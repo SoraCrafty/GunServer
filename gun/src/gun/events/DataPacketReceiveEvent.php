@@ -18,6 +18,8 @@ use gun\form\formManager;
 
 class DataPacketReceiveEvent extends Events {
 
+	const RELOADMESSAGE_UPDATE = 1;//任意の値に変更でPopupの更新間隔が変わる。
+
 	public function __construct($api){
 		parent::__construct($api);
 		$this->beam = new beam($api);
@@ -43,8 +45,7 @@ class DataPacketReceiveEvent extends Events {
 				$p->ticks['touch'] = $time + round(0.25, 5);
 				if($p->isSneaking() and ($gun = $p->gun) !== null and !$p->reloading) {
 					$p->reloading = true;
-					$p->sendPopup("---reloading---");
-					$this->schedule->scheduleDelayedTask(new CallBack([$this, 'reload'], [$p, $gun]), $gun['reload'] * 20);
+					$this->reload($p, $gun, 0);
 					break;
 				}
 				if($p->shot){
@@ -63,10 +64,18 @@ class DataPacketReceiveEvent extends Events {
 		}
 	}
 	
-	public function reload($p, $gun){
-		$p->ammo = (int) $gun['max_ammo'];
-		$p->reloading = false;
-		$p->sendPopUp("Completed");
+	public function reload($p, $gun, $phase){
+		if($phase >= $gun['reload'] * 20){
+			$p->ammo = (int) $gun['max_ammo'];
+			$p->reloading = false;
+			$p->sendPopUp("\n\n\n§lReloaded＿<§a||||||||||||||||||||||||||||||§f(100％)>");
+		}
+		else{
+			$phase += self::RELOADMESSAGE_UPDATE;
+			$progress = round($phase / ($gun['reload'] * 20) * 30);
+			$p->sendPopUp("\n\n\n§lReloading＿<§a" . substr_replace("||||||||||||||||||||||||||||||","§f", $progress, 0) . "§f(" . round($progress*3.3) . "％)>");
+			$this->schedule->scheduleDelayedTask(new CallBack([$this, 'reload'], [$p, $gun, $phase]), self::RELOADMESSAGE_UPDATE);
+		}
 	}
 }
 
