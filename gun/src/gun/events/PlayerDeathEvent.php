@@ -1,0 +1,24 @@
+<?php
+namespace gun\events;
+
+use pocketmine\Player;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+
+use gun\gameManager;
+
+class PlayerDeathEvent extends Events {
+	
+	public function call($ev){
+		$player = $ev->getPlayer();
+		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
+			$killer = $player->getLastDamageCause()->getDamager();
+			$ev->setKeepInventory(true);
+			if(($team = gameManager::getTeam($killer->getName()))){
+				gameManager::addKillCount($team);
+				$kill = gameManager::getKillCount($team);
+				$this->server->broadcastPopup('§aGAME>>§f'.$team.'チームのキル数:'.$kill.'Killです');
+				gameManager::toSpawn($player);
+			}
+		}
+	}
+}
