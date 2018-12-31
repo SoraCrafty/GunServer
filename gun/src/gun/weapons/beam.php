@@ -67,7 +67,7 @@ class beam {
 					$pos = new Vector3($x, $y, $z);
                     			foreach ($lv->getPlayers() as $player){
                     				if($player !== $p){
-                        				if($pos->distance($player) < 2){
+                        				if($pos->distance($player) < 1){
                             					$headshot = false;
                             					if($player->getY() + 1.42 <= $y){
                                 					$headshot = true;

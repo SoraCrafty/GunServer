@@ -16,7 +16,7 @@ class PlayerJoinEvent extends Events {
 
 	public function call($ev){
 		$player = $ev->getPlayer();
-		$player->sendMessage('a');
+		$player->sendMessage('リロードはスニークして地面タッチです');
 		$this->setWeapons($player);
 		if(gameManager::getTeam($player->getName())){
 			gameManager::toSpawn($player);

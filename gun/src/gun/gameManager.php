@@ -19,7 +19,7 @@ class gameManager {
 		$this->team = ['Red' => [], 'Blue' => []];
 		$this->game = false;
 		$this->server->broadcastMessage('§aGAME>>§f1分半後にゲームが開始されます');
-		$this->spawn = ['Red' => new Vector3(82,5,65), 'Blue' => new Vector3(-5,4,7), 'spawn' => new Vector3(35,6,165)];
+		$this->spawn = ['Red' => new Vector3(82,5,65), 'Blue' => new Vector3(-5,4,7), 'spawn' => new Vector3(-2,4,-2)];
 	}
 
 	public function gamestart(){
