@@ -32,17 +32,17 @@ class DataPacketReceiveEvent extends Events {
 		
 		switch($pk::NETWORK_ID){
 			case Info::INVENTORY_TRANSACTION_PACKET:
-				if($pk->transactionType !== 2) return false;
+				if($pk->transactionType !== 2 and $pk->transactionType !== 3) return false;
 				if($p->ticks['touch'] > ($time = round(microtime(true), 5))){
 		        		return false;
 		        	}
+		        	$p->ticks['touch'] = $time + round(0.25, 5);
 		        	if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
-		        		//if(is_null($pk->trData->entityRuntimeId)) return false;
+		        		if(is_null($pk->trData->entityRuntimeId) or $pk->trData->entityRuntimeId !== 114514) return false;
 		        		formManager::touch($pk, $p);
 		        		break;
 		        	}
 		        	if(!isset($p->gun) or !gameManager::getTeam($p->getName())) break;
-				$p->ticks['touch'] = $time + round(0.25, 5);
 				if($p->isSneaking() and ($gun = $p->gun) !== null and !$p->reloading) {
 					$p->reloading = true;
 					$this->reload($p, $gun, 0);

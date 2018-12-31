@@ -13,9 +13,7 @@ class EntityDamageEvent extends Events {
 			$player = $ev->getEntity();
 			$atacker = $ev->getDamager();
 			if($player instanceof Player and $atacker instanceof Player){
-				$team = gameManager::getTeam($player->getName());
-				$ateam = gameManager::getTeam($atacker->getName());
-				if($team === false or $ateam === false or $team === $ateam){
+				if(!gameManager::getTeam($player->getName()) or !gameManager::getTeam($atacker->getName())){
 					$ev->setCancelled(true);
 				}
 			}

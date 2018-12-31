@@ -21,9 +21,9 @@ class formManager {
 	public static function receive($pk, $p){
 		$data = json_decode($pk->formData);
 		if(!isset($data)) return false;
-		foreach($data as $value){
+		/*foreach($data as $value){
 			if(!isset($value)) return false;
-		}
+		}*/
 		switch($pk->formId){
 			case(1):
 				$gun = array(
@@ -46,13 +46,23 @@ class formManager {
 				$p->sendMessage($data[0].'追加しました');
 			break;
 			case(3):
-				$name = array_slice(self::$instance->datas,$data,1);
-				$gun = gunData::get($name);
+				$gun = gunData::get(self::$instance->datas[$data]);
 				$p->getInventory()->clearAll();
-				$item = Item::get(280,0,1)->setCustomName($name);
+				$item = Item::get(280,0,1)->setCustomName(self::$instance->datas[$data]);
 				$lore = array("§a発射レート:".$gun['speed'], "§b火力:".$gun['damage'], "§cリロード:".$gun['reload'], "§d弾数:".$gun['max_ammo']);
+				$item->setLore($lore);
 				$p->getInventory()->addItem($item);
-				$p->sendMessage('銃を追加しました');
+				$p->sendMessage('銃を選択しました');
+				if(isset($p->gun)){
+					$data = array(
+									'speed' => $gun['speed'],
+									'damage' => $gun['damage'],
+									'reload' => $gun['reload'],
+									'max_ammo' => $gun['max_ammo']
+					);
+					$p->gun = $data;
+					if(!isset($p->ammo) or $p->ammo > $gun['max_ammo']) $p->ammo = $gun['max_ammo'];
+				}
 			break;
 		}
 	}
@@ -61,7 +71,8 @@ class formManager {
 		$pk = new ModalFormRequestPacket();
 		$pk->formId = 3;
 		$buttons = [];
-		foreach(self::$instance->datas as $name => $data){
+		var_dump(self::$instance->datas);
+		foreach(self::$instance->datas as $name){
 			$buttons[] = ['text' => $name];
 		}
 		$data = [ "type" => "form", "title" => "shop", "content" => '銃を選んでください', "buttons" => $buttons];

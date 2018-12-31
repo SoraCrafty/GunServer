@@ -17,6 +17,7 @@ class gameManager {
 		$this->schedule->scheduleDelayedTask(new CallBack([$this, 'gamestart'], []), 120 * 20);
 		$this->killcount = [ 'Red' => 0, 'Blue' => 0];
 		$this->team = ['Red' => [], 'Blue' => []];
+		$this->game = false;
 		$this->server->broadcastMessage('§aGAME>>§f1分半後にゲームが開始されます');
 		$this->spawn = ['Red' => new Vector3(82,5,65), 'Blue' => new Vector3(-5,4,7), 'spawn' => new Vector3(35,6,165)];
 	}
@@ -24,6 +25,7 @@ class gameManager {
 	public function gamestart(){
 		$this->killcount = [ 'Red' => 0, 'Blue' => 0];
 		$this->team = ['Red' => [], 'Blue' => []];
+		$this->game = true;
 		$players = $this->server->getOnlinePlayers();
 		shuffle($players);
 		foreach($players as $player){
@@ -38,6 +40,7 @@ class gameManager {
 		$players = $this->server->getOnlinePlayers();
 		$this->killcount = [ 'Red' => 0, 'Blue' => 0];
 		$this->team = ['Red' => [], 'Blue' => []];
+		$this->game = false;
 		foreach($players as $player){
 			$this->setName($player);
 			$player->teleport($this->spawn['spawn']);
@@ -46,21 +49,6 @@ class gameManager {
 		$this->schedule->scheduleDelayedTask(new CallBack([$this, 'gamestart'], []), 90 * 20);
 		$this->server->broadcastMessage('§aGAME>>§f1分半後にゲームが開始されます');
 	}
-	
-	public function addMember($player) {
-	    	$user = $player->getName();
-            	foreach ($this->team as $min_team => $members) {
-                	if (!isset($amount) or $amount > count($members)) {
-                   		$amount = count($members);
-                    		$team = $min_team;
-                	}
-            	}
-            	$this->team[$team][] = $user;
-            	$this->setName($player);
-           	$player->sendMessage('あなたは'.$team.'チームです');
-            	$player->teleport($this->spawn[$team]);
-            	$player->setSpawn($this->spawn[$team]);
-    	}
     	
     	public function setName($player){ 
     		$name = $player->getName();
@@ -69,7 +57,7 @@ class gameManager {
         	$player->setNameTag($color . $name.'§f');
         	$player->setDisplayName($color . $name.'§f');
     	}
-    	
+
     	public function getColor($team) {
         	switch ($team) {
             	case 1:
@@ -86,6 +74,42 @@ class gameManager {
 
         	}
    	 }
+   	 
+   	 public static function addMember($player) {
+   	 	if(!self::$instance->game) return false;
+	    		$user = $player->getName();
+            		foreach (self::$instance->team as $min_team => $members) {
+                		if (!isset($amount) or $amount > count($members)) {
+                	   		$amount = count($members);
+                	    		$team = $min_team;
+                		}
+            		}
+            		self::$instance->team[$team][] = $user;
+            		self::$instance->setName($player);
+           		$player->sendMessage('あなたは'.$team.'チームです');
+            		$player->teleport(self::$instance->spawn[$team]);
+            		$player->setSpawn(self::$instance->spawn[$team]);
+	}
+	
+	public static function removeMember($user) {
+        	$team = self::$instance->getTeam($user);
+        	if ($team != false) {
+            		$team_index = array_search($user, self::$instance->team[$team]);
+            		unset(self::$instance->team[$team][$team_index]);
+            		$num = 0;
+            		foreach (self::$instance->team as $te => $members) {
+                		if (count($members) === 0) {
+                    			++$num;
+                		}
+            		}
+            		if ($num === 1) {
+                		self::$instance->gameend();
+                		foreach (self::$instance->server->getOnlinePlayers() as $player) {
+                    			$player->teleport(self::$instance->spawn);
+                		}
+            		}
+        	}
+	}
     	
     	public static function getTeam($username) {
         	foreach (self::$instance->team as $team => $members) {

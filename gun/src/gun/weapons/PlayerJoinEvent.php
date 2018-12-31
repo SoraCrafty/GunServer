@@ -20,9 +20,6 @@ class PlayerJoinEvent extends Events {
 		$this->setWeapons($player);
 		if(gameManager::getTeam($player->getName())){
 			gameManager::toSpawn($player);
-			gameManager::setName($player);
-		}else{
-			gameManager::addMember($player);
 		}
 		npcManager::addNPC($player);
 	}

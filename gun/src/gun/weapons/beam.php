@@ -77,7 +77,7 @@ class beam {
                             						$p->addTitle('>   <','',1,1,1);
                             					}
                             					$ev = new EntityDamageByEntityEvent($p,$player,EntityDamageEvent::CAUSE_PROJECTILE, (int)$damage);                            		$ev->setKnockBack(0);
-                            					$ev->setBaseDamage($damage);
+                            					$ev->setAttackCooldown(0);
                             					$player->attack($ev);
                                 				$lv->addParticle(new DestroyBlockParticle($pos, Block::get(236,14)), [$p]);
                                 				break 2;
