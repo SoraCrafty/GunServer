@@ -5,9 +5,137 @@ namespace gun;
 use pocketmine\math\Vector3;
 use gun\Callback;
 
-class gameManager {
+class gameManager 
+{
+    //ここらへんは後でConfigで設定できるようににする(コードも粗め)
+    //'Red' => new Vector3(82,5,65), 'Blue' => new Vector3(-5,4,7), 'spawn' => new Vector3(-2,4,-2)
+    const TEAM_NAME = [
+                    0 => [
+                        "name" => "Redチーム",
+                        "decoration" => "§c",
+                        "spawn" => [82, 5 , 65]
+                        ],
+                    1 => [
+                        "name" => "Blueチーム",
+                        "decoration" => "§b",
+                        "spawn" => [-5, 4, 7]
+                        ]
+                    ];
 
-	private static $instance;
+    const WAITING_TIME = 10;
+
+    /*Mainクラスのオブジェクト*/
+    private $plugin;
+    /*ゲームの進行状態*/
+    private $TimeTableStatus = -1;//-1が初期値
+    /*チームメンバー*/
+    private $teamMembers = [
+                        0 => [],
+                        1 => []
+                        ];
+    /*キルカウント*/
+    private $killCount = [
+                        0 => 0,
+                        1 => 0
+                        ];
+
+    public function __construct($plugin)
+    {
+        $this->plugin = $plugin;
+        $this->TimeTable();
+    }
+
+    public function TimeTable()
+    {
+        $this->TimeTableStatus++;
+
+        switch($this->TimeTableStatus)
+        {
+            case 0:
+                $this->WaitingTask();
+                return true;
+
+            case 1:
+                $this->setTeamMembers();
+                $this->setSpawns();
+                $this->gotoStageAll();
+                return true;
+        }
+
+
+    }
+
+    /*ゲーム開始可能人数になってからどれだけ経ったか*/
+    private $waitingCount = 0;
+
+    public function WaitingTask()
+    {
+        if(count($this->plugin->getServer()->getOnlinePlayers()) >= 2)
+        {
+            $this->waitingCount += 1;
+            if($this->waitingCount >= self::WAITING_TIME)
+            {
+                $this->TimeTable();
+                return true;
+            }
+            $this->plugin->getServer()->broadcastTip("§lゲーム開始まであと§c" . (self::WAITING_TIME - $this->waitingCount) . "§f秒");
+        }
+        else
+        {
+            $this->waitingCount = 0;
+            $this->plugin->getServer()->broadcastTip("§l§a参加者を待っています…");
+        }
+
+        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'WaitingTask'], []), 20);
+    }
+
+    public function setTeamMembers()
+    {
+        foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
+            $this->lotteryTeam($player);
+        }
+    }
+
+    public function lotteryTeam($player)
+    {
+        $team = (count($this->teamMembers[0]) <= count($this->teamMembers[1])) ? 0 : 1;
+        $this->teamMembers[$team][] = $player;
+        $player->sendMessage("§aGAME>>§fあなたは" . self::TEAM_NAME[$team]["decoration"] . self::TEAM_NAME[$team]["name"] . "§fになりました");
+    }
+
+    public function setSpawns()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                $this->setSpawn($player, $team);
+            }    
+        }   
+    }
+
+    public function setSpawn($player, $team)
+    {
+        $player->setSpawn(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
+    }
+
+    public function gotoStageAll()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                $this->gotoStage($player, $team);
+            }    
+        }   
+    }
+
+    public function gotoStage($player, $team)
+    {
+        $player->teleport(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
+    }
+
+	/*private static $instance;
 
 	public function __construct($plugin){
 		self::$instance = $this;
@@ -135,7 +263,7 @@ class gameManager {
     		$team = self::$instance::getTeam($player->getName());
     		if($team)
     		$player->teleport(self::$instance->spawn[$team]);
-    	}
+    	}*/
     	
 }
 		

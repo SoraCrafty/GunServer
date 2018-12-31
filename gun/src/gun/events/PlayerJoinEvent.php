@@ -15,7 +15,7 @@ class PlayerJoinEvent extends Events {
 	}
 
 	public function call($ev){
-		$player = $ev->getPlayer();
+		/*$player = $ev->getPlayer();
 		$player->sendMessage('リロードはスニークして地面タッチです');
 		$this->setWeapons($player);
 		if(gameManager::getTeam($player->getName())){
@@ -24,7 +24,7 @@ class PlayerJoinEvent extends Events {
 		}else{
 			gameManager::addMember($player);
 		}
-		npcManager::addNPC($player);
+		npcManager::addNPC($player);*/
 	}
 	
 	 public function setWeapons($p){
