@@ -7,7 +7,7 @@ use gun\Callback;
 
 class gameManager 
 {
-    //ここらへんは後でConfigで設定できるようににする(コードも粗め)
+    //ここらへん(定数とか)は後でConfigで設定できるようににする(コードも粗め)
     //'Red' => new Vector3(82,5,65), 'Blue' => new Vector3(-5,4,7), 'spawn' => new Vector3(-2,4,-2)
     const TEAM_NAME = [
                     0 => [
@@ -22,7 +22,9 @@ class gameManager
                         ]
                     ];
 
-    const WAITING_TIME = 10;
+    const WAITING_TIME = 10;//秒単位
+
+    const GAME_TIME = 30 * 60;//秒単位
 
     /*Mainクラスのオブジェクト*/
     private $plugin;
@@ -59,6 +61,8 @@ class gameManager
                 $this->setTeamMembers();
                 $this->setSpawns();
                 $this->gotoStageAll();
+                $this->plugin->getServer()->broadcastTitle("§l§cGame Start!!§r", "§f試合開始!!", 1, 20, 10);
+                $this->GameTask(self::GAME_TIME);
                 return true;
         }
 
@@ -133,6 +137,18 @@ class gameManager
     public function gotoStage($player, $team)
     {
         $player->teleport(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
+    }
+
+    public function GameTask($time)
+    {
+        if($time <= 0 || $this->TimeTableStatus !== 1)
+        {
+            $this->TimeTable();
+            return true;
+        }
+
+        $time--;
+        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'GameTask'], [$time]), 20);
     }
 
 	/*private static $instance;
