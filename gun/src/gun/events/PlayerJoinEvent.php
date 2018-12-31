@@ -7,6 +7,7 @@ use pocketmine\item\Item;
 use gun\gameManager;
 use gun\npcManager;
 use gun\data\gunData;
+use gun\bossbar\BossBar;
 
 class PlayerJoinEvent extends Events {
 
@@ -25,6 +26,7 @@ class PlayerJoinEvent extends Events {
 			gameManager::addMember($player);
 		}
 		npcManager::addNPC($player);*/
+		BossBar::sendBossBar([$ev->getPlayer()], $ev->getPlayer()->getPosition(), 4000, "a", $color = 16711680);
 	}
 	
 	 public function setWeapons($p){
