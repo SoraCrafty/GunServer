@@ -65,7 +65,6 @@ class beam {
                     			$y += $motionY;
                     			$z += $motionZ;
 					$pos = new Vector3($x, $y, $z);
-					$pos2 = new Vector3($x,$y+1,$z);
                     			foreach ($lv->getPlayers() as $player){
                     				if($player !== $p){
                         				if(abs($player->x - $x) <= $player->width + $rad && abs($player->z - $z) <= $player->width + $rad && abs(($player->y + $player->height * 0.5) - $y) <= $player->height + $rad){
