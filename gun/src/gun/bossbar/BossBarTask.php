@@ -16,7 +16,7 @@ class BossBarTask extends Task{
 	public function onRun(int $currentTick){
 		if($this->api->isVisivle())
 		{
-			$this->api->show();
+			$this->api->move();
 		}
 	}
 

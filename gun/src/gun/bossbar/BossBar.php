@@ -5,12 +5,15 @@ namespace gun\bossbar;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\math\Vector3;
-use pocketmine\event\Listener;
 use pocketmine\entity\Entity;
+
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
+
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
-//use pocketmine\network\mcpe\protocol\MoveEntityAbsolutePacket;
+use pocketmine\network\mcpe\protocol\MoveEntityAbsolutePacket;
 use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 
@@ -32,11 +35,24 @@ class BossBar implements Listener{
 		$this->plugin = $plugin;
 		$this->eid = Entity::$entityCount++;
 
-		//$this->BossBarTask();
-
 		$this->plugin->getScheduler()->scheduleRepeatingTask(new BossBarTask($this), 20);
 		$this->plugin->getServer()->getPluginManager()->registerEvents($this, $this->plugin);
 	}
+
+	public function onJoin(PlayerJoinEvent $event)
+	{
+		if($this->visible)
+		{
+			$player = $event->getPlayer();
+
+			$this->showBossBar($player);
+
+			$this->updateTitle($player);
+			$this->updatePercentage($player);
+		}
+	}
+
+	/*以下API部分*/
 
 	public function show()
 	{
@@ -57,6 +73,13 @@ class BossBar implements Listener{
 	public function isVisivle()
 	{
 		return $this->visible;
+	}
+
+	public function move()
+	{
+		foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
+			$this->moveToPlayer($player);
+		}
 	}
 
 	public function setTitle($title)
@@ -164,21 +187,16 @@ class BossBar implements Listener{
 		$player->dataPacket($bpk);
 	}
 
-	/*public function BossBarTask()
+	public function moveToPlayer($player)
 	{
-		if($this->visible)
-		{
-			$mpk = new MoveEntityAbsolutePacket();
-			$mpk->flags |= MoveEntityAbsolutePacket::FLAG_TELEPORT;
-			$mpk->xRot = 0;
-			$mpk->yRot = 0;
-			$mpk->zRot = 0;
-			foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
-				$mpk->position = $player->getPosition();
-				$player->dataPacket($mpk);
-			}
-		}
-		$this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'BossBarTask'], []), 20);
-	}*/
+		$mpk = new MoveEntityAbsolutePacket();
+		$mpk->entityRuntimeId = $this->eid;
+		$mpk->flags |= MoveEntityAbsolutePacket::FLAG_TELEPORT;
+		$mpk->position = $player->getPosition();
+		$mpk->xRot = 0;
+		$mpk->yRot = 0;
+		$mpk->zRot = 0;
+		$player->dataPacket($mpk);
+	}
 
 }

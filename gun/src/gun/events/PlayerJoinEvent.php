@@ -26,7 +26,6 @@ class PlayerJoinEvent extends Events {
 			gameManager::addMember($player);
 		}
 		npcManager::addNPC($player);*/
-		$this->api->plugin->BossBar->showBossBar($event->getPlayer());
 	}
 	
 	 public function setWeapons($p){
