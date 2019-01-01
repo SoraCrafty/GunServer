@@ -22,6 +22,7 @@ class Main extends PluginBase {
 		$this->game = new gameManager($this);
 		$this->npc = new npcManager($this);
 		$this->command = new Command($this);
+		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 	}
 	
