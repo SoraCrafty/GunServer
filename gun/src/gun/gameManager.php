@@ -11,12 +11,12 @@ class gameManager
     //'Red' => new Vector3(82,5,65), 'Blue' => new Vector3(-5,4,7), 'spawn' => new Vector3(-2,4,-2)
     const TEAM_NAME = [
                     0 => [
-                        "name" => "Redチーム",
+                        "name" => "Red",
                         "decoration" => "§c",
                         "spawn" => [82, 5 , 65]
                         ],
                     1 => [
-                        "name" => "Blueチーム",
+                        "name" => "Blue",
                         "decoration" => "§b",
                         "spawn" => [-5, 4, 7]
                         ]
@@ -25,6 +25,8 @@ class gameManager
     const WAITING_TIME = 10;//秒単位
 
     const GAME_TIME = 30 * 60;//秒単位
+
+    const KILLCOUNT_MAX = 5;
 
     /*Mainクラスのオブジェクト*/
     private $plugin;
@@ -61,8 +63,11 @@ class gameManager
                 $this->setTeamMembers();
                 $this->setSpawns();
                 $this->gotoStageAll();
-                $this->plugin->getServer()->broadcastTitle("§l§cGame Start!!§r", "§f試合開始!!", 1, 20, 10);
+                $this->plugin->getServer()->broadcastTitle("§l§cGame Start!!§r", "§f試合開始!!", 5, 20, 10);
                 $this->GameTask(self::GAME_TIME);
+                return true;
+
+            case 2:
                 return true;
         }
 
@@ -82,12 +87,14 @@ class gameManager
                 $this->TimeTable();
                 return true;
             }
-            $this->plugin->getServer()->broadcastTip("§lゲーム開始まであと§c" . (self::WAITING_TIME - $this->waitingCount) . "§f秒");
+            $this->plugin->BossBar->setTitle("§lゲーム開始まであと§c" . (self::WAITING_TIME - $this->waitingCount) . "§f秒");
+            $this->plugin->BossBar->setPercentage((self::WAITING_TIME - $this->waitingCount) / self::WAITING_TIME);
         }
         else
         {
             $this->waitingCount = 0;
-            $this->plugin->getServer()->broadcastTip("§l§a参加者を待っています…");
+            $this->plugin->BossBar->setPercentage(1);
+            $this->plugin->BossBar->setTitle("§l§a参加者を待っています…");
         }
 
         $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'WaitingTask'], []), 20);
@@ -141,12 +148,18 @@ class gameManager
 
     public function GameTask($time)
     {
-        if($time <= 0 || $this->TimeTableStatus !== 1)
+        if($this->TimeTableStatus !== 1) return true;
+
+        if($time <= 0)
         {
             $this->TimeTable();
             return true;
         }
 
+        $this->plugin->BossBar->setPercentage($time / self::GAME_TIME);
+        $this->plugin->BossBar->setTitle("§a試合時間残り>>§f" . floor($time / 60) . " : " . str_pad(round($time % 60), 2, "0", STR_PAD_LEFT) . 
+                                         "  §aキルカウント>>§f" . self::TEAM_NAME[0]["decoration"] . self::TEAM_NAME[0]["name"] . "§f:" . $this->killCount[0] . "/" . self::KILLCOUNT_MAX . " vs " . 
+                                                             self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§f:" . $this->killCount[1] . "/" . self::KILLCOUNT_MAX);
         $time--;
         $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'GameTask'], [$time]), 20);
     }

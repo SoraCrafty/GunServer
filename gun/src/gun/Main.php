@@ -15,10 +15,12 @@ class Main extends PluginBase {
 	
 	public static $datafolder;
 
+	/*BossBarのAPIのオブジェクト*/
 	public $BossBar;
 	
 	public function onEnable(){
 		if (!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0744, true);
+		$this->BossBar = new BossBar($this);
 		self::$datafolder = $this->getDataFolder();
 		$this->server = $this->getServer();
 		$this->data = new dataManager($this);
@@ -26,7 +28,6 @@ class Main extends PluginBase {
 		$this->game = new gameManager($this);
 		$this->npc = new npcManager($this);
 		$this->command = new Command($this);
-		$this->BossBar = new BossBar($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 	}
 	

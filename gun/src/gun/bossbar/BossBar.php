@@ -26,9 +26,9 @@ class BossBar implements Listener{
 	/*タイトル*/
 	private $title = "";
 	/*ゲージの割合*/
-	private $percentage = 0;
+	private $percentage = 1;
 	/*ボスバーが表示状態かどうか*/
-	private $visible = false;
+	private $visible = true;
 
 	public function __construct($plugin)
 	{
