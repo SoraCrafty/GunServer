@@ -15,7 +15,7 @@ class PlayerJoinEvent extends Events {
 		$this->api = $api;
 	}
 
-	public function call($ev){
+	public function call($event){
 		/*$player = $ev->getPlayer();
 		$player->sendMessage('リロードはスニークして地面タッチです');
 		$this->setWeapons($player);
@@ -26,7 +26,7 @@ class PlayerJoinEvent extends Events {
 			gameManager::addMember($player);
 		}
 		npcManager::addNPC($player);*/
-		BossBar::sendBossBar([$ev->getPlayer()], $ev->getPlayer()->getPosition(), 4000, "a", $color = 16711680);
+		$this->api->plugin->BossBar->showBossBar($event->getPlayer());
 	}
 	
 	 public function setWeapons($p){

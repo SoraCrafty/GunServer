@@ -9,9 +9,13 @@ use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
 
+use gun\bossbar\BossBar;
+
 class Main extends PluginBase {
 	
 	public static $datafolder;
+
+	public $BossBar;
 	
 	public function onEnable(){
 		if (!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0744, true);
@@ -22,6 +26,7 @@ class Main extends PluginBase {
 		$this->game = new gameManager($this);
 		$this->npc = new npcManager($this);
 		$this->command = new Command($this);
+		$this->BossBar = new BossBar($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 	}
 	

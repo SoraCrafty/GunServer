@@ -59,7 +59,6 @@ class Listener implements MainListener {
 	
 	public function onJoin(PlayerJoinEvent $event){
 		$this->playerjoin->call($event);
-		$event->getPlayer()->sendMessage('a');
 	}
 	
 	public function onReceive(DataPacketReceiveEvent $event){
