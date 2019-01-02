@@ -37,7 +37,6 @@ class scoreboard implements Listener{
 	public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
 		$this->create($player);
-		$this->showThisServerScoreBoard($player);
 	}
 	
 	/*恐らく送る準備的な??*/

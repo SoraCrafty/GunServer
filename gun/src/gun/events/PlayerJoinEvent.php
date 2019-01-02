@@ -8,6 +8,7 @@ use gun\gameManager;
 use gun\npcManager;
 use gun\data\gunData;
 use gun\data\playerData;
+use gun\scoreboard\scoreboard;
 
 class PlayerJoinEvent extends Events {
 
@@ -27,7 +28,8 @@ class PlayerJoinEvent extends Events {
 		}else{
 			gameManager::addMember($player);
 		}*/
-		$this->playerData->getAccount($name) ?? $this->playerData->createAccount($name);
+		$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
+		scoreboard::getScoreBoard()->showThisServerScoreBoard($player);
 		npcManager::addNPC($player);
 	}
 	

@@ -10,13 +10,14 @@ use gun\scoreboard\scoreboard;
 
 class playerData{
         
-        private static $instance = null;
+        private static $instance;
 
        	public function __construct($plugin){
        		$this->plugin = $plugin;
                 $this->DataFolder = $plugin->getDatafolder();
                 $this->SC = scoreboard::getScoreBoard();
-                self::$instnace = $this;
+                self::$instance = $this;
+                $this->CreateConfig();
         }
 
         public static function init(){
@@ -28,10 +29,6 @@ class playerData{
 	public function closeDB(){
 		$this->DB->close();
 	}
-
-/*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	アカウント
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
         public function CreateConfig(){
 		$file = $this->DataFolder."playerdata.db";
