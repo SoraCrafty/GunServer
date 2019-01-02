@@ -39,7 +39,7 @@ class BossBar implements Listener{
 		$this->plugin->getServer()->getPluginManager()->registerEvents($this, $this->plugin);
 	}
 
-	public function onJoin(PlayerJoinEvent $event)
+	public function onJoin(PlayerJoinEvent $event)//BossBar系は単体で動くようにしたかったので…
 	{
 		if($this->visible)
 		{

@@ -9,7 +9,15 @@ use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
 
+use pocketmine\entity\Entity;
+use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
+
 use gun\bossbar\BossBar;
+
+use gun\fireworks\FireworksAPI;
+use gun\fireworks\item\Fireworks;
+use gun\fireworks\entity\FireworksRocket;
 
 class Main extends PluginBase {
 	
@@ -17,15 +25,24 @@ class Main extends PluginBase {
 
 	/*BossBarのAPIのオブジェクト*/
 	public $BossBar;
+	/*gameManagerのオブジェクト*/
+	public $gameManager;
+
+	public function onLoad()
+	{
+		ItemFactory::registerItem(new Fireworks(), true);
+		Entity::registerEntity(FireworksRocket::class, true);
+	}
 	
 	public function onEnable(){
 		if (!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0744, true);
 		$this->BossBar = new BossBar($this);
+		$this->Fireworks = new FireworksAPI($this);
 		self::$datafolder = $this->getDataFolder();
 		$this->server = $this->getServer();
 		$this->data = new dataManager($this);
+		$this->gameManager = new gameManager($this);
 		$this->listener = new Listener($this);
-		$this->game = new gameManager($this);
 		$this->npc = new npcManager($this);
 		$this->command = new Command($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);

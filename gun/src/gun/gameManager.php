@@ -3,6 +3,7 @@
 namespace gun;
 
 use pocketmine\math\Vector3;
+
 use gun\Callback;
 
 class gameManager 
@@ -68,6 +69,7 @@ class gameManager
                 return true;
 
             case 2:
+                $this->ResultTask(-1);
                 return true;
         }
 
@@ -114,6 +116,17 @@ class gameManager
         $player->sendMessage("§aGAME>>§fあなたは" . self::TEAM_NAME[$team]["decoration"] . self::TEAM_NAME[$team]["name"] . "§fになりました");
     }
 
+    public function setDefaultSpawns()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                $player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+            }    
+        }
+    }
+
     public function setSpawns()
     {
         foreach ($this->teamMembers as $team => $members) 
@@ -122,7 +135,7 @@ class gameManager
             {
                 $this->setSpawn($player, $team);
             }    
-        }   
+        }
     }
 
     public function setSpawn($player, $team)
@@ -162,6 +175,63 @@ class gameManager
                                                              self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§f:" . $this->killCount[1] . "/" . self::KILLCOUNT_MAX);
         $time--;
         $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'GameTask'], [$time]), 20);
+    }
+
+    public function ResultTask($phase)
+    {
+        $phase++;
+
+        switch($phase)
+        {
+
+            case 0:
+                $this->plugin->getServer()->broadcastTitle("§l§cGame Set!!§r", "§f試合終了!!", 5, 20, 10);
+                $this->plugin->BossBar->setPercentage(0);
+                $this->plugin->BossBar->setTitle("§8<<試合終了>>§f" . 
+                                                 "  §aキルカウント>>§f" . self::TEAM_NAME[0]["decoration"] . self::TEAM_NAME[0]["name"] . "§f:" . $this->killCount[0] . "/" . self::KILLCOUNT_MAX . " vs " . 
+                                                                      self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§f:" . $this->killCount[1] . "/" . self::KILLCOUNT_MAX);
+                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], []), 40);
+                return true;
+
+            case 1:
+                $winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
+                $this->plugin->getServer()->broadcastMessage("§aGAME>>§f" . self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§fチームの勝利!!");
+                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], []), 40);
+                return true;
+
+            default:
+                
+                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], []), 30);
+                return true;
+
+            case 11:
+                $this->TimeTable();
+                return true;
+        }
+    }
+
+    public function getTeam($player) {
+        foreach ($this->teamMembers as $team => $members) {
+            if (array_search($player, $members) !== false) {
+                return $team;
+            }
+        }
+        return false;
+    }
+
+    public function addKillCount($team)
+    {
+        $this->killCount[$team]++;
+
+        if($this->killCount[$team] >= self::KILLCOUNT_MAX && $this->TimeTableStatus === 1)
+        {
+            $this->TimeTable();
+        }
+    }
+
+    public function isGaming()
+    {
+        return $this->TimeTableStatus === 1;  
     }
 
 	/*private static $instance;

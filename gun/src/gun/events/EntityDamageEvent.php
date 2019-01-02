@@ -9,18 +9,24 @@ use gun\gameManager;
 class EntityDamageEvent extends Events {
 	
 	public function call($event){
-		/*if($event instanceof EntityDamageByEntityEvent)
+		if($event instanceof EntityDamageByEntityEvent)
 		{
-			$player = $event->getEntity();
-			$atacker = $event->getDamager();
-			if($player instanceof Player and $atacker instanceof Player){
-				$playerteam = gameManager::getTeam($player->getName());
-				$atackerteam = gameManager::getTeam($atacker->getName());
-				if($playerteam === false or $atackerteam === false or $team === $ateam){
-					$event->setCancelled(true);
+			if(!$this->plugin->gameManager->isGaming())
+			{
+				$event->setCancelled(true);
+			}
+			else{
+				$player = $event->getEntity();
+				$atacker = $event->getDamager();
+				if($player instanceof Player and $atacker instanceof Player){
+					$playerteam = $this->plugin->gameManager->getTeam($player);
+					$atackerteam = $this->plugin->gameManager->getTeam($atacker);
+					if($playerteam === false or $atackerteam === false or $team === $ateam){
+						$event->setCancelled(true);
+					}
 				}
 			}
-		}*/
+		}
 	}
 	
 }
