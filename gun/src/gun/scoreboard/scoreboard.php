@@ -7,6 +7,8 @@ use pocketmine\event\Listener;
 use pocketmine\network\mcpe\protocol\ { SetScorePacket, RemoveObjectivePacket, SetDisplayObjectivePacket };
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 
+use gun\data\playerData;
+
 class scoreboard implements Listener{
 	
 	//表示する場所
@@ -18,16 +20,26 @@ class scoreboard implements Listener{
 	//並べ方 0が昇順 1が降順
 	const sortOrder = 0;
 	
+	const placeLine = ['exp' => 1, 'kill' => 2, 'death' => 3, 'money' => 4];
+	
+	private static $instance;
+	
 	public function __construct($plugin){
 		$this->plugin = $plugin;
 		$this->plugin->getServer()->getPluginManager()->registerEvents($this, $this->plugin);
+		self::$instance = $this;
+	}
+	
+	public static function getScoreBoard(){
+		return self::$instance;
 	}
 	
 	public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
 		$this->create($player);
-		$this->setLine(1, $player->getName(), $player);
+		$this->showThisServerScoreBoard($player);
 	}
+	
 	/*恐らく送る準備的な??*/
 	public function create(Player $player){
 		$pk = new SetDisplayObjectivePacket();
@@ -53,7 +65,8 @@ class scoreboard implements Listener{
 		$pk = new ScorePacketEntry();
 		$pk->objectiveName = self::objectiveName;
 		$pk->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
-		$pk->customName = $message;
+							/*行の長さを揃えるため*/
+		$pk->customName = str_pad($message, ((strlen(self::displayName) * 2) - strlen($message)));
 		$pk->score = $line;
 		$pk->scoreboardId = $line;
 		
@@ -63,6 +76,7 @@ class scoreboard implements Listener{
 		$player->dataPacket($set);
 	}
 	
+	/*指定行の文章をリセット*/
 	public function removeLine(int $line, Player $player){
 		$pk = new ScorePacketEntry();
 		$pk->objectiveName = self::objectiveName;
@@ -74,6 +88,21 @@ class scoreboard implements Listener{
 		$set->entries[] = $pk;
 		
 		$player->dataPacket($set);
+	}
+	
+	/*プレイヤーにスコアボードを表示*/
+	public function showThisServerScoreBoard($player){
+		$data = playerData::getPlayerData()->getAccount($player->getName());
+		foreach(array_keys(self::placeLine) as $key){
+			$this->updateScoreBoard($key, $data[$key], $player);
+		}
+	}
+			
+	/*playerdataが書き換えられたときに呼び出し*/
+	public function updateScoreBoard(string $place, int $data, Player $player){
+		$line = self::placeLine[$place];
+		$marge = "{$place} : {$data}";
+		$this->setLine($line, $marge, $player);
 	}
 }
 		

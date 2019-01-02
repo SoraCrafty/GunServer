@@ -7,23 +7,27 @@ use pocketmine\item\Item;
 use gun\gameManager;
 use gun\npcManager;
 use gun\data\gunData;
+use gun\data\playerData;
 
 class PlayerJoinEvent extends Events {
 
 	public function __construct($api){
 		$this->api = $api;
+		$this->playerData = playerData::getPlayerData();
 	}
 
 	public function call($ev){
 		$player = $ev->getPlayer();
 		$player->sendMessage('リロードはスニークして地面タッチです');
 		$this->setWeapons($player);
-		if(gameManager::getTeam($player->getName())){
+		$name = $player->getName();
+		/*if(gameManager::getTeam($player->getName())){
 			gameManager::toSpawn($player);
 			gameManager::setName($player);
 		}else{
 			gameManager::addMember($player);
-		}
+		}*/
+		$this->playerData->getAccount($name) ?? $this->playerData->createAccount($name);
 		npcManager::addNPC($player);
 	}
 	
