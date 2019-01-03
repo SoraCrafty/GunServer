@@ -37,28 +37,27 @@ class DataPacketReceiveEvent extends Events {
 		        		return false;
 		        	}
 		        	$p->ticks['touch'] = $time + round(0.25, 5);
-		        	if(!isset($p->gun) or !gameManager::getTeam($p->getName())){}else{
-					if($p->isSneaking() and ($gun = $p->gun) !== null and !$p->reloading) {
-						$p->reloading = true;
-						$this->reload($p, $gun, 0);
-						break;
-					}
-					if($p->shot){
-						$p->shot = false;
-						break;
-					}
-					if(!$p->reloading and ($gun = $p->gun) !== null and $p->getInventory()->getItemInHand()->getId() !== 261){
-						$p->shot = true;
-						$this->beam->shot($p, $gun);
-						break;
-					}
-				}
-				if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
+		        	if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
 		        		if(is_null($pk->trData->entityRuntimeId) or $pk->trData->entityRuntimeId !== 114514) return false;
 		        		formManager::touch($pk, $p);
 		        		break;
 		        	}
-				break;
+		        	if(!isset($p->gun) or $this->plugin->gameManager->getTeam($p) === false) break;
+				if($p->isSneaking() and ($gun = $p->gun) !== null and !$p->reloading) {
+					$p->reloading = true;
+					$this->reload($p, $gun, 0);
+					break;
+				}
+				if($p->shot){
+					$p->shot = false;
+					break;
+				}
+				if(!$p->reloading and ($gun = $p->gun) !== null and $p->getInventory()->getItemInHand()->getId() !== 261){
+					$p->shot = true;
+					$this->beam->shot($p, $gun);
+					break;
+				}
+			break;
 			case Info::MODAL_FORM_RESPONSE_PACKET:
 				formManager::receive($pk, $p);
 			break;	

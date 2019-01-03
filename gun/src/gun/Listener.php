@@ -48,6 +48,7 @@ class Listener implements MainListener {
 	
 	public function registerEvents(){
 		$this->playerjoin = new events\PlayerJoinEvent($this);
+		$this->playerquit = new events\PlayerQuitEvent($this);
 		$this->receive = new events\DataPacketReceiveEvent($this);
 		$this->playerlogin = new events\PlayerLoginEvent($this);
 		$this->playerinteract = new events\PlayerInteractEvent($this);
@@ -59,7 +60,10 @@ class Listener implements MainListener {
 	
 	public function onJoin(PlayerJoinEvent $event){
 		$this->playerjoin->call($event);
-		$event->getPlayer()->sendMessage('a');
+	}
+
+	public function onAuit(PlayerQuitEvent $event){
+		$this->playerquit->call($event);
 	}
 	
 	public function onReceive(DataPacketReceiveEvent $event){
