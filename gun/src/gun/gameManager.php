@@ -4,6 +4,7 @@ namespace gun;
 
 use pocketmine\math\Vector3;
 use pocketmine\level\Position;
+use pocketmine\network\mcpe\protocol\LevelEventPacket;
 
 use gun\Callback;
 use gun\fireworks\item\Fireworks;
@@ -25,7 +26,7 @@ class gameManager
                         ]
                     ];
 
-    const WAITING_TIME = 90;//秒単位
+    const WAITING_TIME = 10;//秒単位
 
     const GAME_TIME = 30 * 60;//秒単位
 
@@ -67,6 +68,7 @@ class gameManager
                 $this->setSpawns();
                 $this->gotoStageAll();
                 $this->plugin->getServer()->broadcastTitle("§l§cGame Start!!§r", "§f試合開始!!", 5, 20, 10);
+                $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
                 $this->GameTask(self::GAME_TIME);
                 return true;
 
@@ -85,26 +87,30 @@ class gameManager
 
     }
 
-    /*ゲーム開始可能人数になってからどれだけ経ったか*/
-    private $waitingCount = 0;
+    /*ゲーム開始まであと何秒か*/
+    private $waitingCount = self::WAITING_TIME;
 
     public function WaitingTask()
     {
         if(count($this->plugin->getServer()->getOnlinePlayers()) >= 2)
         {
-            $this->waitingCount += 1;
-            if($this->waitingCount >= self::WAITING_TIME)
+            $this->waitingCount--;
+            if($this->waitingCount === 0)
             {
-                $this->waitingCount = 0;
+                $this->waitingCount = self::WAITING_TIME;
                 $this->TimeTable();
                 return true;
             }
-            $this->plugin->BossBar->setTitle("§lゲーム開始まであと§c" . (self::WAITING_TIME - $this->waitingCount) . "§f秒");
-            $this->plugin->BossBar->setPercentage((self::WAITING_TIME - $this->waitingCount) / self::WAITING_TIME);
+            if($this->waitingCount <= 5)
+            {
+                $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_ANVIL_FALL, 0);
+            }
+            $this->plugin->BossBar->setTitle("§lゲーム開始まであと§a" . ($this->waitingCount) . "§f秒");
+            $this->plugin->BossBar->setPercentage($this->waitingCount / self::WAITING_TIME);
         }
         else
         {
-            $this->waitingCount = 0;
+            $this->waitingCount = self::WAITING_TIME;
             $this->plugin->BossBar->setPercentage(1);
             $this->plugin->BossBar->setTitle("§l§a参加者を待っています…");
         }
@@ -285,10 +291,15 @@ class gameManager
                         ];
     }
 
-    public function getTeam($player) {
-        foreach ($this->teamMembers as $team => $members) {
-            if (array_search($player, $members) !== false) {
-                return $team;
+    public function getTeam($player) {//要改善
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $member) {
+                //if($player == $member) return true; エラー吐く
+                if($player->getName() === $member->getName())
+                {
+                    return $team;
+                }
             }
         }
         return false;
@@ -307,6 +318,17 @@ class gameManager
     public function isGaming()
     {
         return $this->TimeTableStatus === 1;  
+    }
+
+    /*PMMPのアプデきたら処理変える*/
+    public function playSoundIndivudually($id, $pitch){
+        foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
+            $pk = new LevelEventPacket();
+            $pk->evid = $id;
+            $pk->position = $player->getPosition();
+            $pk->data = $pitch;
+            $player->dataPacket($pk);
+        }
     }
 }
 		

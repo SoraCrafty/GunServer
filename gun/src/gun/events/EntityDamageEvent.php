@@ -21,7 +21,7 @@ class EntityDamageEvent extends Events {
 				if($player instanceof Player and $atacker instanceof Player){
 					$playerteam = $this->plugin->gameManager->getTeam($player);
 					$atackerteam = $this->plugin->gameManager->getTeam($atacker);
-					if($playerteam === false or $atackerteam === false or $team === $ateam){
+					if($playerteam === false || $atackerteam === false || $playerteam === $atackerteam){
 						$event->setCancelled(true);
 					}
 				}
