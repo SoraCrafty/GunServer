@@ -93,8 +93,14 @@ class BossBar implements Listener{
 	public function setPercentage($percentage)
 	{
 		$this->percentage = $percentage;
-		foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
-			$this->updatePercentage($player);
+		if($percentage === 0)
+		{
+			$this->show();
+		}
+		else{
+			foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
+				$this->updatePercentage($player);
+			}
 		}
 	}
 

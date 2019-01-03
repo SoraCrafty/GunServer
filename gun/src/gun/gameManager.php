@@ -3,8 +3,10 @@
 namespace gun;
 
 use pocketmine\math\Vector3;
+use pocketmine\level\Position;
 
 use gun\Callback;
+use gun\fireworks\item\Fireworks;
 
 class gameManager 
 {
@@ -25,7 +27,7 @@ class gameManager
 
     const WAITING_TIME = 10;//秒単位
 
-    const GAME_TIME = 30 * 60;//秒単位
+    const GAME_TIME = 0.1 * 60;//秒単位
 
     const KILLCOUNT_MAX = 5;
 
@@ -71,6 +73,13 @@ class gameManager
             case 2:
                 $this->ResultTask(-1);
                 return true;
+
+            case 3:
+                $this->setDefaultSpawns();
+                $this->gotoLobbyAll();
+                $this->resetGameStatus();
+                $this->TimeTable();//最初に戻る
+                return true;
         }
 
 
@@ -86,6 +95,7 @@ class gameManager
             $this->waitingCount += 1;
             if($this->waitingCount >= self::WAITING_TIME)
             {
+                $this->waitingCount = 0;
                 $this->TimeTable();
                 return true;
             }
@@ -104,7 +114,9 @@ class gameManager
 
     public function setTeamMembers()
     {
-        foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
+        $players = $this->plugin->getServer()->getOnlinePlayers();
+        shuffle($players);
+        foreach ($players as $player) {
             $this->lotteryTeam($player);
         }
     }
@@ -159,6 +171,22 @@ class gameManager
         $player->teleport(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
     }
 
+    public function gotoLobbyAll()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                $this->gotoLobby($player);
+            }    
+        }   
+    }
+
+    public function gotoLobby($player)
+    {
+        $player->teleport($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+    }
+
     public function GameTask($time)
     {
         if($this->TimeTableStatus !== 1) return true;
@@ -190,24 +218,71 @@ class gameManager
                 $this->plugin->BossBar->setTitle("§8<<試合終了>>§f" . 
                                                  "  §aキルカウント>>§f" . self::TEAM_NAME[0]["decoration"] . self::TEAM_NAME[0]["name"] . "§f:" . $this->killCount[0] . "/" . self::KILLCOUNT_MAX . " vs " . 
                                                                       self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§f:" . $this->killCount[1] . "/" . self::KILLCOUNT_MAX);
-                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], []), 40);
+                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 40);
                 return true;
 
             case 1:
                 $winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
                 $this->plugin->getServer()->broadcastMessage("§aGAME>>§f" . self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§fチームの勝利!!");
-                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], []), 40);
+                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 10);
                 return true;
 
-            default:
-                
-                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], []), 30);
+            default://ここも改善したい
+                $types = [
+                            Fireworks::TYPE_SMALL_SPHERE,
+                            Fireworks::TYPE_HUGE_SPHERE,
+                            Fireworks::TYPE_STAR,
+                            Fireworks::TYPE_CREEPER_HEAD,
+                            Fireworks::TYPE_BURST
+                        ];
+                $colors = [
+                            Fireworks::COLOR_RED,
+                            Fireworks::COLOR_BLUE,
+                            Fireworks::COLOR_PINK,
+                            Fireworks::COLOR_GREEN,
+                            Fireworks::COLOR_YELLOW,
+                            Fireworks::COLOR_LIGHT_AQUA,
+                            Fireworks::COLOR_GOLD,
+                            Fireworks::COLOR_WHITE
+                        ];
+                foreach ($this->teamMembers as $team => $members) 
+                {
+                    foreach ($members as $player) 
+                    {
+                        if($player->isOnline())
+                        {
+                            shuffle($types);
+                            shuffle($colors);
+                            $this->plugin->Fireworks->spawn(
+                                                            Position::fromObject($player->getPosition()->add(mt_rand(-6, 6), 1, mt_rand(-6, 6)), $player->getLevel()), 
+                                                            1,
+                                                            $types[0],
+                                                            $colors[0]
+                                                            );
+                        }
+                    }    
+                }
+                $this->plugin->BossBar->setPercentage(($phase - 2) / 8);//2~10
+                $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 20);
                 return true;
 
             case 11:
                 $this->TimeTable();
                 return true;
         }
+    }
+
+    public function resetGameStatus()
+    {
+        $this->TimeTableStatus = -1;
+        $this->teamMembers = [
+                        0 => [],
+                        1 => []
+                            ];
+        $this->killCount = [
+                        0 => 0,
+                        1 => 0
+                        ];
     }
 
     public function getTeam($player) {
