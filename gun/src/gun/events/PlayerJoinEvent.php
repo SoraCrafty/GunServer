@@ -13,16 +13,17 @@ use gun\bossbar\BossBar;
 
 class PlayerJoinEvent extends Events {
   
-  public function __construct($api){
+  	public function __construct($api){
 		$this->playerData = playerData::getPlayerData();
+		parent::__construct($api);
 	}
 
 	public function call($event){
 		$player = $event->getPlayer();
-    $name = $player->getName();
+    	$name = $player->getName();
 		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
 		$this->setWeapons($player);		
-    $this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
+    	$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
 		scoreboard::getScoreBoard()->showThisServerScoreBoard($player);
 		npcManager::addNPC($player);
 

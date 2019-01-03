@@ -25,4 +25,8 @@ class srData {
 		self::$instance->config->set($name, $data);
 		self::$instance->config->save();
 	}
+
+	public static function getAll(){
+		return self::$instance->config->getAll();
+	}
 }
