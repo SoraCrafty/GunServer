@@ -254,7 +254,7 @@ class gameManager
                             shuffle($types);
                             shuffle($colors);
                             $this->plugin->Fireworks->spawn(
-                                                            Position::fromObject($player->getPosition()->add(mt_rand(-6, 6), 1, mt_rand(-6, 6)), $player->getLevel()), 
+                                                            Position::fromObject($player->getPosition()->add(mt_rand(-6, 6), mt_rand(5 ,15) * 0.1, mt_rand(-6, 6)), $player->getLevel()), 
                                                             1,
                                                             $types[0],
                                                             $colors[0]
