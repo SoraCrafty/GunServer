@@ -101,7 +101,9 @@ class scoreboard implements Listener{
 	public function updateScoreBoard(string $place, int $data, Player $player){
 		$line = self::placeLine[$place];
 		$marge = "{$place} : {$data}";
+		$this->removeLine($line, $player);
 		$this->setLine($line, $marge, $player);
+		
 	}
 }
 		
