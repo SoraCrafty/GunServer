@@ -8,17 +8,16 @@ class playerData{
         private static $instance;
 
        	public function __construct($plugin){
-       		$this->plugin = $plugin;
-            $this->DataFolder = $plugin->getDatafolder();
-            $this->SC = scoreboard::getScoreBoard();
-            self::$instance = $this;
-            $this->CreateConfig();
+		$this->plugin = $plugin;
+        	$this->DataFolder = $plugin->getDatafolder();
+            	self::$instance = $this;
+            	$this->CreateConfig();
         }
 
         public static function init(){
-            if(is_null(self::$api)){
-                    self::$api = new self;
-            }
+		if(is_null(self::$api)){
+			self::$api = new self;
+            	}
         }
         
     	public function closeDB(){
@@ -26,14 +25,14 @@ class playerData{
     	}
 
         public function CreateConfig(){
-    	    $file = $this->DataFolder."playerdata.db";
-            if(!file_exists($file)){
-            	$this->DB = new \SQLite3($file, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
-            }else{
-            	$this->DB = new \SQLite3($file, SQLITE3_OPEN_READWRITE);
-            }
-            $this->DB->query("CREATE TABLE IF NOT EXISTS player (name TEXT PRIMARY KEY, exp INT, kill INT, death INT, money INT)");
-            return true;
+    	    	$file = $this->DataFolder."playerdata.db";
+            	if(!file_exists($file)){
+            		$this->DB = new \SQLite3($file, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+            	}else{
+            		$this->DB = new \SQLite3($file, SQLITE3_OPEN_READWRITE);
+            	}
+            	$this->DB->query("CREATE TABLE IF NOT EXISTS player (name TEXT PRIMARY KEY, exp INT, kill INT, death INT, money INT)");
+            	return true;
         }
 
         public function createAccount($username){
@@ -62,7 +61,7 @@ class playerData{
     				break;
     		}
     		/*scoreboardを連携して動かす*/
-    		$this->SC->updateScoreBoard($name, $data, $this->plugin->getServer()->getPlayer($username));
+    		scoreboard::getScoreBoard()->updateScoreBoard($name, $data, $this->plugin->getServer()->getPlayer($username));
         }
         
         public static function getPlayerData(){
