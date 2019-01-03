@@ -26,7 +26,7 @@ class gameManager
                         ]
                     ];
 
-    const WAITING_TIME = 10;//秒単位
+    const WAITING_TIME = 90;//秒単位
 
     const GAME_TIME = 30 * 60;//秒単位
 
