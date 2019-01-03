@@ -1,11 +1,6 @@
 <?php
 namespace gun\data;
 
-use pocketmine\Server;
-use pocketmine\Player;
-use pocketmine\utils\TextFormat;
-use pocketmine\utils\Config;
-
 use gun\scoreboard\scoreboard;
 
 class playerData{
