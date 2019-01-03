@@ -13,6 +13,6 @@ class dataManager {
 		$this->npc = new data\npcData($plugin);
 		$this->gun = new data\gunData($plugin);
 		$this->sr = new data\srData($plugin);
+		$this->player = new data\playerData($plugin);
 	}
-	
 }

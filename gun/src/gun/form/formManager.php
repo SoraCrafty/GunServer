@@ -16,6 +16,9 @@ class formManager {
 		foreach(gunData::getAll() as $key => $data){
 			$this->datas[] = $key;
 		}
+		foreach(srData::getAll() as $key => $data){
+			$this->SR[] = $key;
+		}
 	}
 
 	public static function receive($pk, $p){

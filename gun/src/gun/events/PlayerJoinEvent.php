@@ -7,14 +7,23 @@ use pocketmine\item\Item;
 use gun\gameManager;
 use gun\npcManager;
 use gun\data\gunData;
+use gun\data\playerData;
+use gun\scoreboard\scoreboard;
 use gun\bossbar\BossBar;
 
 class PlayerJoinEvent extends Events {
+  
+  public function __construct($api){
+		$this->playerData = playerData::getPlayerData();
+	}
 
 	public function call($event){
 		$player = $event->getPlayer();
+    $name = $player->getName();
 		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
-		$this->setWeapons($player);
+		$this->setWeapons($player);		
+    $this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
+		scoreboard::getScoreBoard()->showThisServerScoreBoard($player);
 		npcManager::addNPC($player);
 
 		/*途中参加のときの処理(?)*/

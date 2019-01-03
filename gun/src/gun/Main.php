@@ -47,6 +47,7 @@ class Main extends PluginBase {
 		$this->listener = new Listener($this);
 		$this->npc = new npcManager($this);
 		$this->command = new Command($this);
+		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 	}
 	
