@@ -25,6 +25,8 @@ class Main extends PluginBase {
 
 	/*BossBarのAPIのオブジェクト*/
 	public $BossBar;
+	/*FireworksAPIのオブジェクト*/
+	public $Fireworks;
 	/*gameManagerのオブジェクト*/
 	public $gameManager;
 
