@@ -9,6 +9,7 @@ use pocketmine\item\Item;
 
 use pocketmine\network\mcpe\protocol\ProtocolInfo as Info;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 
 use gun\Callback;
@@ -31,17 +32,39 @@ class DataPacketReceiveEvent extends Events {
 		$pk = $ev->getPacket();
 		
 		switch($pk::NETWORK_ID){
+			case Info::LEVEL_SOUND_EVENT_PACKET:
+				if($pk->sound === LevelSoundEventPacket::SOUND_ATTACK_NODAMAGE){
+					if(!isset($p->gun) or $this->plugin->gameManager->getTeam($p) === false) break;
+					if($p->isSneaking() and ($gun = $p->gun) !== null and !$p->reloading) {
+						$p->reloading = true;
+						$this->reload($p, $gun, 0);
+						break;
+					}
+					if($p->shot){
+						$p->shot = false;
+						break;
+					}
+					if(!$p->reloading and ($gun = $p->gun) !== null and $p->getInventory()->getItemInHand()->getId() !== 261){
+						$p->shot = true;
+						$this->beam->shot($p, $gun);
+						break;
+					}
+				}
+				break;
 			case Info::INVENTORY_TRANSACTION_PACKET:
 				if($pk->transactionType !== 2 and $pk->transactionType !== 3) return false;
+				/*spamバグ対策*/
 				if($p->ticks['touch'] > ($time = round(microtime(true), 5))){
 		        		return false;
 		        	}
 		        	$p->ticks['touch'] = $time + round(0.25, 5);
+		        	/*shop関連*/
 		        	if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
 		        		if(is_null($pk->trData->entityRuntimeId) or $pk->trData->entityRuntimeId !== 114514) return false;
 		        		formManager::touch($pk, $p);
 		        		break;
 		        	}
+		        	/*銃関連*/
 		        	if(!isset($p->gun) or $this->plugin->gameManager->getTeam($p) === false) break;
 				if($p->isSneaking() and ($gun = $p->gun) !== null and !$p->reloading) {
 					$p->reloading = true;
