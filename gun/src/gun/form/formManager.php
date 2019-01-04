@@ -74,7 +74,6 @@ class formManager {
 		$pk = new ModalFormRequestPacket();
 		$pk->formId = 3;
 		$buttons = [];
-		var_dump(self::$instance->datas);
 		foreach(self::$instance->datas as $name){
 			$buttons[] = ['text' => $name];
 		}

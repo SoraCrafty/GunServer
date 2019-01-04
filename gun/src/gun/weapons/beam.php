@@ -65,6 +65,11 @@ class beam {
                     			$y += $motionY;
                     			$z += $motionZ;
 					$pos = new Vector3($x, $y, $z);
+					if(Blocks::isSolid($id = $lv->getBlockIdAt($x, $y, $z))){
+                        			$b = Block::get($id, $lv->getBlockDataAt($x, $y, $z));
+                        			$lv->addParticle(new DestroyBlockParticle(new Vector3($x - $motionX, $y - $motionY, $z - $motionZ), $b), [$p]);
+                        			break;
+                    			}
                     			foreach ($lv->getPlayers() as $player){
                     				if($player !== $p){
                         				if(abs($player->x - $x) <= $player->width + $rad && abs($player->z - $z) <= $player->width + $rad && abs(($player->y + $player->height * 0.5) - $y) <= $player->height + $rad){
@@ -84,11 +89,6 @@ class beam {
                                 			}
                             			}
                        			}
-                       			if(Blocks::isSolid($id = $lv->getBlockIdAt($x, $y, $z))){
-                        			$b = Block::get($id, $lv->getBlockDataAt($x, $y, $z));
-                        			$lv->addParticle(new DestroyBlockParticle(new Vector3($x - $motionX, $y - $motionY, $z - $motionZ), $b), [$p]);
-                        			break;
-                    			}
                     		}
             		}else{
                 		$p->sendPopUp('見えない弾が当たるわけ無いだろ！いい加減にしろ！');//. $max_ammo);
