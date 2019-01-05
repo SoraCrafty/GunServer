@@ -28,7 +28,7 @@ class gameManager
 
     const WAITING_TIME = 60;//秒単位
 
-    const GAME_TIME = 30 * 60;//秒単位
+    const GAME_TIME = 10 * 60;//秒単位
 
     const KILLCOUNT_MAX = 50;
 
@@ -231,7 +231,7 @@ class gameManager
 
             case 1:
                 $winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
-                $this->plugin->getServer()->broadcastMessage("§aGAME>>§f" . self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§fチームの勝利!!");
+                $this->plugin->getServer()->broadcastMessage("§aGAME>>§f" . self::TEAM_NAME[$winteam]["decoration"] . self::TEAM_NAME[$winteam]["name"] . "§fチームの勝利!!");
                 $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 10);
                 return true;
 
