@@ -67,6 +67,7 @@ class gameManager
                 $this->setTeamMembers();
                 $this->setSpawns();
                 $this->gotoStageAll();
+                $this->setNameTagsAll();
                 $this->plugin->getServer()->broadcastTitle("§l§cGame Start!!§r", "§f試合開始!!", 5, 20, 10);
                 $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
                 $this->GameTask(self::GAME_TIME);
@@ -79,6 +80,7 @@ class gameManager
             case 3:
                 $this->setDefaultSpawns();
                 $this->gotoLobbyAll();
+                $this->setDefaultNameTagsAll();
                 $this->resetGameStatus();
                 $this->TimeTable();//最初に戻る
                 return true;
@@ -329,6 +331,44 @@ class gameManager
             $pk->data = $pitch;
             $player->dataPacket($pk);
         }
+    }
+
+    /*別クラスに移動したほうがいいかも*/
+
+    public function setNameTagsAll()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                $this->setNameTags($player, $team);
+            }    
+        }   
+    }
+
+    public function setNameTags($player, $team)
+    {
+    	$tag = self::TEAM_NAME[0]["decoration"] . $player->getName() . "§f";
+    	$player->setNameTag($tag);
+    	$player->setDisplayName($tag);
+    }
+
+    public function setDefaultNameTagsAll()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                $this->setDefaultNameTags($player);
+            }    
+        }   
+    }
+
+    public function setDefaultNameTags($player)
+    {
+    	$tag = $player->getName();
+    	$player->setNameTag($tag);
+    	$player->setDisplayName($tag);
     }
 }
 		
