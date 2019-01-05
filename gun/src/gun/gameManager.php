@@ -142,7 +142,7 @@ class gameManager
         {
             foreach ($members as $player) 
             {
-                $player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+                if($player->isOnline()) $player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
             }    
         }
     }
@@ -160,7 +160,7 @@ class gameManager
 
     public function setSpawn($player, $team)
     {
-        $player->setSpawn(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
+        if($player->isOnline()) $player->setSpawn(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
     }
 
     public function gotoStageAll()
@@ -176,7 +176,7 @@ class gameManager
 
     public function gotoStage($player, $team)
     {
-        $player->teleport(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
+        if($player->isOnline()) $player->teleport(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
     }
 
     public function gotoLobbyAll()
@@ -192,7 +192,7 @@ class gameManager
 
     public function gotoLobby($player)
     {
-        $player->teleport($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+        if($player->isOnline()) $player->teleport($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
     }
 
     public function GameTask($time)
@@ -221,6 +221,7 @@ class gameManager
         {
 
             case 0:
+            	$this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
                 $this->plugin->getServer()->broadcastTitle("§l§cGame Set!!§r", "§f試合終了!!", 5, 20, 10);
                 $this->plugin->BossBar->setPercentage(0);
                 $this->plugin->BossBar->setTitle("§8<<試合終了>>§f" . 
@@ -348,9 +349,12 @@ class gameManager
 
     public function setNameTags($player, $team)
     {
-    	$tag = self::TEAM_NAME[$team]["decoration"] . $player->getName() . "§f";
-    	$player->setNameTag($tag);
-    	$player->setDisplayName($tag);
+    	if($player->isOnline())
+    	{
+	    	$tag = self::TEAM_NAME[$team]["decoration"] . $player->getName() . "§f";
+	    	$player->setNameTag($tag);
+	    	$player->setDisplayName($tag);
+    	}
     }
 
     public function setDefaultNameTagsAll()
@@ -366,9 +370,12 @@ class gameManager
 
     public function setDefaultNameTags($player)
     {
-    	$tag = $player->getName();
-    	$player->setNameTag($tag);
-    	$player->setDisplayName($tag);
+    	if($player->isOnline())
+    	{
+	    	$tag = $player->getName();
+	    	$player->setNameTag($tag);
+	    	$player->setDisplayName($tag);
+    	}
     }
 }
 		
