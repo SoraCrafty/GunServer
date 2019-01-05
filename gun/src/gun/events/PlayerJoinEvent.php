@@ -32,6 +32,7 @@ class PlayerJoinEvent extends Events {
 		{
 			$team = $this->plugin->gameManager->getTeam($player);
 			if($team !== false){
+				$this->plugin->gameManager->setSpawn($player, $team);
 				$this->plugin->gameManager->gotoStage($player, $team);
 			}else{
 				$this->plugin->gameManager->lotteryTeam($player);
