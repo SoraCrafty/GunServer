@@ -11,6 +11,8 @@ use gun\data\playerData;
 use gun\scoreboard\scoreboard;
 use gun\bossbar\BossBar;
 
+use gun\weapons\beam;
+
 class PlayerJoinEvent extends Events {
   
   	public function __construct($api){
@@ -44,17 +46,18 @@ class PlayerJoinEvent extends Events {
 	}
 	
 	public function setWeapons($p){
-    		if(($inv = $p->getInventory()) !== null){
-	    		$weapons = $p->userdata['weapons'];
-	    		$m = $weapons['main'];
-	    		$s = $weapons['sub'];
-	    		$g = $weapons['granade'];
-	    		$k = $weapons['knife'];
-    		}
-    		$item = Item::get(280,0,1)->setCustomName('UziWaterPistol');
-    		$gun = gunData::get('UziWaterPistol');
-    		$lore = array("§a発射レート:".$gun['speed'], "§b火力:".$gun['damage'], "§cリロード:".$gun['reload'], "§d弾数:".$gun['max_ammo']);
-    		$item->setLore($lore);
-    		$p->getInventory()->addItem($item);
+		/*if(($inv = $p->getInventory()) !== null){
+    		$weapons = $p->userdata['weapons'];
+    		$m = $weapons['main'];
+    		$s = $weapons['sub'];
+    		$g = $weapons['granade'];
+    		$k = $weapons['knife'];
+		}
+		$item = Item::get(280,0,1)->setCustomName('UziWaterPistol');
+		$gun = gunData::get('UziWaterPistol');
+		$lore = array("§a発射レート:".$gun['speed'], "§b火力:".$gun['damage'], "§cリロード:".$gun['reload'], "§d弾数:".$gun['max_ammo']);
+		$item->setLore($lore);
+		$p->getInventory()->addItem($item);*/
+		$p->getInventory()->setContents([beam::get("UMP45")]);
     }
 }
