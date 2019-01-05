@@ -31,7 +31,7 @@ class PlayerJoinEvent extends Events {
 		if($this->plugin->gameManager->isGaming())
 		{
 			$team = $this->plugin->gameManager->getTeam($player);
-			if($team !== false){
+			if($team !== false){//あとでかいぜん
 				$this->plugin->gameManager->setSpawn($player, $team);
 				$this->plugin->gameManager->gotoStage($player, $team);
 			}else{
@@ -40,6 +40,7 @@ class PlayerJoinEvent extends Events {
 				$this->plugin->gameManager->setSpawn($player, $team);
 				$this->plugin->gameManager->gotoStage($player, $team);
 			}
+			$this->plugin->gameManager->setNameTags($player, $team)
 		}
 
 	}
