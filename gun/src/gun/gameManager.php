@@ -26,7 +26,7 @@ class gameManager
                         ]
                     ];
 
-    const WAITING_TIME = 90;//秒単位
+    const WAITING_TIME = 60;//秒単位
 
     const GAME_TIME = 30 * 60;//秒単位
 
@@ -348,7 +348,7 @@ class gameManager
 
     public function setNameTags($player, $team)
     {
-    	$tag = self::TEAM_NAME[0]["decoration"] . $player->getName() . "§f";
+    	$tag = self::TEAM_NAME[$team]["decoration"] . $player->getName() . "§f";
     	$player->setNameTag($tag);
     	$player->setDisplayName($tag);
     }
