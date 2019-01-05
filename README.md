@@ -1,2 +1,2 @@
 # GunServer
--MinecraftBEのマルチプレイサーバー、BattleFrontのプラグインです
+- MinecraftBEのマルチプレイサーバー、BattleFrontのプラグインです
