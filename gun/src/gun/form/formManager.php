@@ -4,6 +4,7 @@ namespace gun\form;
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 
+use gun\weapons\{ beam, SR };
 use gun\data\srData;
 use gun\data\gunData;
 
@@ -49,16 +50,43 @@ class formManager {
 				$p->sendMessage($data[0].'追加しました');
 			break;
 			case(3):
-				$gun = gunData::get(self::$instance->datas[$data]);
+				switch($data){
+					case(0):
+						self::$instance->sendARShopForm($p);
+						break;
+					case(1):
+						self::$instance->sendSRShopForm($p);
+						break;
+				}
+				break;
+			case(4):
 				$p->getInventory()->clearAll();
-				$item = Item::get(280,0,1)->setCustomName(self::$instance->datas[$data]);
-				$lore = array("§a発射レート:".$gun['speed'], "§b火力:".$gun['damage'], "§cリロード:".$gun['reload'], "§d弾数:".$gun['max_ammo']);
-				$item->setLore($lore);
+				$item = beam::get(self::$instance->datas[$data]);
 				$p->getInventory()->addItem($item);
 				$p->sendMessage('銃を選択しました');
 				if(isset($p->gun)){
+					$gun = gunData::get(self::$instance->datas[$data]);
 					$data = array(
 									'speed' => $gun['speed'],
+									'damage' => $gun['damage'],
+									'reload' => $gun['reload'],
+									'max_ammo' => $gun['max_ammo']
+					);
+					$p->gun = $data;
+					if(!isset($p->ammo) or $p->ammo > $gun['max_ammo']) $p->ammo = $gun['max_ammo'];
+				}
+			break;
+			case(5):
+				$p->getInventory()->clearAll();
+				$item = SR::get(self::$instance->SR[$data]);
+				if(!$item) return $p->sendMessage('error');
+				$p->getInventory()->addItem($item);
+				$p->getInventory()->addItem(Item::get(262));
+				$p->sendMessage('銃を選択しました');
+				if(isset($p->gun)){
+					$gun = srData::get(self::$instance->SR[$data]);
+					$data = array(
+									'range' => $gun['range'],
 									'damage' => $gun['damage'],
 									'reload' => $gun['reload'],
 									'max_ammo' => $gun['max_ammo']
@@ -70,11 +98,33 @@ class formManager {
 		}
 	}
 	
-	public static function touch($pk, $p){
+	public static function touch($packet, $p){
 		$pk = new ModalFormRequestPacket();
 		$pk->formId = 3;
+		$buttons = [['text' => 'AR'],
+				     ['text' => 'SR']];
+		$data = [ "type" => "form", "title" => "shop", "content" => '銃を選んでください', "buttons" => $buttons];
+		$pk->formData = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);
+		$p->dataPacket($pk);
+	}
+	
+	public function sendARShopForm($p){
+		$pk = new ModalFormRequestPacket();
+		$pk->formId = 4;
 		$buttons = [];
-		foreach(self::$instance->datas as $name){
+		foreach($this->datas as $name){
+			$buttons[] = ['text' => $name];
+		}
+		$data = [ "type" => "form", "title" => "shop", "content" => '銃を選んでください', "buttons" => $buttons];
+		$pk->formData = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);
+		$p->dataPacket($pk);
+	}
+	
+	public function sendSRShopForm($p){
+		$pk = new ModalFormRequestPacket();
+		$pk->formId = 5;
+		$buttons = [];
+		foreach($this->SR as $name){
 			$buttons[] = ['text' => $name];
 		}
 		$data = [ "type" => "form", "title" => "shop", "content" => '銃を選んでください', "buttons" => $buttons];

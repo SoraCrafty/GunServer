@@ -7,6 +7,7 @@ use pocketmine\block\Block;
 use pocketmine\math\Vector3;
 use pocketmine\level\Position;
 use pocketmine\entity\Entity;
+use pocketmine\item\Item;
 
 /* Particles */
 // use pocketmine\level\particle\XXXXXXXXXXXX;
