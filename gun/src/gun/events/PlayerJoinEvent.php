@@ -23,7 +23,9 @@ class PlayerJoinEvent extends Events {
 	public function call($event){
 		$player = $event->getPlayer();
     	$name = $player->getName();
+		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
+		$player->sendMessage('§bInfo>>§f試合開始時のリロード忘れに注意してください');
 		$this->setWeapons($player);		
     	$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
 		scoreboard::getScoreBoard()->showThisServerScoreBoard($player);
