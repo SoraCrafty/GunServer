@@ -3,6 +3,7 @@ namespace gun\events;
 
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\item\Item;
 
 use gun\gameManager;
 use gun\data\playerData;
@@ -21,10 +22,18 @@ class PlayerDeathEvent extends Events {
 		if(isset($p->shot)) $p->shot = false;
 		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
 			$killer = $player->getLastDamageCause()->getDamager();
+			$item = Item::get(322, 0, 1);
+	        $killer->getInventory()->addItem($item);
 			$team = $this->plugin->gameManager->getTeam($killer);
 			if($team !== false){
 				$this->plugin->gameManager->addKillCount($team);
 				$this->playerdata->setAccount($killer->getName(), 'kill', $this->playerdata->getAccount($killer->getName())['kill'] + 1);
+
+
+
+
+
+				
 			}
 		}
 	}

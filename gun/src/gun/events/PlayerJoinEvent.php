@@ -3,6 +3,8 @@
 namespace gun\events;
 
 use pocketmine\item\Item;
+use pocketmine\Server;
+
 
 use gun\gameManager;
 use gun\npcManager;
@@ -26,6 +28,8 @@ class PlayerJoinEvent extends Events {
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
 		$player->sendMessage('§bInfo>>§f試合開始時のリロード忘れに注意してください');
+		$event->setJoinMessage(null);
+		Server::getInstance()->broadcastPopup('§b参加>>'.$event->getPlayer()->getName().'さん');
 		$this->setWeapons($player);		
     	$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
 		scoreboard::getScoreBoard()->showThisServerScoreBoard($player);

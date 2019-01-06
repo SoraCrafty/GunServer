@@ -17,6 +17,7 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\EntityDamageEvent;
