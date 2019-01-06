@@ -17,6 +17,7 @@ class EntityShootBowEvent extends Events {
 		$player = $ev->getEntity();
 		$ev->setCancelled();
 		if($player instanceof Player){
+			if($this->plugin->gameManager->getTeam($player)) return false;
 			if(!$player->reloading and ($gun = $player->gun) !== null){
 				$this->SR->shot($player,$gun);
 			}
