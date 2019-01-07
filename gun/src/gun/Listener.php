@@ -15,9 +15,9 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerDeathEvent;
-use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
+use pocketmine\event\player\PlayerDropItemEvent;
 
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -57,6 +57,7 @@ class Listener implements MainListener {
 		$this->playerdeath = new events\PlayerDeathEvent($this);
 		$this->entityshoot = new events\EntityShootBowEvent($this);
 		$this->entitydamage = new events\EntityDamageEvent($this);
+		$this->playerdropitem = new events\PlayerDropItemEvent($this);
 	}
 	
 	public function onJoin(PlayerJoinEvent $event){
@@ -93,6 +94,11 @@ class Listener implements MainListener {
 	
 	public function onDamage(EntityDamageEvent $event){
 		$this->entitydamage->call($event);
+	}
+
+	public function onDropItem(PlayerDropItemEvent $event){
+		$this->playerdropitem->call($event);
+		
 	}
 	
 }
