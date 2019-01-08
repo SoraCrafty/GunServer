@@ -46,6 +46,8 @@ class gameManager
                         0 => 0,
                         1 => 0
                         ];
+    /*キルストリーク*/
+    private $killstreak = [];
 
     public function __construct($plugin)
     {
@@ -292,6 +294,7 @@ class gameManager
                         0 => 0,
                         1 => 0
                         ];
+        $this->killstreak = [];
     }
 
     public function getTeam($player) {//要改善
@@ -316,6 +319,28 @@ class gameManager
         {
             $this->TimeTable();
         }
+    }
+
+    /*キルストリークらへん雑いんで時間ある時改善*/
+
+    public function addKillStreak($player)
+    {
+        $name = $player->getName();
+
+        if(!isset($this->killstreak[$name])) $this->killstreak[$name] = 0;
+        $this->killstreak[$name]++;
+
+        if($this->killstreak[$name] >= 2)$player->sendTip("\n\n§a" . $this->killstreak[$name] . "§fキルストリークを達成しました");
+
+        if($this->killstreak[$name] >= 5)
+        {
+            $this->plugin->getServer()->broadcastMessage("§aGAME>>§f" . $player->getNameTag() . "§fが" . $this->killstreak[$name] . "キルストリークを達成しました");
+        }
+    }
+
+    public function resetKillStreak($player)
+    {
+        unset($this->killstreak[$name]);
     }
 
     public function isGaming()

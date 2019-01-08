@@ -18,23 +18,25 @@ class PlayerDeathEvent extends Events {
 	public function call($event){
 		$event->setKeepInventory(true);
 		$player = $event->getPlayer();
-    	$this->playerdata->setAccount($player->getName(), 'death', $this->playerdata->getAccount($player->getName())['death'] + 1);
+
 		if(isset($p->shot)) $p->shot = false;
+
 		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
 			$killer = $player->getLastDamageCause()->getDamager();
+
 			$item = Item::get(322, 0, 1);
 	        $killer->getInventory()->addItem($item);
-			$team = $this->plugin->gameManager->getTeam($killer);
-			if($team !== false){
-				$this->plugin->gameManager->addKillCount($team);
+
+			$killerteam = $this->plugin->gameManager->getTeam($killer);
+			$playerteam = $this->plugin->gameManager->getTeam($player);
+			if($team !== false && $player !== false){
+				$this->plugin->gameManager->addKillCount($killerteam);
+				$this->plugin->gameManager->addKillStreak($killer);
+				$this->plugin->gameManager->resetKillStreak($player);
 				$this->playerdata->setAccount($killer->getName(), 'kill', $this->playerdata->getAccount($killer->getName())['kill'] + 1);
-
-
-
-
-
-				
+				$this->playerdata->setAccount($player->getName(), 'death', $this->playerdata->getAccount($player->getName())['death'] + 1);
 			}
 		}
+
 	}
 }
