@@ -24,12 +24,11 @@ class PlayerDeathEvent extends Events {
 		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
 			$killer = $player->getLastDamageCause()->getDamager();
 
-			$item = Item::get(322, 0, 1);
-	        $killer->getInventory()->addItem($item);
-
 			$killerteam = $this->plugin->gameManager->getTeam($killer);
 			$playerteam = $this->plugin->gameManager->getTeam($player);
-			if($team !== false && $player !== false){
+			if($team !== false && $player !== false && $this->plugin->gameManager->isGaming()){
+				$item = Item::get(322, 0, 1);
+		        $killer->getInventory()->addItem($item);
 				$this->plugin->gameManager->addKillCount($killerteam);
 				$this->plugin->gameManager->addKillStreak($killer);
 				$this->plugin->gameManager->resetKillStreak($player);
