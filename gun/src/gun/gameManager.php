@@ -28,7 +28,7 @@ class gameManager
 
     const WAITING_TIME = 60;//秒単位
 
-    const GAME_TIME = 10 * 60;//秒単位
+    const GAME_TIME = 15 * 60;//秒単位
 
     const KILLCOUNT_MAX = 50;
 
@@ -208,7 +208,7 @@ class gameManager
         }
 
         $this->plugin->BossBar->setPercentage($time / self::GAME_TIME);
-        $this->plugin->BossBar->setTitle("§a試合時間残り>>§f" . floor($time / 60) . " : " . str_pad(round($time % 60), 2, "0", STR_PAD_LEFT) . 
+        $this->plugin->BossBar->setTitle("§a試合時間残り>>§f" . str_pad(floor($time / 60), 2, "0", STR_PAD_LEFT) . " : " . str_pad(round($time % 60), 2, "0", STR_PAD_LEFT) . 
                                          "  §aキルカウント>>§f" . self::TEAM_NAME[0]["decoration"] . self::TEAM_NAME[0]["name"] . "§f:" . $this->killCount[0] . "/" . self::KILLCOUNT_MAX . " vs " . 
                                                              self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§f:" . $this->killCount[1] . "/" . self::KILLCOUNT_MAX);
         $time--;
