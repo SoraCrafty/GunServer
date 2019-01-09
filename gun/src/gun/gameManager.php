@@ -7,6 +7,7 @@ use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 
 use gun\Callback;
+use gun\data\playerData;
 use gun\fireworks\item\Fireworks;
 
 class gameManager 
@@ -81,6 +82,7 @@ class gameManager
 
             case 3:
                 $this->setDefaultSpawns();
+                $this->givePrizeAll();//賞金を渡したかったので書き加えました
                 $this->gotoLobbyAll();
                 $this->setDefaultNameTagsAll();
                 $this->resetGameStatus();
@@ -96,7 +98,7 @@ class gameManager
 
     public function WaitingTask()
     {
-        if(count($this->plugin->getServer()->getOnlinePlayers()) >= 2)
+        if(count($this->plugin->getServer()->getOnlinePlayers()) >= 1)
         {
             $this->waitingCount--;
             if($this->waitingCount === 0)
@@ -340,7 +342,7 @@ class gameManager
 
     public function resetKillStreak($player)
     {
-        unset($this->killstreak[$name]);
+        unset($this->killstreak[$player->getName()]);
     }
 
     public function isGaming()
@@ -402,5 +404,19 @@ class gameManager
 	    	$player->setDisplayName($tag);
     	}
     }
+    
+    /*賞金*/
+    public function givePrizeAll()
+    {
+    	$playerdata = playerData::getPlayerData();
+    	$winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
+    	foreach ($this->teamMembers[$winteam] as $player) 
+        {
+        	$playerdata->setAccount($player->getName(), 'money', $playerdata->getAccount($player->getName())['money'] + 2000);
+                $player->sendMessage('§aGAME>>§f>>賞金を贈与しました');
+        }   
+    }
+    
+    
 }
 		

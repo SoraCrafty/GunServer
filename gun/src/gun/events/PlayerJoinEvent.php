@@ -24,14 +24,14 @@ class PlayerJoinEvent extends Events {
 
 	public function call($event){
 		$player = $event->getPlayer();
-    	$name = $player->getName();
+    		$name = $player->getName();
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
 		$player->sendMessage('§bInfo>>§f試合開始時のリロード忘れに注意してください');
 		$event->setJoinMessage(null);
 		Server::getInstance()->broadcastPopup('§b参加>>'.$event->getPlayer()->getName().'さん');
 		$this->setWeapons($player);		
-    	$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
+    		$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
 		scoreboard::getScoreBoard()->showThisServerScoreBoard($player);
 		npcManager::addNPC($player);
 
@@ -64,6 +64,6 @@ class PlayerJoinEvent extends Events {
 		$lore = array("§a発射レート:".$gun['speed'], "§b火力:".$gun['damage'], "§cリロード:".$gun['reload'], "§d弾数:".$gun['max_ammo']);
 		$item->setLore($lore);
 		$p->getInventory()->addItem($item);*/
-		$p->getInventory()->setContents([beam::get("UMP45")]);
+		//$p->getInventory()->setContents([beam::get("UMP45")]);
     }
 }

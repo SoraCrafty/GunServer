@@ -26,13 +26,14 @@ class PlayerDeathEvent extends Events {
 
 			$killerteam = $this->plugin->gameManager->getTeam($killer);
 			$playerteam = $this->plugin->gameManager->getTeam($player);
-			if($team !== false && $player !== false && $this->plugin->gameManager->isGaming()){
+			if($killerteam !== false && $playerteam !== false && $this->plugin->gameManager->isGaming()){
 				$item = Item::get(322, 0, 1);
-		        $killer->getInventory()->addItem($item);
+		        	$killer->getInventory()->addItem($item);
 				$this->plugin->gameManager->addKillCount($killerteam);
 				$this->plugin->gameManager->addKillStreak($killer);
 				$this->plugin->gameManager->resetKillStreak($player);
 				$this->playerdata->setAccount($killer->getName(), 'kill', $this->playerdata->getAccount($killer->getName())['kill'] + 1);
+				$this->playerdata->setAccount($killer->getName(), 'money', $this->playerdata->getAccount($killer->getName())['money'] + 100);
 				$this->playerdata->setAccount($player->getName(), 'death', $this->playerdata->getAccount($player->getName())['death'] + 1);
 			}
 		}
