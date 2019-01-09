@@ -17,6 +17,7 @@ use pocketmine\level\Location;
 
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\PlayerSkinPacket;
+use pocketmine\network\mcpe\protocol\MovePlayerPacket;
 use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\network\mcpe\protocol\MobEquipmentPacket;
 use pocketmine\network\mcpe\protocol\MobArmorEquipmentPacket;
@@ -24,7 +25,9 @@ use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 
 use pocketmine\network\mcpe\protocol\types\ContainerIds;
 
-abstract class NPC extends Location{
+class NPC extends Location{
+
+	const NPC_TYPE = 0;
 
 	/*以下のものをLocationから継承している
 	int   $x
@@ -75,6 +78,11 @@ abstract class NPC extends Location{
 		$this->eid = Entity::$entityCount++;
 
 		$this->uuid = UUID::fromRandom();
+	}
+
+	public function onTouch(Player $player)
+	{
+		
 	}
 
 	public function spawn(){
@@ -329,6 +337,40 @@ abstract class NPC extends Location{
 		$pk = new MobArmorEquipmentPacket();
 		$pk->entityRuntimeId = $this->eid;
 		$pk->slots = [$this->helmet, $this->chestplate, $this->leggings, $this->boots];
+
+		$player->dataPacket($pk);
+	}
+
+	//プレイヤーの方向を向く処理関連
+	public function setDoGaze($doGaze)
+	{
+		$this->doGaze =$doGaze;
+	}
+
+	public function isGazer()
+	{
+		return $this->doGaze;
+	}
+
+	public function gazeAt(Player $player)//https://github.com/TuranicTeam/Altay/blob/master/src/pocketmine/entity/Living.php より引用し改変
+	{
+		$pk = new MovePlayerPacket();
+		$pk->entityRuntimeId = $this->eid;
+		$pk->position = $this;//このクラスがLocationを継承しているため
+
+		$horizontal = sqrt(($player->x - $this->x) ** 2 + ($player->z - $this->z) ** 2);
+		$vertical = $player->y - $this->y;
+		$pk->pitch = -atan2($vertical, $horizontal) / M_PI * 180;
+
+		$xDist = $player->x - $this->x;
+		$zDist = $player->z - $this->z;
+		$pk->yaw = atan2($zDist, $xDist) / M_PI * 180 - 90;
+		if($pk->yaw < 0)
+		{
+			$pk->yaw += 360.0;
+		}
+
+		$pk->headYaw = $pk->yaw;
 
 		$player->dataPacket($pk);
 	}
