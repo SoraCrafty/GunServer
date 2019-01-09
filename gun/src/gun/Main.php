@@ -19,6 +19,8 @@ use gun\fireworks\FireworksAPI;
 use gun\fireworks\item\Fireworks;
 use gun\fireworks\entity\FireworksRocket;
 
+use gun\npc\NPCManager;
+
 class Main extends PluginBase {
 	
 	public static $datafolder;
@@ -29,6 +31,8 @@ class Main extends PluginBase {
 	public $Fireworks;
 	/*gameManagerのオブジェクト*/
 	public $gameManager;
+	/*NPCManagerのオブジェクト*/
+	public $npcManager;
 
 	public function onLoad()
 	{
@@ -46,11 +50,11 @@ class Main extends PluginBase {
 		$this->gameManager = new gameManager($this);
 		$this->listener = new Listener($this);
 		$this->npc = new npcManager($this);
+		$this->npcManager = new NPCManager($this);
 		$this->command = new Command($this);
 		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 	}
-	
 	
 	public function onCommand(CommandSender $sender, CMD $command, $label, array $args):bool {
 		$this->command->call($sender, $command, $label, $args);
