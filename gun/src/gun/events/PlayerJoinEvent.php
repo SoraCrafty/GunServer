@@ -25,9 +25,12 @@ class PlayerJoinEvent extends Events {
 	public function call($event){
 		$player = $event->getPlayer();
     		$name = $player->getName();
+
+        $player->sendMessage('§b--------------------------------------------------');
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
 		$player->sendMessage('§bInfo>>§f試合開始時のリロード忘れに注意してください');
+		$player->sendMessage('§b--------------------------------------------------');
 		$event->setJoinMessage(null);
 		Server::getInstance()->broadcastPopup('§b参加>>'.$event->getPlayer()->getName().'さん');
 		$this->setWeapons($player);		
