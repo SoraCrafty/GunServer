@@ -22,6 +22,7 @@ class PlayerInteractEvent extends Events {
 					["type" => "input", "text" => 'damage', "placeholder" => "", "default" => null],
 					["type" => "input", "text" => 'reload', "placeholder" => "", "default" => null],
 					["type" => "input", "text" => 'max_ammo', "placeholder" => "", "default" => null],
+					["type" => "input", "text" => 'price', "placeholder" => "", "default" => null],
 				];
 		$data = [ "type" => "custom_form", "title" => "gunmake", "content" => $content];
 		$pk->formData = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);
@@ -35,7 +36,7 @@ class PlayerInteractEvent extends Events {
 					["type" => "input", "text" => 'range', "placeholder" => "", "default" => null],
 					["type" => "input", "text" => 'damage', "placeholder" => "", "default" => null],
 					["type" => "input", "text" => 'reload', "placeholder" => "", "default" => null],
-					["type" => "input", "text" => 'max_ammo', "placeholder" => "", "default" => null],
+					["type" => "input", "text" => 'price', "placeholder" => "", "default" => null],
 				];
 		$data = [ "type" => "custom_form", "title" => "Srmake", "content" => $content];
 		$pk->formData = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);

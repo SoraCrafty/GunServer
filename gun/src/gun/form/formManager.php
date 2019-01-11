@@ -15,10 +15,10 @@ class formManager {
 	public function __construct(){
 		self::$instance = $this;
 		foreach(gunData::getAll() as $key => $data){
-			$this->datas[] = $key;
+			$this->datas[] = array('name' => $key, 'price' => $data['price']);
 		}
 		foreach(srData::getAll() as $key => $data){
-			$this->SR[] = $key;
+			$this->SR[] = array('name' => $key, 'price' => $data['price'];
 		}
 	}
 
@@ -35,6 +35,7 @@ class formManager {
 								'damage' => $data[2],
 								'reload' => $data[3],
 								'max_ammo' => $data[4],
+								'price' => $data[5]
 							);
 				gunData::set($data[0], $gun);
 				$p->sendMessage($data[0].'追加しました');
@@ -45,6 +46,7 @@ class formManager {
 								'damage' => $data[2],
 								'reload' => $data[3],
 								'max_ammo' => $data[4],
+								'price' => $data[5]
 							);
 				srData::set($data[0], $gun);
 				$p->sendMessage($data[0].'追加しました');
@@ -112,8 +114,8 @@ class formManager {
 		$pk = new ModalFormRequestPacket();
 		$pk->formId = 4;
 		$buttons = [];
-		foreach($this->datas as $name){
-			$buttons[] = ['text' => $name];
+		foreach($this->datas as $data){
+			$buttons[] = ['text' => "{$data['name']}{$data['price']}円"];
 		}
 		$data = [ "type" => "form", "title" => "shop", "content" => '銃を選んでください', "buttons" => $buttons];
 		$pk->formData = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);
@@ -124,8 +126,8 @@ class formManager {
 		$pk = new ModalFormRequestPacket();
 		$pk->formId = 5;
 		$buttons = [];
-		foreach($this->SR as $name){
-			$buttons[] = ['text' => $name];
+		foreach($this->SR as $data){
+			$buttons[] = ['text' =>  "{$data['name']}{$data['price']}円"];
 		}
 		$data = [ "type" => "form", "title" => "shop", "content" => '銃を選んでください', "buttons" => $buttons];
 		$pk->formData = json_encode($data, JSON_PRETTY_PRINT | JSON_BIGINT_AS_STRING | JSON_UNESCAPED_UNICODE);
