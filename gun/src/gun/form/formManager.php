@@ -18,7 +18,7 @@ class formManager {
 			$this->datas[] = array('name' => $key, 'price' => $data['price']);
 		}
 		foreach(srData::getAll() as $key => $data){
-			$this->SR[] = array('name' => $key, 'price' => $data['price'];
+			$this->SR[] = array('name' => $key, 'price' => $data['price']);
 		}
 	}
 
