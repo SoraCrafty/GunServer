@@ -98,7 +98,7 @@ class gameManager
 
     public function WaitingTask()
     {
-        if(count($this->plugin->getServer()->getOnlinePlayers()) >= 1)
+        if(count($this->plugin->getServer()->getOnlinePlayers()) >= 2)
         {
             $this->waitingCount--;
             if($this->waitingCount === 0)
