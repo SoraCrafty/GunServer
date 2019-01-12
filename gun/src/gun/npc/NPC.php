@@ -27,7 +27,7 @@ use pocketmine\network\mcpe\protocol\types\ContainerIds;
 
 class NPC extends Location{
 
-	const NPC_TYPE = 0;
+	const TYPE = 0;
 
 	/*以下のものをLocationから継承している
 	int   $x
@@ -51,17 +51,19 @@ class NPC extends Location{
 	/*NPCのヘルメット*/
 	private $helmet;
 	/*NPCのチェストプレート*/
-	private $chestplate
+	private $chestplate;
 	/*NPCのレギンス*/
 	private $leggings;
 	/*NPCのブーツ*/
 	private $boots;
 	/*NPCがプレイヤーの方を向くかどうか*/
 	private $doGaze;
+	/*メインクラスのオブジェクト*/
+	protected $plugin;
 	/*NPCのEntityRuntimeId*/
 	private $eid;
 
-	public function __construct($name, $size, Skin $skin, Item $item_right, Item $item_left, $helmet, $chestplate, $leggings, $boots, $doGaze, $x, $y, $z, $yaw, $pitch, Level $level)
+	public function __construct($name, $size, Skin $skin, Item $item_right, Item $item_left, $helmet, $chestplate, $leggings, $boots, $doGaze, $plugin, $x, $y, $z, $yaw, $pitch, Level $level)
 	{
 		parent::__construct($x, $y, $z, $yaw, $pitch, $level);
 
@@ -75,14 +77,44 @@ class NPC extends Location{
 		$this->leggings = $leggings;
 		$this->boots = $boots;
 		$this->doGaze = $doGaze;
+		$this->plugin = $plugin;
 		$this->eid = Entity::$entityCount++;
 
 		$this->uuid = UUID::fromRandom();
 	}
 
+	public static function fromPlayerObject(Player $player, $plugin, $name = "", $size = 1, $doGaze = true)
+	{
+		return new static
+					(
+						$name,
+						$size,
+						$player->getSkin(),
+						$player->getInventory()->getItemInHand(),
+						Item::get(0),//未実装のため
+						$player->getArmorInventory()->getHelmet(),
+						$player->getArmorInventory()->getChestplate(),
+						$player->getArmorInventory()->getLeggings(),
+						$player->getArmorInventory()->getBoots(),
+						$doGaze,
+						$plugin,
+						$player->x,
+						$player->y,
+						$player->z,
+						$player->yaw,
+						$player->pitch,
+						$player->getLevel()
+					);
+	}
+
 	public function onTouch(Player $player)
 	{
-		
+
+	}
+
+	public function getType()
+	{
+		return static::TYPE;
 	}
 
 	public function spawn(){
@@ -100,7 +132,7 @@ class NPC extends Location{
 		$pk->motion = new Vector3(0, 0, 0);
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
-		$pk->item = $this->item;
+		$pk->item = $this->item_right;
 		$pk->metadata =
 		[
 			Entity::DATA_FLAGS => 
@@ -122,6 +154,8 @@ class NPC extends Location{
 		];
 
 		$player->dataPacket($pk);
+
+		$this->plugin->getServer()->updatePlayerListData($this->uuid, $this->eid, $this->name, $this->skin, "", [$player]);
 
 		$this->sendSkinTo($player);
 
@@ -356,10 +390,10 @@ class NPC extends Location{
 	{
 		$pk = new MovePlayerPacket();
 		$pk->entityRuntimeId = $this->eid;
-		$pk->position = $this;//このクラスがLocationを継承しているため
+		$pk->position = new Vector3($this->x, $this->y + 1.62, $this->z);
 
 		$horizontal = sqrt(($player->x - $this->x) ** 2 + ($player->z - $this->z) ** 2);
-		$vertical = $player->y - $this->y;
+		$vertical = $player->y - ($this->y - 1.62 + 1.62 * $this->size);
 		$pk->pitch = -atan2($vertical, $horizontal) / M_PI * 180;
 
 		$xDist = $player->x - $this->x;
@@ -379,6 +413,11 @@ class NPC extends Location{
 	public function getId()
 	{
 		return $this->eid;
+	}
+
+	public function getSaveData()
+	{
+
 	}
 
 }

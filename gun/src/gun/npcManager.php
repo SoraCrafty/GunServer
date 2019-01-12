@@ -24,10 +24,10 @@ class npcManager {
 	}
 
 	public static function addNPC($player){
-		foreach(self::$instance->npc as $name => $data){
+		/*foreach(self::$instance->npc as $name => $data){
 			$pk = self::$instance->summon($name,new Vector3($data['x'],$data['y'],$data['z']),$data['eid'],$data['yaw'],$data['uuid'],$player);
 			$player->dataPacket($pk);
-		}
+		}*/
 	}
 	
 	private function summon($type,$pos,$eid,$yaw,$uuiid,$player){

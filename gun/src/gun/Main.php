@@ -49,7 +49,6 @@ class Main extends PluginBase {
 		$this->data = new dataManager($this);
 		$this->gameManager = new gameManager($this);
 		$this->listener = new Listener($this);
-		$this->npc = new npcManager($this);
 		$this->npcManager = new NPCManager($this);
 		$this->command = new Command($this);
 		$this->scoreboard = new scoreboard\scoreboard($this);

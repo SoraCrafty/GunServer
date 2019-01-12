@@ -23,47 +23,58 @@ class Command {
     }
 
     public function call($sender, $command, $label, $args){
-    	if(($p = $sender) instanceof Player){
-			if(!isset($args[0]) or !isset($args[1])) return false;
-			switch($args[0]){
-				case('ar'):
-					$ar = beam::get($args[1]);
-					if($ar === false)
-					{
-						$p->sendMessage('銃が存在しません');
+
+    	switch($label)
+    	{
+    		case "npc":
+    			$this->plugin->npcManager->onCommand($sender, $command, $label, $args);
+    			break;
+
+    		case "gun":
+		    	if(($p = $sender) instanceof Player){
+					if(!isset($args[0]) or !isset($args[1])) return false;
+					switch($args[0]){
+						case('ar'):
+							$ar = beam::get($args[1]);
+							if($ar === false)
+							{
+								$p->sendMessage('銃が存在しません');
+							}
+							else
+							{
+								$p->getInventory()->addItem($ar);
+							}
+							break;
+						case('sr'):
+							$sr = SR::get($args[1]);
+							if($ar === false)
+							{
+								$p->sendMessage('銃が存在しません');
+							}
+							else
+							{
+								$p->getInventory()->addItem($sr);
+							}
+							break;
+						case('npc'):
+							npcData::set('shop', array('x' => $sender->x, 'y' => $sender->y, 'z' => $sender->z, 'yaw' => $sender->yaw,'eid' => $args[1],'uuid' => md5(uniqid('', false))));
+							
+							npcData::setSkin('shop', array( 'id' => $sender->getSkin()->getSkinId(),
+													'data' => $sender->getSkin()->getSkinData()
+													));
+													
+							foreach($this->server->getOnlinePlayers() as $p){
+								npcManager::removeNPC($p);
+								npcManager::addNPC($p);
+							}
+							$sender->sendMessage('セットしました');
+							return true;
+							break;
 					}
-					else
-					{
-						$p->getInventory()->addItem($ar);
-					}
-					break;
-				case('sr'):
-					$sr = SR::get($args[1]);
-					if($ar === false)
-					{
-						$p->sendMessage('銃が存在しません');
-					}
-					else
-					{
-						$p->getInventory()->addItem($sr);
-					}
-					break;
-				case('npc'):
-					npcData::set('shop', array('x' => $sender->x, 'y' => $sender->y, 'z' => $sender->z, 'yaw' => $sender->yaw,'eid' => $args[1],'uuid' => md5(uniqid('', false))));
-					
-					npcData::setSkin('shop', array( 'id' => $sender->getSkin()->getSkinId(),
-											'data' => $sender->getSkin()->getSkinData()
-											));
-											
-					foreach($this->server->getOnlinePlayers() as $p){
-						npcManager::removeNPC($p);
-						npcManager::addNPC($p);
-					}
-					$sender->sendMessage('セットしました');
-					return true;
-					break;
-			}
-		}
-		return true;
+				}
+    			break;
+
+    	}
+
 	}
 }
