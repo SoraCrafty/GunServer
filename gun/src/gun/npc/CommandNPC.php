@@ -21,6 +21,13 @@ class CommandNPC extends NPC{
 		parent::__construct($name, $size, $skin, $item_right, $item_left, $helmet, $chestplate, $leggings, $boots, $doGaze, $plugin, $x, $y, $z, $yaw, $pitch, $level);
 	}
 
+	public static function fromSimpleData($plugin, $data)
+	{
+		$npc = parent::fromSimpleData($plugin, $data);
+		$npc->setCommand($data["command"]);
+		return $npc;
+	}
+
 	public function onTouch(Player $player)
 	{
 		if($this->command !== "") $this->plugin->getServer()->dispatchCommand($player, $this->command);
@@ -37,5 +44,12 @@ class CommandNPC extends NPC{
 	public function getCommand()
 	{
 		return $this->command;
+	}
+
+	public function getSimpleData()
+	{
+		$data = parent::getSimpleData();
+		$data["command"] = $this->command;
+		return $data;
 	}
 }

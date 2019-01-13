@@ -15,6 +15,8 @@ use pocketmine\math\Vector3;
 use pocketmine\level\Level;
 use pocketmine\level\Location;
 
+use pocketmine\nbt\BigEndianNBTStream;
+
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\network\mcpe\protocol\PlayerSkinPacket;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
@@ -104,6 +106,32 @@ class NPC extends Location{
 						$player->yaw,
 						$player->pitch,
 						$player->getLevel()
+					);
+	}
+
+	public static function fromSimpleData($plugin, $data)
+	{
+		$plugin->getServer()->loadLevel($data["level"]);
+		$nbt = new BigEndianNBTStream();
+		return new static
+					(
+						$data["name"],
+						$data["size"],
+						new Skin($data["skin"]["id"], $data["skin"]["data"], $data["skin"]["cape"], $data["skin"]["geometry"]["name"], $data["skin"]["geometry"]["data"]),
+						Item::get($data["item_right"]["id"], $data["item_right"]["damage"], $data["item_right"]["amount"], $nbt->read($data["item_right"]["tag"])),
+						Item::get($data["item_left"]["id"], $data["item_left"]["damage"], $data["item_left"]["amount"], $nbt->read($data["item_left"]["tag"])),
+						Item::get($data["helmet"]["id"], $data["helmet"]["damage"], $data["helmet"]["amount"], $nbt->read($data["helmet"]["tag"])),
+						Item::get($data["chestplate"]["id"], $data["chestplate"]["damage"], $data["chestplate"]["amount"], $nbt->read($data["chestplate"]["tag"])),
+						Item::get($data["leggings"]["id"], $data["leggings"]["damage"], $data["leggings"]["amount"], $nbt->read($data["leggings"]["tag"])),
+						Item::get($data["boots"]["id"], $data["boots"]["damage"], $data["boots"]["amount"], $nbt->read($data["boots"]["tag"])),
+						$data["doGaze"],
+						$plugin,
+						$data["x"],
+						$data["y"],
+						$data["z"],
+						$data["yaw"],
+						$data["pitch"],
+						$plugin->getServer()->getLevelByName($data["level"])
 					);
 	}
 
@@ -415,9 +443,67 @@ class NPC extends Location{
 		return $this->eid;
 	}
 
-	public function getSaveData()
+	//データの保存関連
+	public function getSimpleData()
 	{
-
+		$nbt = new BigEndianNBTStream();
+		return [
+			"type" => static::TYPE,
+			"x" => $this->x,
+			"y" => $this->y,
+			"z" => $this->z, 
+			"yaw" => $this->yaw,
+			"pitch" => $this->pitch,
+			"level" => $this->level->getFolderName(),
+			"name" => $this->name,
+			"size" => $this->size,
+			"skin" => [
+				"id" => $this->skin->getSkinId(),
+				"data" => $this->skin->getSkinData(),
+				"cape" => $this->skin->getCapeData(),
+				"geometry" => [
+							"name" => $this->skin->getGeometryName(),
+							"data" => $this->skin->getGeometryData()
+							]
+					],
+			"item_right" => [
+				"id" => $this->item_right->getId(),
+				"damage" => $this->item_right->getDamage(),
+				"amount" => $this->item_right->getCount(),
+				"tag" => $nbt->write($this->item_right->getNamedTag())
+					],
+			"item_left" => [
+				"id" => $this->item_left->getId(),
+				"damage" => $this->item_left->getDamage(),
+				"amount" => $this->item_left->getCount(),
+				"tag" => $nbt->write($this->item_left->getNamedTag())
+					],
+			"helmet" => [
+				"id" => $this->helmet->getId(),
+				"damage" => $this->helmet->getDamage(),
+				"amount" => $this->helmet->getCount(),
+				"tag" => $nbt->write($this->helmet->getNamedTag())
+					],
+			"chestplate" => [
+				"id" => $this->chestplate->getId(),
+				"damage" => $this->chestplate->getDamage(),
+				"amount" => $this->chestplate->getCount(),
+				"tag" => $nbt->write($this->chestplate->getNamedTag())
+					],
+			"leggings" => [
+				"id" => $this->leggings->getId(),
+				"damage" => $this->leggings->getDamage(),
+				"amount" => $this->leggings->getCount(),
+				"tag" => $nbt->write($this->leggings->getNamedTag())
+					],
+			"boots" => [
+				"id" => $this->boots->getId(),
+				"damage" => $this->boots->getDamage(),
+				"amount" => $this->boots->getCount(),
+				"tag" => $nbt->write($this->boots->getNamedTag())
+					],
+			"doGaze" => $this->doGaze
+			];
 	}
 
 }

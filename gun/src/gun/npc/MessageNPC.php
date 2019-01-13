@@ -20,6 +20,13 @@ class MessageNPC extends NPC{
 		parent::__construct($name, $size, $skin, $item_right, $item_left, $helmet, $chestplate, $leggings, $boots, $doGaze, $plugin, $x, $y, $z, $yaw, $pitch, $level);
 	}
 
+	public static function fromSimpleData($plugin, $data)
+	{
+		$npc = parent::fromSimpleData($plugin, $data);
+		$npc->setCommand($data["messages"]);
+		return $npc;
+	}
+
 	public function onTouch(Player $player)
 	{
 		if($this->messages !== []) $player->sendMessage($this->messages[array_rand($this->messages)]);
@@ -55,5 +62,12 @@ class MessageNPC extends NPC{
 	public function getMessage($key)
 	{
 		return $this->messages[$key];
+	}
+
+	public function getSimpleData()
+	{
+		$data = parent::getSimpleData();
+		$data["messages"] = $this->messages;
+		return $data;
 	}
 }

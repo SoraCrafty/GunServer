@@ -10,6 +10,7 @@ use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\event\plugin\PluginDisableEvent;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -44,17 +45,34 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 			mkdir($this->plugin->getDataFolder());
 		}
 
-		if(!file_exists($this->plugin->getDataFolder() . "npcs")){
-			mkdir($this->plugin->getDataFolder() . "npcs");
+		if(!is_file($this->plugin->getDataFolder() . "npcs.dat")){
+			file_put_contents($this->plugin->getDataFolder() . "npcs.dat", serialize([]));
 		}
 
-		if(!file_exists($this->plugin->getDataFolder() . "skins")){
-			mkdir($this->plugin->getDataFolder() . "skins");
+		foreach (unserialize(file_get_contents($this->plugin->getDataFolder() . "npcs.dat")) as $data) {
+			switch($data["type"])
+			{
+				case NPC::TYPE:
+					$npc = NPC::fromSimpleData($this->plugin, $data);
+					break;
+				case MessageNPC::TYPE:
+					$npc = MessageNPC::fromSimpleData($this->plugin, $data);
+					break;
+				case CommandNPC::TYPE:
+					$npc = CommandNPC::fromSimpleData($this->plugin, $data);
+					break;
+			}
+			$this->npcs[$npc->getId()] = $npc;
 		}
-
-		$dir = scandir($this->plugin->getDataFolder()."npcs/");
 
 		$this->plugin->getServer()->getPluginManager()->registerEvents($this, $this->plugin);//NPCも部品化的なことして再利用したかったので…すみません
+	}
+
+	public function onDisable(PluginDisableEvent $event)
+	{
+		if($event->getPlugin() != $this->plugin) return true;
+
+		$this->save();
 	}
 
 	public function onCommand(CommandSender $sender, Command $command, $label, array $args) : bool
@@ -344,6 +362,16 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				}
 			}
 		}
+	}
+
+	public function save()
+	{
+		$data = [];
+		foreach ($this->npcs as $npc) {
+			$data[] = $npc->getSimpleData();
+		}
+
+		file_put_contents($this->plugin->getDataFolder() . "npcs.dat", serialize($data));
 	}
 
 }
