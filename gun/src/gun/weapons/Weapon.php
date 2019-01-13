@@ -2,5 +2,6 @@
 
 namespace gun\weapons;
 
-abstract class Weapon {}
+abstract class Weapon {
+}
 
