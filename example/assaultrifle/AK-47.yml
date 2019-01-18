@@ -1,13 +1,13 @@
-Example: #銃のID(できるだけファイル名と同じにしてください) (以下、数値は適当なものです)
+AK-47: #銃のID(できるだけファイル名と同じにしてください) (以下、数値は適当なものです)
     Item_Information:
-        Item_Name: "Example" #表示される銃の名前(§などで色付け可)
+        Item_Name: "§eAK-47" #表示される銃の名前(§などで色付け可)
         Item_Id: 280 #銃として使用するアイテムのID
         Item_Damage: 0 #銃として使用するアイテムのダメージ値
-        Item_Lore: "銃の説明文のサンプルです" #銃に関する説明
+        Item_Lore: "1949年にソビエト連邦軍が制式採用した自動小銃" #銃に関する説明
     Shooting:
-        Delay_Between_Shots: 1  #発射レート
+        Delay_Between_Shots: 3  #発射レート
         Shooting_Damage: 4 #弾のダメージ
-        Shooting_Range: 4 #射程
+        Shooting_Range: 30 #射程(ブロック単位)
         Recoil_Amount: 1 #反動
         Bullet_Spread: 2 #弾のブレ
     Sneak:
@@ -16,5 +16,7 @@ Example: #銃のID(できるだけファイル名と同じにしてください)
         Bullet_Spread: 0 #スニーク時の弾ブレ
     Reload:
         Enable: true #リロード機能を使うか(普通はtrue)
-        Reload_Amount: 15 #弾数
+        Reload_Amount: 30 #弾数
         Reload_Duration: 40 #リロードかかる時間
+    Move:
+        Move_Speed: 1.5 #武器を持っているときの移動速度(デフォルトは1)

@@ -24,18 +24,6 @@ class PlayerLoginEvent extends Events{
         	];
         	$p->userdata = $user;
 
-        	$p->ticks = [
-        	    	'touch' => 0,
-        	    	'shot' => 0,
-        	];
-
-        	$p->guns = []; //id => data
-        	$p->gun = null; //data
-        	$p->reloading = false;
-        	$p->reloadcount = 0;
-        	$p->shot = false;
-        	$p->ammo = 0;
-
         	$lv = $this->server->getDefaultLevel();
         	$p->level = $lv;
         	$p->x = 0;

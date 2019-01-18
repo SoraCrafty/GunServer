@@ -7,13 +7,13 @@ use pocketmine\Server;
 
 
 use gun\gameManager;
-use gun\npcManager;
 use gun\data\gunData;
 use gun\data\playerData;
 use gun\scoreboard\scoreboard;
 use gun\bossbar\BossBar;
 
 use gun\weapons\beam;
+use gun\weapons\WeaponManager;
 
 class PlayerJoinEvent extends Events {
   
@@ -24,7 +24,7 @@ class PlayerJoinEvent extends Events {
 
 	public function call($event){
 		$player = $event->getPlayer();
-    		$name = $player->getName();
+    	$name = $player->getName();
 
         $player->sendMessage('§b--------------------------------------------------');
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
@@ -32,11 +32,9 @@ class PlayerJoinEvent extends Events {
 		$player->sendMessage('§bInfo>>§f試合開始時のリロード忘れに注意してください');
 		$player->sendMessage('§b--------------------------------------------------');
 		$event->setJoinMessage(null);
-		Server::getInstance()->broadcastPopup('§b参加>>'.$event->getPlayer()->getName().'さん');
-		$this->setWeapons($player);		
-    		$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
+		Server::getInstance()->broadcastPopup('§b参加>>'.$event->getPlayer()->getName().'さん');	
+    	$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
 		scoreboard::getScoreBoard()->showThisServerScoreBoard($player);
-		npcManager::addNPC($player);
 
 		/*途中参加のときの処理(?)*/
 		if($this->plugin->gameManager->isGaming())
@@ -52,6 +50,7 @@ class PlayerJoinEvent extends Events {
 			$this->plugin->gameManager->setNameTags($player, $team);
 		}
 
+		$player->getInventory()->setContents([WeaponManager::get("assaultrifle", "AK-47")]);
 	}
 	
 	public function setWeapons($p){

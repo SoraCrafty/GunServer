@@ -19,6 +19,11 @@ use gun\fireworks\FireworksAPI;
 use gun\fireworks\item\Fireworks;
 use gun\fireworks\entity\FireworksRocket;
 
+use gun\form\FormManager;
+
+use gun\weapons\WeaponManager;
+use gun\weapons\WeaponListener;
+
 use gun\npc\NPCManager;
 
 class Main extends PluginBase {
@@ -33,11 +38,14 @@ class Main extends PluginBase {
 	public $gameManager;
 	/*NPCManagerのオブジェクト*/
 	public $npcManager;
+	/*FormManagerのオブジェクト*/
+	public $formManager;
 
 	public function onLoad()
 	{
 		ItemFactory::registerItem(new Fireworks(), true);
 		Entity::registerEntity(FireworksRocket::class, true);
+		Item::initCreativeItems();
 	}
 	
 	public function onEnable(){
@@ -50,7 +58,9 @@ class Main extends PluginBase {
 		$this->gameManager = new gameManager($this);
 		$this->listener = new Listener($this);
 		$this->npcManager = new NPCManager($this);
+		$this->FormManager = new FormManager($this);
 		$this->command = new Command($this);
+		WeaponManager::init($this);
 		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 	}

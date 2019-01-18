@@ -97,7 +97,7 @@ class Fireworks extends Item{
 	}
 
 	public function onClickAir(Player $player, Vector3 $directionVector) : bool{
-		if($player->isGliding()){
+		if($player->getGenericFlag(Entity::DATA_FLAG_GLIDING)){
 			$motion = new Vector3(
 				(-sin($player->yaw / 180 * M_PI) * cos($player->pitch / 180 * M_PI) * self::BOOST_POWER),
 				(-sin($player->pitch / 180 * M_PI) * self::BOOST_POWER),
