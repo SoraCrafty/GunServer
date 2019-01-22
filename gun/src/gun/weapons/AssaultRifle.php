@@ -143,7 +143,14 @@ class AssaultRifle extends Weapon
 			$level = $player->getLevel();
 			$pos = $player->asVector3();
 			$pos->y += $player->getEyeHeight();
-			$motion = $player->getDirectionVector();
+			$speread = ($player->isSneaking() && $data["Sneak"]["Enable"]) ? $data["Sneak"]["Bullet_Spread"] : $data["Shooting"]["Bullet_Spread"];
+			$pitch = $player->pitch + mt_rand(-$speread, $speread);
+			$yaw = $player->yaw + mt_rand(-$speread, $speread);
+			$motionY = -sin(deg2rad($pitch));
+			$motionXZ = cos(deg2rad($pitch));
+			$motionX = -$motionXZ * sin(deg2rad($yaw));
+			$motionZ = $motionXZ * cos(deg2rad($yaw));
+			$motion = new Vector3($motionX, $motionY, $motionZ);
 			for ($i = 0; $i < $data["Shooting"]["Shooting_Range"]; $i++) { 
 				$pos = $pos->add($motion);
     			$block = $level->getBlock($pos);
