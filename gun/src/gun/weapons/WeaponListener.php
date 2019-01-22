@@ -9,6 +9,7 @@ use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 
 class WeaponListener implements Listener
@@ -48,6 +49,13 @@ class WeaponListener implements Listener
 		if($pk instanceof InventoryTransactionPacket)
 		{
 			$this->onEvent(Weapon::EVENT_INTERACT, $event->getPlayer());
+		}
+
+		if($pk instanceof LevelSoundEventPacket)
+		{
+			if($pk->sound === LevelSoundEventPacket::SOUND_ATTACK_NODAMAGE){
+				$this->onEvent(Weapon::EVENT_INTERACT, $event->getPlayer());
+			}
 		}
 	}
 
