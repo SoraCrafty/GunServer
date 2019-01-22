@@ -109,7 +109,7 @@ class SniperRifle extends Weapon
 			$weapon->setNamedTagEntry($tag);
 			$weapon->setCustomName($data["Item_Information"]["Item_Name"] . "§f ▪ «" . $bullet . "»");
 			$player->sendPopUp("§o" . $weapon->getCustomName());
-			$player->getInventory()->setItemInHand($weapon);
+			$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "giveTask"], [$player, $weapon]), 1);//minecraftの仕様対策
 		}
 
 		if($data["Shooting"]["Recoil_Amount"] > 0)//反動つける処理
@@ -167,7 +167,7 @@ class SniperRifle extends Weapon
 						{
     						$entity->setLastDamageCause($event);
     						$entity->broadcastEntityEvent(EntityEventPacket::HURT_ANIMATION, null, $level->getPlayers());
-    						$entity->setHealth($entity->getHealth() - 1);
+    						$entity->setHealth($entity->getHealth() - $damage);
     						$level->addParticle(new DestroyBlockParticle($pos, Block::get(236,14)));
 						}
 						break 2;
@@ -181,6 +181,11 @@ class SniperRifle extends Weapon
 		$this->cooltime[$player->getName()] = true;
 		$this->CooltimeTask($player, $data, 0);
 	}
+
+	public function giveTask($player, $weapon)//minecraftの仕様対策
+	{
+		if($player->isOnline()) $player->getInventory()->setItemInHand($weapon);
+ 	}
 
 	public function CooltimeTask($player, $data, $phase){//クールタイム関連は要改善
 		$name = $player->getName();
@@ -198,14 +203,15 @@ class SniperRifle extends Weapon
 			$progress = round($phase / $data["Shooting"]["Cooltime_Between_Shots"] * 30);
 			if($phase >= $data["Shooting"]["Cooltime_Between_Shots"])
 			{
-				$text = "§r§o" . $weapon->getCustomName() . "©";
+				$text = "§r§o" . $weapon->getCustomName();
 				$player->getLevel()->addSound(new EndermanTeleportSound($player->asVector3(), 0), [$player]);
 			}
 			else
 			{
 				$text = "§lCooltime §b" . str_repeat("‖", 30 - $progress) . "§f" . str_repeat("‖",$progress) . "\n§r§o" . $weapon->getCustomName() . "©";
 			}
-			$player->sendPopUp($text);
+
+			if(!$this->reloading[$name]) $player->sendPopUp($text);
 		}
 
 		if($phase >= $data["Shooting"]["Cooltime_Between_Shots"]){

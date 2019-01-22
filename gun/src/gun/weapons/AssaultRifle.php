@@ -180,7 +180,7 @@ class AssaultRifle extends Weapon
     						{
 	    						$entity->setLastDamageCause($event);
 	    						$entity->broadcastEntityEvent(EntityEventPacket::HURT_ANIMATION, null, $level->getPlayers());
-	    						$entity->setHealth($entity->getHealth() - 1);
+	    						$entity->setHealth($entity->getHealth() - $damage);
 	    						$level->addParticle(new DestroyBlockParticle($pos, Block::get(236,14)));
     						}
     						break 2;
