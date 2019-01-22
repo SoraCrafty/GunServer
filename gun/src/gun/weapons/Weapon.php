@@ -27,6 +27,7 @@ abstract class Weapon
 	const EVENT_WEAPON_ON = "onWeaponOn";
 	const EVENT_WEAPON_OFF = "onWeaponOff";
 	const EVENT_MOVE = "onMove";
+	const EVENT_SHOOTBOW = "onShootBow";
 
 	/*Mainクラスのオブジェクト*/
 	protected $plugin;
@@ -60,7 +61,7 @@ abstract class Weapon
 	{
 		$data = null;
 		if(isset($this->weapons[$type])) $data = $this->weapons[$type];
-		return $this->weapons[$type];
+		return $data;
 	}
 
 	public function get($type)
@@ -73,7 +74,7 @@ abstract class Weapon
 		$lore[] = "§l§7§n" . static::WEAPON_NAME . "§r";
 		foreach (static::ITEM_LORE as $datakey => $data) {
 			foreach ($data as $key => $value) {
-				$lore[] = $value . ":§f" . $this->weapons[$type][$datakey][$key];
+				$lore[] = "§3" . $value . ":§f" . $this->weapons[$type][$datakey][$key];
 			}
 		}
 		$lore[] = "§f" . $this->weapons[$type]["Item_Information"]["Item_Lore"];
@@ -92,13 +93,13 @@ abstract class Weapon
 
 	}
 
-	public function onWeaponOn($player, $data, $slot)
+	public function onWeaponOn($player, $data, $args)
 	{
 		$attribute = $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
 		$attribute->setValue($player->isSprinting() ? ($attribute->getDefaultValue() * 1.3 * $data["Move"]["Move_Speed"]) : $attribute->getDefaultValue() * $data["Move"]["Move_Speed"], false, true);
 	}
 
-	public function onWeaponOff($player, $data, $slot)
+	public function onWeaponOff($player, $data, $args)
 	{
 		$attribute = $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
 		$attribute->setValue($player->isSprinting() ? ($attribute->getDefaultValue() * 1.3) : $attribute->getDefaultValue(), false, true);
@@ -110,6 +111,11 @@ abstract class Weapon
 	}
 
 	public function onMove($player, $data)
+	{
+
+	}
+
+	public function onShootBow($player, $data, $args)
 	{
 
 	}

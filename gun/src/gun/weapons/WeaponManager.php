@@ -10,6 +10,7 @@ class WeaponManager
 	public static function init($plugin)
 	{
 		self::registerItem(new AssaultRifle($plugin));
+		self::registerItem(new SniperRifle($plugin));
 		
 		$plugin->getServer()->getPluginManager()->registerEvents(new WeaponListener($plugin), $plugin);
 	}

@@ -2,7 +2,10 @@
 
 namespace gun\weapons;
 
+use pocketmine\Player;
+
 use pocketmine\event\Listener;
+use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
@@ -95,6 +98,15 @@ class WeaponListener implements Listener
 	public function onMove(PlayerMoveEvent $event)
 	{
 		$this->onEvent(Weapon::EVENT_MOVE, $event->getPlayer());
+	}
+
+	public function onShootBow(EntityShootBowEvent $event)
+	{
+		$player = $event->getEntity();
+		if($player instanceof Player)
+		{
+			$this->onEvent(Weapon::EVENT_SHOOTBOW, $player, $event);
+		}
 	}
 
 }
