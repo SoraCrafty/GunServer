@@ -299,6 +299,20 @@ class gameManager
         $this->killstreak = [];
     }
 
+    public function setTeam($player, $team)
+    {
+        foreach ($this->teamMembers[$team] as $key => $member) {
+            //if($player == $member) return true; エラー吐く
+            if($player->getName() === $member->getName())
+            {
+                $this->teamMembers[$team][$key] = $player;
+                return true;
+            }
+        }
+
+        $this->teamMembers[$team][] = $player;
+    }
+
     public function getTeam($player) {//要改善
         foreach ($this->teamMembers as $team => $members) 
         {
