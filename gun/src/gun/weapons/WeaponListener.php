@@ -8,6 +8,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
+use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
@@ -51,7 +52,10 @@ class WeaponListener implements Listener
 
 		if($pk instanceof InventoryTransactionPacket)
 		{
-			$this->onEvent(Weapon::EVENT_INTERACT, $event->getPlayer());
+			if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM || $pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY)
+			{
+				$this->onEvent(Weapon::EVENT_INTERACT, $event->getPlayer());
+			}
 		}
 
 		if($pk instanceof LevelSoundEventPacket)
@@ -107,6 +111,11 @@ class WeaponListener implements Listener
 		{
 			$this->onEvent(Weapon::EVENT_SHOOTBOW, $player, $event);
 		}
+	}
+
+	public function onDropItem(PlayerDropItemEvent $event)
+	{
+		$this->onEvent(Weapon::EVENT_DROP_ITEM, $event->getPlayer(), $event);
 	}
 
 }

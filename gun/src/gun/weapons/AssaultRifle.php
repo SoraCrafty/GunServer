@@ -84,6 +84,25 @@ class AssaultRifle extends Weapon
 		}
 	}
 
+	public function onDropItem($player, $data, $args)
+	{
+		$event = $args[0];
+		$event->setCancelled(true);
+
+		$name = $player->getName();
+
+		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
+
+		if($this->reloading[$name]) return true;
+
+		if($data["Reload"]["Enable"])
+		{
+			$this->reloading[$name] = true;
+			$this->ReloadTask($player, $data, 0);
+			return true;
+		}
+	}
+
 	public function ShootingTask($player, $data, $tick)
 	{
 		$name = $player->getName();

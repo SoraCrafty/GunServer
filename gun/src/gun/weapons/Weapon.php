@@ -28,6 +28,7 @@ abstract class Weapon
 	const EVENT_WEAPON_OFF = "onWeaponOff";
 	const EVENT_MOVE = "onMove";
 	const EVENT_SHOOTBOW = "onShootBow";
+	const EVENT_DROP_ITEM = "onDropItem";
 
 	/*Mainクラスのオブジェクト*/
 	protected $plugin;
@@ -116,6 +117,11 @@ abstract class Weapon
 	}
 
 	public function onShootBow($player, $data, $args)
+	{
+
+	}
+
+	public function onDropItem($player, $data, $args)
 	{
 
 	}

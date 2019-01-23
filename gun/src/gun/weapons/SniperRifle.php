@@ -75,16 +75,39 @@ class SniperRifle extends Weapon
 		}
 	}
 
+	public function onDropItem($player, $data, $args)
+	{
+		$event = $args[0];
+		$event->setCancelled(true);
+
+		$name = $player->getName();//同じ処理だし関数にしたほうがいいかも
+
+		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
+
+		if($this->reloading[$name]) return true;
+
+		if($data["Reload"]["Enable"])
+		{
+			$this->reloading[$name] = true;
+			$this->ReloadTask($player, $data, 0);
+			return true;
+		}
+	}
+
 	public function onShootBow($player, $data, $args)
 	{
 		$event = $args[0];
+		$event->setCancelled(true);
+		
 		$name = $player->getName();
+
+		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
+
+		if($this->reloading[$name]) return true;
 
 		if(!isset($this->cooltime[$name])) $this->cooltime[$name] = false;
 
 		if(!$this->cooltime[$name]) $this->Shoot($player, $data);
-
-		$event->setCancelled(true);
 	}
 
 	public function Shoot($player, $data)
