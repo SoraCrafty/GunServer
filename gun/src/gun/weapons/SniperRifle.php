@@ -46,6 +46,8 @@ class SniperRifle extends Weapon
 
 	public function get($type)
 	{
+		if(!isset($this->weapons[$type])) return null;
+
 		$item = parent::get($type);
 
 		$nbt = $item->getNamedTagEntry(Weapon::TAG_WEAPON);
@@ -53,6 +55,10 @@ class SniperRifle extends Weapon
 		{
 			$nbt->setInt(Weapon::TAG_BULLET, $this->weapons[$type]["Reload"]["Reload_Amount"]);	
 			$item->setCustomName($item->getCustomName() . "§f ▪ «" . $this->weapons[$type]["Reload"]["Reload_Amount"] . "»");
+		}
+		else
+		{
+			$item->setCustomName($item->getCustomName() . "§f ▪ «∞»");
 		}
 		$item->setNamedTagEntry($nbt);
 
@@ -124,6 +130,8 @@ class SniperRifle extends Weapon
 			{
 				$this->shooting[$name] = false;
 				$player->getLevel()->addSound(new ClickSound($player->asVector3(), -100), [$player]);
+				$this->reloading[$name] = true;
+				$this->ReloadTask($player, $data, 0);
 				return true;
 			}
 
@@ -131,9 +139,10 @@ class SniperRifle extends Weapon
 			$tag->setInt(Weapon::TAG_BULLET, $bullet, true);
 			$weapon->setNamedTagEntry($tag);
 			$weapon->setCustomName($data["Item_Information"]["Item_Name"] . "§f ▪ «" . $bullet . "»");
-			$player->sendPopUp("§o" . $weapon->getCustomName());
 			$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "giveTask"], [$player, $weapon]), 1);//minecraftの仕様対策
 		}
+
+		$player->sendPopUp("§o" . $weapon->getCustomName());
 
 		if($data["Shooting"]["Recoil_Amount"] > 0)//反動つける処理
 		{

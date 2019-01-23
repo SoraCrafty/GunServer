@@ -46,6 +46,8 @@ class AssaultRifle extends Weapon
 
 	public function get($type)
 	{
+		if(!isset($this->weapons[$type])) return null;
+
 		$item = parent::get($type);
 
 		$nbt = $item->getNamedTagEntry(Weapon::TAG_WEAPON);
@@ -53,6 +55,10 @@ class AssaultRifle extends Weapon
 		{
 			$nbt->setInt(Weapon::TAG_BULLET, $this->weapons[$type]["Reload"]["Reload_Amount"]);	
 			$item->setCustomName($item->getCustomName() . "§f ▪ «" . $this->weapons[$type]["Reload"]["Reload_Amount"] . "»");
+		}
+		else
+		{
+			$item->setCustomName($item->getCustomName() . "§f ▪ «∞»");
 		}
 		$item->setNamedTagEntry($nbt);
 
@@ -133,6 +139,8 @@ class AssaultRifle extends Weapon
 				{
 					$this->shooting[$name] = false;
 					$player->getLevel()->addSound(new ClickSound($player->asVector3(), -100), [$player]);
+					$this->reloading[$name] = true;
+					$this->ReloadTask($player, $data, 0);
 					return true;
 				}
 
@@ -143,6 +151,8 @@ class AssaultRifle extends Weapon
 				$player->sendPopUp("§o" . $weapon->getCustomName());
 				$player->getInventory()->setItemInHand($weapon);
 			}
+
+			$player->sendPopUp("§o" . $weapon->getCustomName());
 
 			if($data["Shooting"]["Recoil_Amount"] > 0)//反動つける処理
 			{

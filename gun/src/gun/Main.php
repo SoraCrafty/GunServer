@@ -2,10 +2,6 @@
 
 namespace gun;
 
-use pocketmine\command\Command as CMD;
-use pocketmine\command\CommandSender;
-use pocketmine\command\ConsoleCommandSender;
-
 use pocketmine\Server;
 use pocketmine\plugin\PluginBase;
 
@@ -25,6 +21,7 @@ use gun\weapons\WeaponManager;
 use gun\weapons\WeaponListener;
 
 use gun\npc\NPCManager;
+use gun\command\CommandManager;
 
 class Main extends PluginBase {
 	
@@ -50,6 +47,8 @@ class Main extends PluginBase {
 	
 	public function onEnable(){
 		if (!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0744, true);
+		WeaponManager::init($this);
+		CommandManager::init($this);
 		$this->BossBar = new BossBar($this);
 		$this->Fireworks = new FireworksAPI($this);
 		self::$datafolder = $this->getDataFolder();
@@ -59,15 +58,8 @@ class Main extends PluginBase {
 		$this->listener = new Listener($this);
 		$this->npcManager = new NPCManager($this);
 		$this->FormManager = new FormManager($this);
-		$this->command = new Command($this);
-		WeaponManager::init($this);
 		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
-	}
-	
-	public function onCommand(CommandSender $sender, CMD $command, $label, array $args):bool {
-		$this->command->call($sender, $command, $label, $args);
-		return true;
 	}
 }
 

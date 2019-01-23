@@ -9,18 +9,18 @@ class WeaponManager
 
 	public static function init($plugin)
 	{
-		self::registerItem(new AssaultRifle($plugin));
-		self::registerItem(new SniperRifle($plugin));
+		self::registerWeapon(new AssaultRifle($plugin));
+		self::registerWeapon(new SniperRifle($plugin));
 		
 		$plugin->getServer()->getPluginManager()->registerEvents(new WeaponListener($plugin), $plugin);
 	}
 
-	public static function registerItem(Weapon $weapon)
+	public static function registerWeapon(Weapon $weapon)
 	{
 		self::$class[$weapon->getId()] = $weapon;
 	}
 
-	public static function get(string $id, string $type)
+	public static function get($id, $type)
 	{
 		$weapon = null;
 
@@ -31,7 +31,23 @@ class WeaponManager
 		return $weapon;
 	}
 
-	public static function getObject(string $id)
+	public static function getAllData($id)
+	{
+		$data = null;
+
+		if(isset(self::$class[$id])){
+			$data = self::$class[$id]->getDataAll();
+		}
+
+		return $data;
+	}
+
+	public static function getIds()
+	{
+		return array_keys(self::$class);
+	}
+
+	public static function getObject($id)
 	{
 		$object = null;
 		if(isset(self::$class[$id])) $object = self::$class[$id];

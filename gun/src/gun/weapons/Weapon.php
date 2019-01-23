@@ -65,8 +65,15 @@ abstract class Weapon
 		return $data;
 	}
 
+	public function getDataAll()
+	{
+		return $this->weapons;
+	}
+
 	public function get($type)
 	{
+		if(!isset($this->weapons[$type])) return null;
+
 		$item = Item::get($this->weapons[$type]["Item_Information"]["Item_Id"], $this->weapons[$type]["Item_Information"]["Item_Damage"], 1);
 
 		$item->setCustomName($this->weapons[$type]["Item_Information"]["Item_Name"]);
