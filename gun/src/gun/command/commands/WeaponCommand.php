@@ -14,7 +14,7 @@ class WeaponCommand extends BattleFrontCommand
     const DESCRIPTION = "武器管理コマンドです";
     const USAGE = "";
 
-    const PERMISSION = "battlefront.command.weapon:";
+    const PERMISSION = "battlefront.command.weapon";
 
     public function execute(CommandSender $sender, string $label, array $args) : bool
     {

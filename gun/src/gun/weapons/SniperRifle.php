@@ -34,6 +34,7 @@ class SniperRifle extends Weapon
 								"Bullet_Spread" => "弾ブレ"
 								],
 					"Reload" => [
+								"Reload_Amount" => "最大装填数",
 								"Reload_Duration" => "リロード時間"
 								],
 					"Move" =>[

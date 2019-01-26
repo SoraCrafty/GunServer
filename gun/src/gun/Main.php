@@ -23,6 +23,8 @@ use gun\weapons\WeaponListener;
 use gun\npc\NPCManager;
 use gun\command\CommandManager;
 
+use gun\provider\ProviderManager;
+
 class Main extends PluginBase {
 	
 	public static $datafolder;
@@ -35,8 +37,7 @@ class Main extends PluginBase {
 	public $gameManager;
 	/*NPCManagerのオブジェクト*/
 	public $npcManager;
-	/*FormManagerのオブジェクト*/
-	public $formManager;
+
 
 	public function onLoad()
 	{
@@ -49,16 +50,17 @@ class Main extends PluginBase {
 		if (!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0744, true);
 		WeaponManager::init($this);
 		CommandManager::init($this);
+		FormManager::init($this);
+		ProviderManager::init($this);
 		$this->BossBar = new BossBar($this);
 		$this->Fireworks = new FireworksAPI($this);
 		self::$datafolder = $this->getDataFolder();
 		$this->server = $this->getServer();
-		$this->data = new dataManager($this);
+		//$this->data = new dataManager($this);
 		$this->gameManager = new gameManager($this);
 		$this->listener = new Listener($this);
 		$this->npcManager = new NPCManager($this);
-		$this->FormManager = new FormManager($this);
-		$this->scoreboard = new scoreboard\scoreboard($this);
+		//$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 	}
 }

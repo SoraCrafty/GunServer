@@ -2,21 +2,36 @@
 
 namespace gun\form;
 
-use pocketmine\event\Listener;
+use pocketmine\Player;
 
-use pocketmine\event\server\DataPacketReceiveEvent;
+use gun\form\forms\Form;
 
-use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
-use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
-
-class FormManager implements Listener
+class FormManager
 {
-	/*Mainクラスのオブジェクト*/
-	private $plugin;
+	/*Weaponの配列*/
+	private static $forms = [];
 
-	public function __construct($plugin)
+	public static function init($plugin)
 	{
-		$this->plugin = $plugin;//いらんかも
+		$plugin->getServer()->getPluginManager()->registerEvents(new FormListener($plugin), $plugin);
+	}
+
+	public static function register(Form $form)
+	{
+		self::$forms[$form->getPlayer()->getName()] = $form;
+	}
+
+	public static function close(Form $form)
+	{
+		unset(self::$forms[$form->getPlayer()->getName()]);
+	}
+
+	public static function getForm(Player $player)
+	{
+		$form = null;
+		$name = $player->getName();
+		if(isset(self::$forms[$name])) $form = self::$forms[$name];
+		return $form;
 	}
 }
 		

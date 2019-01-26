@@ -9,7 +9,7 @@ use gun\gameManager;
 class EntityDamageEvent extends Events {
 	
 	public function call($event){
-		if($event instanceof EntityDamageByEntityEvent)
+		/*if($event instanceof EntityDamageByEntityEvent)
 		{
 			if(!$this->plugin->gameManager->isGaming())
 			{
@@ -26,7 +26,7 @@ class EntityDamageEvent extends Events {
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 }

@@ -422,13 +422,13 @@ class gameManager
     /*賞金*/
     public function givePrizeAll()
     {
-    	$playerdata = playerData::getPlayerData();
+    	/*$playerdata = playerData::getPlayerData();
     	$winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
     	foreach ($this->teamMembers[$winteam] as $player) 
         {
         	$playerdata->setAccount($player->getName(), 'money', $playerdata->getAccount($player->getName())['money'] + 2000);
-                $player->sendMessage('§aGAME>>§f>>賞金を贈与しました');
-        }   
+            $player->sendMessage('§aGAME>>§f>>賞金を贈与しました');
+        }*/   
     }
     
     

@@ -11,7 +11,7 @@ class NPCCommand extends BattleFrontCommand
     const DESCRIPTION = "NPC管理コマンドです";
     const USAGE = "";
 
-    const PERMISSION = "battlefront.command.npc:";
+    const PERMISSION = "battlefront.command.npc";
 
     public function execute(CommandSender $sender, string $label, array $args) : bool
     {

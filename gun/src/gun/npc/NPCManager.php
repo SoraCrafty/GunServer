@@ -88,15 +88,12 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				switch(array_shift($args))
 				{
 					case "normal":
-					case NPC::TYPE:
 						$npc = NPC::fromPlayerObject($sender, $this->plugin);
 						break;
 					case "message":
-					case MessageNPC::TYPE:
 						$npc = MessageNPC::fromPlayerObject($sender, $this->plugin);
 						break;
 					case "command":
-					case CommandNPC::TYPE:
 						$npc = CommandNPC::fromPlayerObject($sender, $this->plugin);
 						break;
 					default:

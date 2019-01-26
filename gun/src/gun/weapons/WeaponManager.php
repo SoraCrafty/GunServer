@@ -31,6 +31,17 @@ class WeaponManager
 		return $weapon;
 	}
 
+	public static function getData($id, $type)
+	{
+		$data = null;
+
+		if(isset(self::$class[$id])){
+			$data = self::$class[$id]->getData($type);
+		}
+
+		return $data;		
+	}
+
 	public static function getAllData($id)
 	{
 		$data = null;

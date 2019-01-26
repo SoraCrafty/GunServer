@@ -9,6 +9,7 @@ use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
+use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
@@ -28,7 +29,7 @@ class WeaponListener implements Listener
 
 	public function onEvent($eventname, $player, ...$args)
 	{
-		if(!$this->plugin->gameManager->isGaming()) return true;
+		//if(!$this->plugin->gameManager->isGaming()) return true;
 
 		$weapon = $player->getInventory()->getItemInHand();
 
@@ -73,7 +74,7 @@ class WeaponListener implements Listener
 
 	public function onItemHeld(PlayerItemHeldEvent $event)//後々改善したい
 	{
-		if(!$this->plugin->gameManager->isGaming()) return true;
+		//if(!$this->plugin->gameManager->isGaming()) return true;
 		
 		$player =  $event->getPlayer();
 
@@ -116,6 +117,11 @@ class WeaponListener implements Listener
 	public function onDropItem(PlayerDropItemEvent $event)
 	{
 		$this->onEvent(Weapon::EVENT_DROP_ITEM, $event->getPlayer(), $event);
+	}
+
+	public function onDeath(PlayerDeathEvent $event)
+	{
+		$this->onEvent(Weapon::EVENT_DEATH, $event->getPlayer());
 	}
 
 }

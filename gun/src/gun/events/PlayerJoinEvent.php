@@ -29,12 +29,11 @@ class PlayerJoinEvent extends Events {
         $player->sendMessage('§b--------------------------------------------------');
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
-		$player->sendMessage('§bInfo>>§f試合開始時のリロード忘れに注意してください');
 		$player->sendMessage('§b--------------------------------------------------');
 		$event->setJoinMessage(null);
 		Server::getInstance()->broadcastPopup('§b参加>>'.$event->getPlayer()->getName().'さん');	
-    	$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
-		scoreboard::getScoreBoard()->showThisServerScoreBoard($player);
+    	//$this->playerData->getAccount($name) ?: $this->playerData->createAccount($name);
+		//scoreboard::getScoreBoard()->showThisServerScoreBoard($player);
 
 		/*途中参加のときの処理(?)*/
 		if($this->plugin->gameManager->isGaming())

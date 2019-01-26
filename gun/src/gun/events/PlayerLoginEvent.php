@@ -8,7 +8,7 @@ class PlayerLoginEvent extends Events{
     
     
     	public function call($ev){
-        	$p = $ev->getPlayer();
+        	/*$p = $ev->getPlayer();
         	$n = $p->getName();
        		$user = [
 			'name' => $n,
@@ -29,6 +29,6 @@ class PlayerLoginEvent extends Events{
         	$p->x = 0;
         	$p->y = 5;
         	$p->z = 0;
-        	$p->yaw = 0;
+        	$p->yaw = 0;*/
     	}
 }

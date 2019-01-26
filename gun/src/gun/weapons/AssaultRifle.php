@@ -34,6 +34,7 @@ class AssaultRifle extends Weapon
 								"Bullet_Spread" => "弾ブレ"
 								],
 					"Reload" => [
+								"Reload_Amount" => "最大装填数",
 								"Reload_Duration" => "リロード時間"
 								],
 					"Move" =>[
@@ -107,6 +108,12 @@ class AssaultRifle extends Weapon
 			$this->ReloadTask($player, $data, 0);
 			return true;
 		}
+	}
+
+	public function onDeath($player, $data)
+	{
+		$name = $player->getName();
+		if(!isset($this->shooting[$name]) || $this->shooting[$name]) $this->shooting[$name] = false;
 	}
 
 	public function ShootingTask($player, $data, $tick)
