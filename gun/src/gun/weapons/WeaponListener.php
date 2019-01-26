@@ -29,7 +29,7 @@ class WeaponListener implements Listener
 
 	public function onEvent($eventname, $player, ...$args)
 	{
-		//if(!$this->plugin->gameManager->isGaming()) return true;
+		if(!$this->plugin->gameManager->isGaming()) return true;
 
 		$weapon = $player->getInventory()->getItemInHand();
 
@@ -74,7 +74,7 @@ class WeaponListener implements Listener
 
 	public function onItemHeld(PlayerItemHeldEvent $event)//後々改善したい
 	{
-		//if(!$this->plugin->gameManager->isGaming()) return true;
+		if(!$this->plugin->gameManager->isGaming()) return true;
 		
 		$player =  $event->getPlayer();
 
