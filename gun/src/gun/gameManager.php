@@ -10,31 +10,14 @@ use gun\Callback;
 use gun\data\playerData;
 use gun\fireworks\item\Fireworks;
 
+use gun\provider\ProviderManager;
+use gun\provider\GameSettingProvider;
 class gameManager 
 {
-    //ここらへん(定数とか)は後でConfigで設定できるようににする(コードも粗め)
-    //'Red' => new Vector3(82,5,65), 'Blue' => new Vector3(-5,4,7), 'spawn' => new Vector3(-2,4,-2)
-    const TEAM_NAME = [
-                    0 => [
-                        "name" => "Red",
-                        "decoration" => "§c",
-                        "spawn" => [82, 5 , 65]
-                        ],
-                    1 => [
-                        "name" => "Blue",
-                        "decoration" => "§b",
-                        "spawn" => [-5, 4, 7]
-                        ]
-                    ];
-
-    const WAITING_TIME = 60;//秒単位
-
-    const GAME_TIME = 15 * 60;//秒単位
-
-    const KILLCOUNT_MAX = 50;
-
     /*Mainクラスのオブジェクト*/
     private $plugin;
+    /*GameSettingProvider*/
+    private $provider;
     /*ゲームの進行状態*/
     private $TimeTableStatus = -1;//-1が初期値
     /*チームメンバー*/
@@ -53,6 +36,7 @@ class gameManager
     public function __construct($plugin)
     {
         $this->plugin = $plugin;
+        $this->provider = ProviderManager::get(GameSettingProvider::PROVIDER_ID);
         $this->TimeTable();
     }
 
@@ -73,7 +57,7 @@ class gameManager
                 $this->setNameTagsAll();
                 $this->plugin->getServer()->broadcastTitle("§l§cGame Start!!§r", "§f試合開始!!", 5, 20, 10);
                 $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
-                $this->GameTask(self::GAME_TIME);
+                $this->GameTask($this->provider->getGameTime());
                 return true;
 
             case 2:
@@ -94,7 +78,7 @@ class gameManager
     }
 
     /*ゲーム開始まであと何秒か*/
-    private $waitingCount = self::WAITING_TIME;
+    private $waitingCount;
 
     public function WaitingTask()
     {
@@ -103,7 +87,7 @@ class gameManager
             $this->waitingCount--;
             if($this->waitingCount === 0)
             {
-                $this->waitingCount = self::WAITING_TIME;
+                $this->waitingCount = $this->provider->getWaitingTime();
                 $this->TimeTable();
                 return true;
             }
@@ -112,11 +96,11 @@ class gameManager
                 $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_ANVIL_FALL, 0);
             }
             $this->plugin->BossBar->setTitle("§lゲーム開始まであと§a" . ($this->waitingCount) . "§f秒");
-            $this->plugin->BossBar->setPercentage($this->waitingCount / self::WAITING_TIME);
+            $this->plugin->BossBar->setPercentage($this->waitingCount / $this->provider->getWaitingTime());
         }
         else
         {
-            $this->waitingCount = self::WAITING_TIME;
+            $this->waitingCount = $this->provider->getWaitingTime();
             $this->plugin->BossBar->setPercentage(1);
             $this->plugin->BossBar->setTitle("§l§a参加者を待っています…");
         }
@@ -137,7 +121,7 @@ class gameManager
     {
         $team = (count($this->teamMembers[0]) <= count($this->teamMembers[1])) ? 0 : 1;
         $this->teamMembers[$team][] = $player;
-        $player->sendMessage("§aGAME>>§fあなたは" . self::TEAM_NAME[$team]["decoration"] . self::TEAM_NAME[$team]["name"] . "§fになりました");
+        $player->sendMessage("§aGAME>>§fあなたは" . $this->provider->getTeamNameDecoration($team) . $this->provider->getTeamName($team) . "§fになりました");
     }
 
     public function setDefaultSpawns()
@@ -164,7 +148,11 @@ class gameManager
 
     public function setSpawn($player, $team)
     {
-        if($player->isOnline()) $player->setSpawn(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
+        if($player->isOnline())
+        {
+            $vectorArray = $this->provider->getTeamSpawn($team);
+            $player->setSpawn(new Vector3($vectorArray["x"], $vectorArray["y"], $vectorArray["z"]));
+        }
     }
 
     public function gotoStageAll()
@@ -180,7 +168,11 @@ class gameManager
 
     public function gotoStage($player, $team)
     {
-        if($player->isOnline()) $player->teleport(new Vector3(self::TEAM_NAME[$team]["spawn"][0], self::TEAM_NAME[$team]["spawn"][1], self::TEAM_NAME[$team]["spawn"][2]));
+        if($player->isOnline())
+        {
+            $vectorArray = $this->provider->getTeamSpawn($team);
+            $player->teleport(new Vector3($vectorArray["x"], $vectorArray["y"], $vectorArray["z"]));
+        }
     }
 
     public function gotoLobbyAll()
@@ -209,10 +201,10 @@ class gameManager
             return true;
         }
 
-        $this->plugin->BossBar->setPercentage($time / self::GAME_TIME);
+        $this->plugin->BossBar->setPercentage($time / $this->provider->getGameTime());
         $this->plugin->BossBar->setTitle("§a試合時間残り>>§f" . str_pad(floor($time / 60), 2, "0", STR_PAD_LEFT) . " : " . str_pad(round($time % 60), 2, "0", STR_PAD_LEFT) . 
-                                         "  §aキルカウント>>§f" . self::TEAM_NAME[0]["decoration"] . self::TEAM_NAME[0]["name"] . "§f:" . $this->killCount[0] . "/" . self::KILLCOUNT_MAX . " vs " . 
-                                                             self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§f:" . $this->killCount[1] . "/" . self::KILLCOUNT_MAX);
+                                         "  §aキルカウント>>§f" . $this->provider->getTeamNameDecoration(0) . $this->provider->getTeamName(0) . "§f:" . $this->killCount[0] . "/" . $this->provider->getMaxKillCount() . " vs " . 
+                                                              $this->provider->getTeamNameDecoration(1) . $this->provider->getTeamName(1) . "§f:" . $this->killCount[1] . "/" . $this->provider->getMaxKillCount());
         $time--;
         $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'GameTask'], [$time]), 20);
     }
@@ -229,14 +221,14 @@ class gameManager
                 $this->plugin->getServer()->broadcastTitle("§l§cGame Set!!§r", "§f試合終了!!", 5, 20, 10);
                 $this->plugin->BossBar->setPercentage(0);
                 $this->plugin->BossBar->setTitle("§8<<試合終了>>§f" . 
-                                                 "  §aキルカウント>>§f" . self::TEAM_NAME[0]["decoration"] . self::TEAM_NAME[0]["name"] . "§f:" . $this->killCount[0] . "/" . self::KILLCOUNT_MAX . " vs " . 
-                                                                      self::TEAM_NAME[1]["decoration"] . self::TEAM_NAME[1]["name"] . "§f:" . $this->killCount[1] . "/" . self::KILLCOUNT_MAX);
+                                         "  §aキルカウント>>§f" . $this->provider->getTeamNameDecoration(0) . $this->provider->getTeamName(0) . "§f:" . $this->killCount[0] . "/" . $this->provider->getMaxKillCount() . " vs " . 
+                                                              $this->provider->getTeamNameDecoration(1) . $this->provider->getTeamName(1) . "§f:" . $this->killCount[1] . "/" . $this->provider->getMaxKillCount());
                 $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 40);
                 return true;
 
             case 1:
                 $winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
-                $this->plugin->getServer()->broadcastMessage("§aGAME>>§f" . self::TEAM_NAME[$winteam]["decoration"] . self::TEAM_NAME[$winteam]["name"] . "§fチームの勝利!!");
+                $this->plugin->getServer()->broadcastMessage("§aGAME>>§f" . $this->provider->getTeamNameDecoration($winteam) . $this->provider->getTeamName($winteam) . "§fチームの勝利!!");
                 $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 10);
                 return true;
 
@@ -331,7 +323,7 @@ class gameManager
     {
         $this->killCount[$team]++;
 
-        if($this->killCount[$team] >= self::KILLCOUNT_MAX && $this->TimeTableStatus === 1)
+        if($this->killCount[$team] >= $this->provider->getMaxKillCount() && $this->TimeTableStatus === 1)
         {
             $this->TimeTable();
         }
@@ -392,7 +384,7 @@ class gameManager
     {
     	if($player->isOnline())
     	{
-	    	$tag = self::TEAM_NAME[$team]["decoration"] . $player->getName() . "§f";
+	    	$tag = $this->provider->getTeamNameDecoration($team) . $player->getName() . "§f";
 	    	$player->setNameTag($tag);
 	    	$player->setDisplayName($tag);
     	}

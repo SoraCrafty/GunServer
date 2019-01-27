@@ -11,6 +11,7 @@ class ProviderManager
 
     public static function init($plugin)
     {
+        self::register(new GameSettingProvider($plugin));
         self::register(new MainWeaponShop($plugin));
     }
 
