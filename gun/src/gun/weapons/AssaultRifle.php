@@ -180,8 +180,8 @@ class AssaultRifle extends Weapon
 			$pos = $player->asVector3();
 			$pos->y += $player->getEyeHeight();
 			$speread = ($player->isSneaking() && $data["Sneak"]["Enable"]) ? $data["Sneak"]["Bullet_Spread"] : $data["Shooting"]["Bullet_Spread"];
-			$pitch = $player->pitch + mt_rand(-$speread, $speread);
-			$yaw = $player->yaw + mt_rand(-$speread, $speread);
+			$pitch = $player->pitch + mt_rand(-$speread * 10, $speread * 10) * 0.1;
+			$yaw = $player->yaw + mt_rand(-$speread * 10, $speread * 10) * 0.1;
 			$motionY = -sin(deg2rad($pitch));
 			$motionXZ = cos(deg2rad($pitch));
 			$motionX = -$motionXZ * sin(deg2rad($yaw));
