@@ -23,7 +23,7 @@ class MessageNPC extends NPC{
 	public static function fromSimpleData($plugin, $data)
 	{
 		$npc = parent::fromSimpleData($plugin, $data);
-		$npc->setCommand($data["messages"]);
+		$npc->setMessages($data["messages"]);
 		return $npc;
 	}
 
