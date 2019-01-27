@@ -2,6 +2,8 @@
 
 namespace gun\form\forms;
 
+use pocketmine\item\Item;
+
 use gun\form\FormManager;
 
 use gun\provider\ProviderManager;
@@ -86,8 +88,12 @@ class MainShopForm extends Form
 				$this->sendModal("§lMainWeaponShop(メイン武器屋)", $content, "購入", "戻る", 4, 1);
 				break;
 
-			case 4:
-				
+			case 4://ベータ用のために簡易版、あとでちゃんとしたのつくる
+				$content = [];
+				$content[] = WeaponManager::get($this->weaponType, $this->weaponId);
+				$this->player->getInventory()->setContents($content);
+				if($this->weaponType === SniperRifle::WEAPON_ID) $this->player->getInventory()->addItem(Item::get(262, 0, 1));
+				$this->sendModal("§lMainWeaponShop(メイン武器屋)", "購入が完了しました\nショップを引き続き利用しますか?\n§c※現在開発中のため、購入データは保存されません。\nサーバーに入り直した際は、お手数ですがもう一度ショップをご利用ください。", "はい", "終了する", 1, 0);
 				break;
 
 			default:

@@ -4,7 +4,7 @@ namespace gun\form;
 
 use pocketmine\event\Listener;
 use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\event\player\PlayerJumpEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
@@ -29,6 +29,12 @@ class FormListener implements Listener
 			$form = FormManager::getForm($event->getPlayer());
 			if(!is_null($form)) $form->response($pk->formId, json_decode($pk->formData, true));
 		}
+	}
+
+	public function onQuit(PlayerQuitEvent $event)
+	{
+		$form = FormManager::getForm($event->getPlayer());
+		if(!is_null($form)) $form->close();
 	}
 }
 
