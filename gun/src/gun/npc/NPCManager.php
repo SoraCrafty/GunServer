@@ -27,15 +27,21 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 
 	//コマンド系
 	/*NPCを削除するための変数*/
-	private $deleteQueue =[];
+	private $deleteQueue = [];
 	/*名前を設定するための変数*/
-	private $nameQueue =[];
+	private $nameQueue = [];
 	/*サイズを設定するための変数*/
-	private $sizeQueue =[];
+	private $sizeQueue = [];
+	/*スキンを設定するための変数*/
+	private $skinQueue = [];
+	/*プレイヤーの方を向くかどうかを設定するための変数*/
+	private $gazeQueue = [];
+	/*NPCのインベントリ設定するための変数*/
+	private $inventoryQueue = [];
 	/*メッセージを設定するための変数*/
-	private $messageQueue =[];
+	private $messageQueue = [];
 	/*コマンドを設定するための変数*/
-	private $commandQueue =[];
+	private $commandQueue = [];
 
 	public function __construct($plugin)
 	{
@@ -149,6 +155,52 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				$sender->sendMessage("大きさを設定したいNPCをタッチしてください");
 				return true;
 
+			case "skin":
+				if(!$sender instanceof Player){
+					$sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
+					return true;
+				}
+
+				$this->skinQueue[$sender->getName()] = $sender->getSkin();
+				$sender->sendMessage("スキンを設定したいNPCをタッチしてください");
+				return true;
+
+			case "gaze":
+				if(!$sender instanceof Player){
+					$sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
+					return true;
+				}
+
+				$doGaze = array_shift($args);
+
+				if($doGaze !== "true" && $doGaze !== "false"){
+					$sender->sendMessage(TextFormat::RED . "使い方: /npc gaze <true|false>");
+					return true;
+				}
+
+				$this->gazeQueue[$sender->getName()] = $doGaze === "true" ? true : false;
+				$sender->sendMessage("プレイヤーの方を向くかどうかを設定したいNPCをタッチしてください");
+				return true;
+
+			case "inventory":
+				if(!$sender instanceof Player){
+					$sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
+					return true;
+				}
+
+				$inventory = $sender->getInventory();
+				$armorInventory = $sender->getArmorInventory();
+				$this->inventoryQueue[$sender->getName()] = [
+														"item_right" => $inventory->getItemInHand(),
+														//"item_left" => 
+														"helmet" => $armorInventory->getHelmet(),
+														"chestplate" => $armorInventory->getChestplate(),
+														"leggings" => $armorInventory->getLeggings(),
+														"boots" => $armorInventory->getBoots()
+													   ];
+				$sender->sendMessage("インベントリを設定したいNPCをタッチしてください");
+				return true;
+
 			case "message":
 				if(!$sender instanceof Player){
 					$sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
@@ -218,7 +270,7 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				return true;
 
 			default:
-				$sender->sendMessage(TextFormat::RED . "使い方: /npc <create|delete|name|size|message|command>");
+				$sender->sendMessage(TextFormat::RED . "使い方: /npc <create|delete|name|size|skin|gaze|inventory|message|command|>");
 				return true;
 		}
 	}
@@ -279,7 +331,15 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 
 				$player = $event->getPlayer();
 				$name = $player->getName();
-				if(!isset($this->nameQueue[$name]) && !in_array($name, $this->deleteQueue) && !isset($this->sizeQueue[$name]) && !isset($this->messageQueue[$name]) && !isset($this->commandQueue[$name]))
+				if(!isset($this->nameQueue[$name]) && 
+				   !in_array($name, $this->deleteQueue) && 
+				   !isset($this->sizeQueue[$name]) && 
+				   !isset($this->messageQueue[$name]) && 
+				   !isset($this->commandQueue[$name]) && 
+				   !isset($this->skinQueue[$name]) &&
+				   !isset($this->gazeQueue[$name]) &&
+				   !isset($this->inventoryQueue[$name])
+				  )
 				{
 					$npc->onTouch($player);
 					return true;
@@ -306,6 +366,32 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 					$npc->setSize($this->sizeQueue[$name]);
 					unset($this->sizeQueue[$name]);
 					$player->sendMessage(TextFormat::GREEN . "大きさを設定しました");
+				}
+
+				if(isset($this->skinQueue[$name]))
+				{
+					$npc->setSkin($this->skinQueue[$name]);
+					unset($this->skinQueue[$name]);
+					$player->sendMessage(TextFormat::GREEN . "スキンを設定しました");
+				}
+
+				if(isset($this->gazeQueue[$name]))
+				{
+					$npc->setDoGaze($this->gazeQueue[$name]);
+					unset($this->gazeQueue[$name]);
+					$player->sendMessage(TextFormat::GREEN . "プレイヤーの方を向くかどうかを設定しました");
+				}
+
+				if(isset($this->inventoryQueue[$name]))
+				{
+					$npc->setItem_Right($this->inventoryQueue[$name]["item_right"]);
+					//$npc->setItem_Left($this->inventoryQueue[$name]["item_left"]);
+					$npc->setHelmet($this->inventoryQueue[$name]["helmet"]);
+					$npc->setChestplate($this->inventoryQueue[$name]["chestplate"]);
+					$npc->setLeggings($this->inventoryQueue[$name]["leggings"]);
+					$npc->setBoots($this->inventoryQueue[$name]["boots"]);
+					unset($this->inventoryQueue[$name]);
+					$player->sendMessage(TextFormat::GREEN . "インベントリを設定しました");
 				}
 
 				if(isset($this->messageQueue[$name]))

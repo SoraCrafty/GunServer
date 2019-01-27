@@ -295,7 +295,7 @@ class NPC extends Location{
 	//アイテム(右手)関連
 	public function setItem_Right(Item $item)
 	{
-		$this->item_right = $item_right;
+		$this->item_right = $item;
 		$this->sendItem_Right();
 	}
 
@@ -325,7 +325,7 @@ class NPC extends Location{
 
 	public function setItem_Left(Item $item)
 	{
-		$this->item_left = $item_left;
+		$this->item_left = $item;
 		$this->sendItem_Left();
 	}
 
@@ -350,21 +350,25 @@ class NPC extends Location{
 	public function setHelmet($helmet)
 	{
 		$this->helmet = $helmet;
+		$this->sendArmors();
 	}
 
 	public function setChestplate($chestplate)
 	{
 		$this->chestplate = $chestplate;
+		$this->sendArmors();
 	}
 
-	public function setLeggings($leggins)
+	public function setLeggings($leggings)
 	{
 		$this->leggings = $leggings;
+		$this->sendArmors();
 	}
 
 	public function setBoots($boots)
 	{
 		$this->boots = $boots;
+		$this->sendArmors();
 	}
 
 	public function getHelmet()
@@ -406,7 +410,8 @@ class NPC extends Location{
 	//プレイヤーの方向を向く処理関連
 	public function setDoGaze($doGaze)
 	{
-		$this->doGaze =$doGaze;
+		$this->doGaze = $doGaze;
+		if(!$doGaze) $this->gazeAtDefaultAll();
 	}
 
 	public function isGazer()
@@ -434,6 +439,26 @@ class NPC extends Location{
 
 		$pk->headYaw = $pk->yaw;
 
+		$player->dataPacket($pk);
+	}
+
+	public function gazeAtDefaultAll()
+	{
+		foreach($this->level->getPlayers() as $player){
+			$this->gazeAtDefault($player);
+		}			
+	}
+
+	public function gazeAtDefault(Player $player)
+	{
+		$pk = new MovePlayerPacket();
+
+		$pk->entityRuntimeId = $this->eid;
+		$pk->position = new Vector3($this->x, $this->y + 1.62, $this->z);
+		$pk->pitch = $this->pitch;
+		$pk->yaw = $this->yaw;
+		$pk->headYaw = $this->yaw;
+		$pk->mode = MovePlayerPacket::MODE_TELEPORT;
 		$player->dataPacket($pk);
 	}
 
