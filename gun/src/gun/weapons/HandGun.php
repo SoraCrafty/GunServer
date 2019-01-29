@@ -18,21 +18,19 @@ use pocketmine\network\mcpe\protocol\EntityEventPacket;
 use gun\Callback;
 use gun\Blocks;
 
-class SniperRifle extends Weapon
+class HandGun extends Weapon
 {
-	/*スナイパーライフルの武器カテゴリ*/
-	const CATEGORY = self::CATEGORY_MAIN;
-	/*スナイパーライフルのID*/
-	const WEAPON_ID = "sniperrifle";
+	/*ハンドガンの武器カテゴリ*/
+	const CATEGORY = self::CATEGORY_SUB;
+	/*ハンドガンのID*/
+	const WEAPON_ID = "handgun";
 	/*武器種の名称*/
-	const WEAPON_NAME = "SniperRifle";
+	const WEAPON_NAME = "HandGun";
 	/*Loreに書く数値*/
 	const ITEM_LORE = [
 					"Shooting" => [
-								"Cooltime_Between_Shots" => "発射不可時間",
 								"Shooting_Damage" => "火力",
 								"Shooting_Range" => "射程",
-								"Recoil_Amount" => "反動",
 								"Bullet_Spread" => "弾ブレ"
 								],
 					"Reload" => [
@@ -45,7 +43,6 @@ class SniperRifle extends Weapon
 					];
 
 	private $reloading = [];
-	private $cooltime = [];
 
 	public function get($type)
 	{
@@ -66,11 +63,6 @@ class SniperRifle extends Weapon
 		$item->setNamedTagEntry($nbt);
 
 		return $item;
-	}
-
-	public function onPreInteract($player, $data)
-	{
-		$this->onInteract($player, $data);
 	}
 
 	public function onInteract($player, $data)
@@ -108,20 +100,15 @@ class SniperRifle extends Weapon
 		}
 	}
 
-	public function onShootBow($player, $data, $args)
+	public function onUseFishRod($player, $data)
 	{
-		$event = $args[0];
-		$event->setCancelled(true);
-		
 		$name = $player->getName();
 
 		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
 
 		if($this->reloading[$name]) return true;
 
-		if(!isset($this->cooltime[$name])) $this->cooltime[$name] = false;
-
-		if(!$this->cooltime[$name]) $this->Shoot($player, $data);
+		$this->Shoot($player, $data);
 	}
 
 	public function Shoot($player, $data)
@@ -152,20 +139,6 @@ class SniperRifle extends Weapon
 
 		$player->sendPopUp("§o" . $weapon->getCustomName());
 
-		if($data["Shooting"]["Recoil_Amount"] > 0)//反動つける処理
-		{
-			if(!($player->isSneaking() && $data["Sneak"]["Enable"] && $data["Sneak"]["No_Recoil"]))
-			{
-				$motion = $player->getDirectionVector()->multiply(-0.2);
-				if(!$player->isOnGround() && !$player->isUnderwater())//地に足がついてない状態では反動が軽減され下に落下する(水中は例外)
-				{
-					$motion->multiply(0.5);
-					$motion->y = -1;
-				}
-				$player->setMotion($motion);
-			}
-		}
-
 		/*銃弾の処理*/
 		$level = $player->getLevel();
 		$pos = $player->asVector3();
@@ -189,7 +162,7 @@ class SniperRifle extends Weapon
 
 			foreach ($level->getEntities() as $entity) {
 				if($entity->getId() != $player->getId()){//エラー吐くので
-					if($pos->distance($entity->asVector3()->add(0, $entity->height / 2, 0)) <= sqrt($entity->height ** 2 + $entity->width ** 2))
+					if($pos->distance($entity->asVector3()->add(0, $entity->height / 2, 0)) <= sqrt($entity->height ** 2 + $entity->width ** 2) / 2)
 					{
 						$damage = $data["Shooting"]["Shooting_Damage"];
 						if($pos->distance($entity->asVector3()->add(0, $entity->getEyeHeight(), 0)) <= 0.7)
@@ -217,52 +190,12 @@ class SniperRifle extends Weapon
 		}
 
 		$level->addSound(new DoorCrashSound($player->asVector3(), -100));
-
-		$this->cooltime[$player->getName()] = true;
-		$this->CooltimeTask($player, $data, 0);
 	}
 
 	public function giveTask($player, $weapon)//minecraftの仕様対策
 	{
 		if($player->isOnline()) $player->getInventory()->setItemInHand($weapon);
  	}
-
-	public function CooltimeTask($player, $data, $phase){//クールタイム関連は要改善
-		$name = $player->getName();
-
-		if(!$player->isOnline()){
-			$this->cooltime[$name] = false;
-			return true;
-		}
-
-		$weapon = $player->getInventory()->getItemInHand();
-		$tag = $weapon->getNamedTagEntry(Weapon::TAG_WEAPON);
-
-		if(!is_null($tag) && $this->getData($tag->getTag(Weapon::TAG_TYPE)->getValue()) === $data)
-		{
-			$progress = round($phase / $data["Shooting"]["Cooltime_Between_Shots"] * 30);
-			if($phase >= $data["Shooting"]["Cooltime_Between_Shots"])
-			{
-				$text = "§r§o" . $weapon->getCustomName();
-				$player->getLevel()->addSound(new EndermanTeleportSound($player->asVector3(), 0), [$player]);
-			}
-			else
-			{
-				$text = "§lCooltime §b" . str_repeat("‖", 30 - $progress) . "§f" . str_repeat("‖",$progress) . "\n§r§o" . $weapon->getCustomName() . "©";
-			}
-
-			if(!$this->reloading[$name]) $player->sendPopUp($text);
-		}
-
-		if($phase >= $data["Shooting"]["Cooltime_Between_Shots"]){
-			$this->cooltime[$name] = false;
-			return true;
-		}
-
-		$phase ++;
-
-		$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "CooltimeTask"], [$player, $data, $phase]), 1);
-	}	
 
 	public function ReloadTask($player, $data, $phase){
 		$name = $player->getName();

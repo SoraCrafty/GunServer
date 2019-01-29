@@ -17,6 +17,8 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 
+use gun\fishing\event\PlayerUseFishRodEvent;
+
 class WeaponListener implements Listener
 {
 	/*Mainクラスのオブジェクト*/
@@ -62,7 +64,7 @@ class WeaponListener implements Listener
 		if($pk instanceof LevelSoundEventPacket)
 		{
 			if($pk->sound === LevelSoundEventPacket::SOUND_ATTACK_NODAMAGE){
-				$this->onEvent(Weapon::EVENT_INTERACT, $event->getPlayer());
+				$this->onEvent(Weapon::EVENT_PRE_INTERACT, $event->getPlayer());
 			}
 		}
 	}
@@ -122,6 +124,11 @@ class WeaponListener implements Listener
 	public function onDeath(PlayerDeathEvent $event)
 	{
 		$this->onEvent(Weapon::EVENT_DEATH, $event->getPlayer());
+	}
+
+	public function onUseFishRod(PlayerUseFishRodEvent $event)
+	{
+		$this->onEvent(Weapon::EVENT_USE_FISHROD, $event->getPlayer());
 	}
 
 }

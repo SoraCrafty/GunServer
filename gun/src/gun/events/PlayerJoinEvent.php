@@ -56,6 +56,7 @@ class PlayerJoinEvent extends Events {
 
 		$player->getInventory()->setContents([]);
 		$player->getInventory()->addItem(WeaponManager::get("assaultrifle", "AK-47"));
+		$player->getInventory()->addItem(WeaponManager::get("handgun", "TT-33"));
 	}
 	
 	public function setWeapons($p){

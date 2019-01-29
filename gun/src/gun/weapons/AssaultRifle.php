@@ -20,6 +20,8 @@ use gun\Blocks;
 
 class AssaultRifle extends Weapon
 {
+	/*アサルトライフルの武器カテゴリ*/
+	const CATEGORY = self::CATEGORY_MAIN;
 	/*アサルトライフルのID*/
 	const WEAPON_ID = "assaultrifle";
 	/*武器種の名称*/
@@ -64,6 +66,11 @@ class AssaultRifle extends Weapon
 		$item->setNamedTagEntry($nbt);
 
 		return $item;
+	}
+
+	public function onPreInteract($player, $data)
+	{
+		$this->onInteract($player, $data);
 	}
 
 	public function onInteract($player, $data)

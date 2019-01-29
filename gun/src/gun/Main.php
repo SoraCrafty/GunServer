@@ -25,6 +25,8 @@ use gun\command\CommandManager;
 
 use gun\provider\ProviderManager;
 
+use gun\fishing\item\FishingRod;
+
 class Main extends PluginBase {
 	
 	public static $datafolder;
@@ -43,6 +45,9 @@ class Main extends PluginBase {
 	{
 		ItemFactory::registerItem(new Fireworks(), true);
 		Entity::registerEntity(FireworksRocket::class, true);
+
+		ItemFactory::registerItem(new FishingRod(), true);
+
 		Item::initCreativeItems();
 	}
 	

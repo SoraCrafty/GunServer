@@ -4,35 +4,62 @@ namespace gun\provider;
 
 use pocketmine\utils\Config;
 
-class MainWeaponShop extends Provider
+class AccountProvider
 {
 
-    const PROVIDER_ID = "account";
+    const PROVIDER_ID = "";
     /*ファイル名(拡張子はなし)*/
-    const FILE_NAME = "shop_main";
+    const FILE_NAME = "";
     /*セーブデータのバージョン*/
     const VERSION = 1;
     /*デフォルトデータ*/
     const DATA_DEFAULT = [];
 
-    public function getItems($type)
+    /*Mainクラスのオブジェクト*/
+    protected $plugin;
+    /*使用中のセーブデータのバージョン*/
+    protected $version;
+    /*セーブデータ*/
+    protected $data;
+
+    public function __construct($plugin)
     {
-        $items = null;
-        if(isset($this->data[$type])) $items = $this->data[$type];
-        return $items;
+        $this->plugin = $plugin;
+        $this->open();
     }
 
-    /*public function getPrice($type, $id)
+    public function open()
     {
-        $price = null;
-        if(isset($this->data[$type][$id])) $price = $this->data[$type][$id];
-        return $price;
+        $this->config = new Config($this->plugin->getDataFolder() . static::FILE_NAME . ".yml", Config::YAML, ["version" => static::VERSION, "data" => static::DATA_DEFAULT]);
+        $this->version = $this->config->get("version");
+        $this->data = $this->config->get("data");
     }
 
-    public function setPrice($type, $id, $value)
+    public function save()
     {
-        $this->data[$type][$id] = $value;
-    }*/
+        $this->config->set("data", $this->data);
+        $this->config->save();
+    }
+
+    public function close()
+    {
+        $this->save();
+    }
+
+    public function getId()
+    {
+        return static::PROVIDER_ID;
+    }
+
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    public function getAllData()
+    {
+        return $this->data;
+    }
 
 }
 

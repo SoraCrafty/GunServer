@@ -10,6 +10,11 @@ use pocketmine\nbt\tag\CompoundTag;
 
 abstract class Weapon
 {
+	/*その武器種のカテゴリー*/
+	const CATEGORY = null;
+	/*カテゴリータイプの値*/
+	const CATEGORY_MAIN = 0;
+	const CATEGORY_SUB = 1;
 	/*その武器種のID*/
 	const WEAPON_ID = "";
 	/*武器種の名称*/
@@ -22,6 +27,7 @@ abstract class Weapon
 	const TAG_TYPE = "type";
 	const TAG_BULLET = "bullet";
 
+	const EVENT_PRE_INTERACT = "onPreInteract";
 	const EVENT_INTERACT = "onInteract";
 	const EVENT_SNEAK = "onSneak";
 	const EVENT_WEAPON_ON = "onWeaponOn";
@@ -30,6 +36,7 @@ abstract class Weapon
 	const EVENT_SHOOTBOW = "onShootBow";
 	const EVENT_DROP_ITEM = "onDropItem";
 	const EVENT_DEATH = "onDeath";
+	const EVENT_USE_FISHROD = "onUseFishRod";
 
 	/*Mainクラスのオブジェクト*/
 	protected $plugin;
@@ -54,15 +61,20 @@ abstract class Weapon
 		}
 	}
 
+	public function getCategory()
+	{
+		return static::CATEGORY;
+	}
+
 	public function getId()
 	{
 		return static::WEAPON_ID;
 	}
 
-	public function getData($type)
+	public function getData($id)
 	{
 		$data = null;
-		if(isset($this->weapons[$type])) $data = $this->weapons[$type];
+		if(isset($this->weapons[$id])) $data = $this->weapons[$id];
 		return $data;
 	}
 
@@ -71,33 +83,38 @@ abstract class Weapon
 		return $this->weapons;
 	}
 
-	public function get($type)
+	public function get($id)
 	{
-		if(!isset($this->weapons[$type])) return null;
+		if(!isset($this->weapons[$id])) return null;
 
-		$item = Item::get($this->weapons[$type]["Item_Information"]["Item_Id"], $this->weapons[$type]["Item_Information"]["Item_Damage"], 1);
+		$item = Item::get($this->weapons[$id]["Item_Information"]["Item_Id"], $this->weapons[$id]["Item_Information"]["Item_Damage"], 1);
 
-		$item->setCustomName($this->weapons[$type]["Item_Information"]["Item_Name"]);
+		$item->setCustomName($this->weapons[$id]["Item_Information"]["Item_Name"]);
 
 		$lore = [];
 		$lore[] = "§l§7§n" . static::WEAPON_NAME . "§r";
 		foreach (static::ITEM_LORE as $datakey => $data) {
 			foreach ($data as $key => $value) {
-				$lore[] = "§3" . $value . ":§f" . $this->weapons[$type][$datakey][$key];
+				$lore[] = "§3" . $value . ":§f" . $this->weapons[$id][$datakey][$key];
 			}
 		}
-		$lore[] = "§f" . $this->weapons[$type]["Item_Information"]["Item_Lore"];
+		$lore[] = "§f" . $this->weapons[$id]["Item_Information"]["Item_Lore"];
 		$item->setLore($lore);
 
 		$nbt = new CompoundTag(self::TAG_WEAPON);
 		$nbt->setString(self::TAG_WEAPON_ID, static::WEAPON_ID);
-		$nbt->setString(self::TAG_TYPE, $type);
+		$nbt->setString(self::TAG_TYPE, $id);
 		$item->setNamedTagEntry($nbt);
 
 		return $item;
 	}
 
 	public function onInteract($player, $data)
+	{
+
+	}
+
+	public function onPreInteract($player, $data)
 	{
 
 	}
@@ -137,6 +154,11 @@ abstract class Weapon
 	public function onDeath($player, $data)
 	{
 		
+	}
+
+	public function onUseFishRod($player, $data)
+	{
+
 	}
 }
 
