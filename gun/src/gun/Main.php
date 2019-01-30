@@ -68,6 +68,11 @@ class Main extends PluginBase {
 		//$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 	}
+
+	public function onDisable()
+	{
+		WeaponManager::close();
+	}
 }
 
 	

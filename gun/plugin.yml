@@ -1,11 +1,23 @@
 name: Gun
 main: gun\Main
-version: 1
+version: "α1.0"
 api: [1.12.0,2.0.0,3.0.0]
 load: POSTWORLD
-author: tintin
-description: sandstarlow
-website:
-commands:
- gun:
-  description: "gun"
+permissions:
+ battlefront:
+  default: op
+  description: このプラグインの全機能を使用することを許可します
+  children:
+   battlefront.command:
+    default: op
+    description: このプラグインによって追加されるコマンドのすべてを使用することを許可します
+    children:
+     battlefront.command.npc:
+      default: op
+      description: NPC管理用コマンドを使用することを許可します
+     battlefront.command.weapon:
+      default: op
+      description: 武器管理用コマンドを使用することを許可します
+     battlefront.command.weaponshop:
+      default: true
+      description: 武器管理用コマンドを使用することを許可します

@@ -61,6 +61,17 @@ abstract class Weapon
 		}
 	}
 
+	public function save()
+	{
+		foreach ($this->weapons as $key => $value) {
+			$file = $this->plugin->getDataFolder() . static::WEAPON_ID . "/" . $key . ".yml";
+			if(!file_exists($file)) touch($file);
+			$data = [];
+			$data[$key] = $value;
+			yaml_emit_file($file, $data, YAML_UTF8_ENCODING);
+		}
+	}
+
 	public function getCategory()
 	{
 		return static::CATEGORY;

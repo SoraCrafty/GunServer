@@ -17,6 +17,13 @@ class WeaponManager
 		$plugin->getServer()->getPluginManager()->registerEvents(new WeaponListener($plugin), $plugin);
 	}
 
+	public static function close()
+	{
+		foreach (self::$class as $weaponObject) {
+			$weaponObject->save();
+		}
+	}
+
 	public static function registerWeapon(Weapon $weapon)
 	{
 		self::$class[$weapon->getId()] = $weapon;
