@@ -68,11 +68,6 @@ class SniperRifle extends Weapon
 		return $item;
 	}
 
-	public function onPreInteract($player, $data)
-	{
-		$this->onInteract($player, $data);
-	}
-
 	public function onInteract($player, $data)
 	{
 		$name = $player->getName();
@@ -189,10 +184,10 @@ class SniperRifle extends Weapon
 
 			foreach ($level->getEntities() as $entity) {
 				if($entity->getId() != $player->getId()){//エラー吐くので
-					if($pos->distance($entity->asVector3()->add(0, $entity->height / 2, 0)) <= sqrt($entity->height ** 2 + $entity->width ** 2))
+					if($pos->distance($entity->asVector3()->add(0, $entity->height / 2, 0)) <= sqrt($entity->height ** 2 + $entity->width ** 2) / 2 + 0.5)
 					{
 						$damage = $data["Shooting"]["Shooting_Damage"];
-						if($pos->distance($entity->asVector3()->add(0, $entity->getEyeHeight(), 0)) <= 0.7)
+						if($pos->distance($entity->asVector3()->add(0, $entity->getEyeHeight(), 0)) <= 0.5)
 						{
 							$damage *= 1.5;
 							$level->addParticle(new DestroyBlockParticle($pos, Block::get(216, 0)));
