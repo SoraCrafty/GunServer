@@ -54,6 +54,7 @@ class PlayerJoinEvent extends Events {
 			$this->plugin->gameManager->setNameTags($player, $team);
 		}
 
+		$player->setGamemode(2);
 		$player->getInventory()->setContents([]);
 		$player->getInventory()->addItem(WeaponManager::get("assaultrifle", "AK-47"));
 		$player->getInventory()->addItem(WeaponManager::get("handgun", "TT-33"));

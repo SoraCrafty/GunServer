@@ -8,6 +8,9 @@ use pocketmine\command\CommandSender;
 
 use gun\weapons\WeaponManager;
 
+use gun\form\FormManager;
+use gun\form\forms\EditWeaponForm;
+
 class WeaponCommand extends BattleFrontCommand
 {
     const NAME = "weapon";
@@ -59,8 +62,17 @@ class WeaponCommand extends BattleFrontCommand
                 $sender->getInventory()->addItem($weapon);
                 return true;
 
+            case "edit":
+                if(!$sender instanceof Player){
+                    $sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
+                    return true;
+                }
+
+                FormManager::register(new EditWeaponForm($this->plugin, $sender));
+                return true;
+
             default:
-                $sender->sendMessage("使い方: /weapon <list|get>");
+                $sender->sendMessage("使い方: /weapon <list|get|edit>");
                 return true;
         }
     }

@@ -67,6 +67,7 @@ class Main extends PluginBase {
 		$this->npcManager = new NPCManager($this);
 		//$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
+		$this->server->getNetwork()->setName("§l§fBattleFront§c2");
 	}
 
 	public function onDisable()

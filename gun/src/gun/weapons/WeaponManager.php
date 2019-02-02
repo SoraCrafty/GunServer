@@ -40,6 +40,11 @@ class WeaponManager
 		return $weapon;
 	}
 
+	public static function setData($id, $type, $data)
+	{
+		self::$class[$id]->setData($type, $data);		
+	}
+
 	public static function getData($id, $type)
 	{
 		$data = null;
@@ -73,6 +78,17 @@ class WeaponManager
 		if(isset(self::$class[$id])) $object = self::$class[$id];
 
 		return $object;
+	}
+
+	public static function getName($id)
+	{
+		$name = null;
+
+		if(isset(self::$class[$id])){
+			$name = self::$class[$id]::WEAPON_NAME;
+		}
+
+		return $name;	
 	}
 
 }

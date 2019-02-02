@@ -82,6 +82,11 @@ abstract class Weapon
 		return static::WEAPON_ID;
 	}
 
+	public function setData($id, $data)
+	{
+		$this->weapons[$id] = $data;
+	}
+
 	public function getData($id)
 	{
 		$data = null;
