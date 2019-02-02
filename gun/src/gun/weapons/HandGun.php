@@ -162,7 +162,7 @@ class HandGun extends Weapon
 
 			foreach ($level->getEntities() as $entity) {
 				if($entity->getId() != $player->getId()){//エラー吐くので
-					if($pos->distance($entity->asVector3()->add(0, $entity->height / 2, 0)) <= sqrt($entity->height ** 2 + $entity->width ** 2) / 2 + 0.5)
+					if($pos->distance($entity->asVector3()->add(0, $entity->height / 2, 0)) <= sqrt($entity->height ** 2 + $entity->width ** 2) / 2 + 0.5 && $entity->isAlive())
 					{
 						$damage = $data["Shooting"]["Shooting_Damage"];
 						if($pos->distance($entity->asVector3()->add(0, $entity->getEyeHeight(), 0)) <= 0.5)
