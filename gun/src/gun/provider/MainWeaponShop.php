@@ -39,6 +39,11 @@ class MainWeaponShop extends Provider
         return $price;
     }
 
+    public function setPrice($type, $id, $price)
+    {
+        $this->data[$type][$id] = $price;
+    }
+
 }
 
 

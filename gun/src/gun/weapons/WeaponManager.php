@@ -40,6 +40,11 @@ class WeaponManager
 		return $weapon;
 	}
 
+	public static function unset($type, $id)
+	{
+		self::$class[$type]->unset($id);	
+	}
+
 	public static function setData($id, $type, $data)
 	{
 		self::$class[$id]->setData($type, $data);		
@@ -70,6 +75,15 @@ class WeaponManager
 	public static function getIds()
 	{
 		return array_keys(self::$class);
+	}
+
+	public static function getNames()
+	{
+		$names = [];
+		foreach (self::$class as $value) {
+			$names[] = $value->getName();
+		}	
+		return $names;
 	}
 
 	public static function getObject($id)

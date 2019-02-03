@@ -16,6 +16,7 @@ class EditWeaponForm extends Form
 /*雑*/
 	const MODE_EDIT = 0;
 	const MODE_MAKE = 1;
+	const MODE_DELETE = 2;
 
 	private $mode = "";
 	private $weaponType = "";
@@ -39,8 +40,8 @@ class EditWeaponForm extends Form
 						];
 				$data = [
 					'type'    => "form",
-					'title'   => "§l武器編集/追加画面",
-					'content' => "追加/編集したい武器種を選択してください",
+					'title'   => "§l武器編集/追加/削除画面",
+					'content' => "追加/編集/削除したい武器種を選択してください",
 					'buttons' => $buttons
 				];
 				$cache = [2, 2, 2];
@@ -69,11 +70,14 @@ class EditWeaponForm extends Form
 								],
 								[
 									"text" => "§l武器の編集§r§8\n既存武器の設定データを編集します"
+								],
+								[
+									"text" => "§l武器の削除§r§8\n武器を削除します"
 								]
 							];
 				$data = [
 					'type'    => "form",
-					'title'   => "§l武器編集/追加画面",
+					'title'   => "§l武器編集/追加/削除画面",
 					'content' => "選択した武器種>>" . WeaponManager::getName($this->weaponType),
 					'buttons' => $buttons
 				];
@@ -88,10 +92,17 @@ class EditWeaponForm extends Form
 					case 0:
 						$mode = self::MODE_MAKE;
 						$content[] = ["type" => "input", "text" => "追加する武器の武器IDを入力してください\n\n武器ID", "placeholder" => "武器IDを入力(他とかぶらないものにしてください)"];
+						$cache = [4];
 						break;
 					case 1:
 						$mode = self::MODE_EDIT;
-						$content[] = ["type" => "dropdown", "text" => "編集する武器の武器IDを入力してください\n\n武器ID", "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+						$content[] = ["type" => "dropdown", "text" => "編集する武器の武器IDを選択してください\n\n武器ID", "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+						$cache = [4];
+						break;
+					case 2:
+						$mode = self::MODE_DELETE;
+						$content[] = ["type" => "dropdown", "text" => "削除する武器の武器IDを選択してください\n\n武器ID", "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+						$cache = [11];
 						break;
 					default:
 						$this->close();
@@ -100,10 +111,9 @@ class EditWeaponForm extends Form
 				$this->mode = $mode;
 				$data = [
 					'type'=>'custom_form',
-					'title'   => "§l武器編集/追加画面",
+					'title'   => "§l武器編集/追加/削除画面",
 					'content' => $content
 				];
-				$cache = [4];
 				break;
 
 			case 4:
@@ -112,12 +122,12 @@ class EditWeaponForm extends Form
 					case self::MODE_MAKE:
 						if($this->lastData === [])
 						{
-							$this->sendModal("§l武器編集/追加画面", "§cError>>§f武器IDを入力してください", $label1 = "閉じる", $label2 = "再入力", $jump1 = 0, $jump2 = 3);
+							$this->sendModal("§l武器編集/追加/削除画面", "§cError>>§f武器IDを入力してください", $label1 = "閉じる", $label2 = "再入力", $jump1 = 0, $jump2 = 3);
 							return true;				
 						}
 						if(!is_null(WeaponManager::getData($this->weaponType, $this->lastData[0])))
 						{
-							$this->sendModal("§l武器編集/追加画面", "§cError>>§f既に存在する武器IDです", $label1 = "閉じる", $label2 = "再入力", $jump1 = 0, $jump2 = 3);
+							$this->sendModal("§l武器編集/追加/削除画面", "§cError>>§f既に存在する武器IDです", $label1 = "閉じる", $label2 = "再入力", $jump1 = 0, $jump2 = 3);
 							return true;
 						}
 						$weaponId = $this->lastData[0];
@@ -179,7 +189,7 @@ class EditWeaponForm extends Form
 				}
 				$data = [
 					'type'=>'custom_form',
-					'title'   => "§l武器編集/追加画面",
+					'title'   => "§l武器編集/追加/削除画面",
 					'content' => $content
 				];
 
@@ -261,8 +271,21 @@ class EditWeaponForm extends Form
 						break;
 				}
 				WeaponManager::setData($this->weaponType, $this->weaponId, $data);
-				$this->sendModal("§l武器編集/追加画面", $this->mode === self::MODE_EDIT ? "武器の編集が完了しました" : "武器の追加が完了しました", $label1 = "閉じる", $label2 = "更に武器を追加/編集する", $jump1 = 0, $jump2 = 1);
+				$this->sendModal("§l武器編集/追加/削除画面", $this->mode === self::MODE_EDIT ? "武器の編集が完了しました" : "武器の追加が完了しました", $label1 = "閉じる", $label2 = "更に武器を追加/編集する", $jump1 = 0, $jump2 = 1);
+				return true;
+
+			case 11:
+				$this->weaponId = array_keys(WeaponManager::getAllData($this->weaponType))[$this->lastData[0]];
+				$text = "選択した武器種>> " . WeaponManager::getName($this->weaponType) . "\n" .
+						"選択した武器ID>> " . $this->weaponId . "\n\n" .
+						"本当に削除しますか?";
+				$this->sendModal("§l武器編集/追加/削除画面", $text, $label1 = "§c削除する", $label2 = "戻る", $jump1 = 12, $jump2 = 1);
 				break;
+
+			case 12:
+				$this->sendModal("§l武器編集/追加/削除画面", "削除しました", $label1 = "戻る", $label2 = "閉じる", $jump1 = 1, $jump2 = 0);
+				WeaponManager::unset($this->weaponType, $this->weaponId);
+				return true;
 
 			default:
 				$this->close();

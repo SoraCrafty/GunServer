@@ -73,6 +73,7 @@ class Main extends PluginBase {
 	public function onDisable()
 	{
 		WeaponManager::close();
+		ProviderManager::close();
 	}
 }
 

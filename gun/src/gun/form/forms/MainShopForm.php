@@ -33,13 +33,18 @@ class MainShopForm extends Form
 							"text" => "§lスナイパーライフル -SniperRifle-§r§8\n狙撃用に特化した小銃"
 						]
 						];
+				$cache = [2, 2];
+				if($this->player->isOp())
+				{
+					$buttons[] = ["text" => "§l§e★§8商品の編集 -Edit goods-§r§8\n商品を編集します"];
+					$cache[] = 11;
+				}
 				$data = [
 					'type'    => "form",
 					'title'   => "§lMainWeaponShop(メイン武器屋)",
 					'content' => "購入したい武器種を選択してください",
 					'buttons' => $buttons
 				];
-				$cache = [2, 2];
 				break;
 
 			case 2://購入武器選択画面
@@ -86,7 +91,7 @@ class MainShopForm extends Form
 					}
 				}
 				$this->sendModal("§lMainWeaponShop(メイン武器屋)", $content, "購入", "戻る", 4, 1);
-				break;
+				return true;
 
 			case 4://ベータ用のために簡易版、あとでちゃんとしたのつくる
 				$content = [];
@@ -95,7 +100,38 @@ class MainShopForm extends Form
 				$this->player->getInventory()->setContents($content);
 				if($this->weaponType === SniperRifle::WEAPON_ID) $this->player->getInventory()->addItem(Item::get(262, 0, 1));
 				$this->sendModal("§lMainWeaponShop(メイン武器屋)", "購入が完了しました\nショップを引き続き利用しますか?\n§c※現在開発中のため、購入データは保存されません。\nサーバーに入り直した際は、お手数ですがもう一度ショップをご利用ください。", "はい", "終了する", 1, 0);
+				return true;
+
+			case 11:
+				$content = [];
+				$content[] = ["type" => "dropdown", "text" => "商品として追加する武器の武器種を選択してください\n値段の編集をする場合は編集する武器の武器種を選択してください\n\n武器種", "options" => WeaponManager::getNames()];
+				$data = [
+					'type'=>'custom_form',
+					'title'   => "§lMainWeaponShop(メイン武器屋)",
+					'content' => $content
+				];
+				$cache = [12];
 				break;
+
+			case 12:
+				$this->weaponType = WeaponManager::getIds()[$this->lastData[0]];
+				$content = [];
+				$text = "商品として追加する、または値段を変更する武器の武器IDを選択し、値段を入力してください\n武器種>>" . WeaponManager::getNames()[$this->lastData[0]] . "\n武器ID";
+				$content[] = ["type" => "dropdown", "text" => $text, "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+				$content[] = ["type" => "input", "text" => "値段", "placeholder" => "値段を入力"];
+				$data = [
+					'type'=>'custom_form',
+					'title'   => "§lMainWeaponShop(メイン武器屋)",
+					'content' => $content
+				];
+				$cache = [13];
+				break;
+
+			case 13:
+				$provider = ProviderManager::get(MainWeaponShop::PROVIDER_ID);
+				$provider->setPrice($this->weaponType, array_keys(WeaponManager::getAllData($this->weaponType))[$this->lastData[0]], $this->lastData[1]);
+				$this->sendModal("§lMainWeaponShop(メイン武器屋)", "設定を反映しました", $label1 = "戻る", $label2 = "閉じる", $jump1 = 1, $jump2 = 0);
+				return true;
 
 			default:
 				$this->close();
