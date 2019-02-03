@@ -14,6 +14,7 @@ use pocketmine\level\particle\DestroyBlockParticle;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket; 
 
 use gun\Callback;
 use gun\Blocks;
@@ -232,7 +233,12 @@ class AssaultRifle extends Weapon
     			}
 			}
 
-			$level->addSound(new DoorCrashSound($player->asVector3(), -100));
+			$pk = new LevelSoundEventPacket();
+			$pk->sound = LevelSoundEventPacket::SOUND_REMEDY;
+			$pk->position = $player->asVector3();
+			foreach ($level->getPlayers() as $target) {
+				$target->dataPacket($pk);
+			}
 		}
 
 		$tick++;
