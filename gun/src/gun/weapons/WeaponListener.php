@@ -6,6 +6,7 @@ use pocketmine\Player;
 
 use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityShootBowEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
@@ -123,7 +124,20 @@ class WeaponListener implements Listener
 
 	public function onDeath(PlayerDeathEvent $event)
 	{
-		$this->onEvent(Weapon::EVENT_DEATH, $event->getPlayer());
+		$player = $event->getPlayer();
+
+		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent)
+		{
+			$killer = $player->getLastDamageCause()->getDamager();
+			if($killer instanceof Player)
+			{
+				$this->onEvent(Weapon::EVENT_KILL, $killer, $player);
+				$this->onEvent(Weapon::EVENT_DEATH, $player, $killer);
+				return true;
+			}
+		}
+
+		$this->onEvent(Weapon::EVENT_DEATH, $player);
 	}
 
 	public function onUseFishRod(PlayerUseFishRodEvent $event)

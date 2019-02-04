@@ -36,6 +36,7 @@ abstract class Weapon
 	const EVENT_SHOOTBOW = "onShootBow";
 	const EVENT_DROP_ITEM = "onDropItem";
 	const EVENT_DEATH = "onDeath";
+	const EVENT_KILL = "onKill";
 	const EVENT_USE_FISHROD = "onUseFishRod";
 
 	/*Mainクラスのオブジェクト*/
@@ -177,7 +178,12 @@ abstract class Weapon
 
 	}
 
-	public function onDeath($player, $data)
+	public function onDeath($player, $data, $args)
+	{
+		
+	}
+
+	public function onKill($player, $data, $args)
 	{
 		
 	}

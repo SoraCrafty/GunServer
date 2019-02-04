@@ -118,7 +118,7 @@ class AssaultRifle extends Weapon
 		}
 	}
 
-	public function onDeath($player, $data)
+	public function onDeath($player, $data, $args)
 	{
 		$name = $player->getName();
 		if(!isset($this->shooting[$name]) || $this->shooting[$name]) $this->shooting[$name] = false;
