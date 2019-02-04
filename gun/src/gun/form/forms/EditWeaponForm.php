@@ -187,6 +187,7 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "移動速度(入力値の1/10倍されます)", "min" => 0, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Move"]["Move_Speed"] * 10 : 10];
 						break;
 				}
+				$content[] = ["type" => "toggle", "text" => "送信後この武器をインベントリへ追加", "default" => true];
 				$data = [
 					'type'=>'custom_form',
 					'title'   => "§l武器編集/追加/削除画面",
@@ -271,6 +272,11 @@ class EditWeaponForm extends Form
 						break;
 				}
 				WeaponManager::setData($this->weaponType, $this->weaponId, $data);
+				if(end($this->lastData))
+				{
+					$this->player->getInventory()->addItem(WeaponManager::get($this->weaponType, $this->weaponId));
+					if($this->weaponType === SniperRifle::WEAPON_ID && !$this->player->getInventory()->contains(Item::get(262))) $this->player->getInventory()->addItem(Item::get(262, 0, 1));
+				}
 				$this->sendModal("§l武器編集/追加/削除画面", $this->mode === self::MODE_EDIT ? "武器の編集が完了しました" : "武器の追加が完了しました", $label1 = "閉じる", $label2 = "更に武器を追加/編集する", $jump1 = 0, $jump2 = 1);
 				return true;
 
