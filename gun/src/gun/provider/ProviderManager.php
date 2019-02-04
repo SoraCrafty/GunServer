@@ -13,6 +13,7 @@ class ProviderManager
     {
         self::register(new GameSettingProvider($plugin));
         self::register(new MainWeaponShop($plugin));
+        self::register(new DiscordProvider($plugin));
     }
 
     public static function register(Provider $provider)

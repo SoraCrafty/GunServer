@@ -11,6 +11,7 @@ class PlayerQuitEvent extends Events {
 		$event->setQuitMessage(null);
 		$this->plugin->getServer()->broadcastPopup('§b退出>>'.$event->getPlayer()->getName().'さん');
 		$event->getPlayer()->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+		$this->plugin->discordManager->sendMessage('**❌' . $event->getPlayer()->getName() . 'がログアウトしました**');
 	}
 	
 }
