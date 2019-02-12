@@ -2,33 +2,17 @@
 
 namespace gun\events;
 
-use pocketmine\level\Position;
+use gun\provider\AccountProvider;
+use gun\provider\ProviderManager;
 
-class PlayerLoginEvent extends Events{
-    
-    
-    	public function call($ev){
-        	/*$p = $ev->getPlayer();
-        	$n = $p->getName();
-       		$user = [
-			'name' => $n,
-        	        'money' => 0,
-        	        'kills' => 0,
-        	        'deaths' => 0,
-        	        'weapons' => [
-        			'main' => 'muku_gun',
-                	    	'sub' => 'sora_crafty',
-                	    	'granade' => '----',
-                	    	'knife' => '----',
-                	],
-        	];
-        	$p->userdata = $user;
+class PlayerLoginEvent extends Events
+{
 
-        	$lv = $this->server->getDefaultLevel();
-        	$p->level = $lv;
-        	$p->x = 0;
-        	$p->y = 5;
-        	$p->z = 0;
-        	$p->yaw = 0;*/
-    	}
+	public function call($event)
+    {
+        $player = $event->getPlayer();
+        $provider = ProviderManager::get(AccountProvider::PROVIDER_ID);
+        if(!$provider->isRegistered($player)) $provider->register($player);
+	}
+
 }

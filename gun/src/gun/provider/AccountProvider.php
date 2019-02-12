@@ -2,87 +2,150 @@
 
 namespace gun\provider;
 
-use pocketmine\utils\Config;
+use pocketmine\IPlayer;
 
-class AccountProvider
+class AccountProvider extends Provider
 {
-
-    const PROVIDER_ID = "";
+    /*プロバイダーID*/
+    const PROVIDER_ID = "account";
     /*ファイル名(拡張子はなし)*/
-    const FILE_NAME = "";
+    const FILE_NAME = "account";
     /*セーブデータのバージョン*/
     const VERSION = 1;
     /*デフォルトデータ*/
     const DATA_DEFAULT = [];
+    /*デフォルトのプレイヤーデータ*/
+    const DATA_PLAYER_DAFAULT = [
+                                    "exp" => 0,
+                                    "kill" => 0,
+                                    "death" => 0,
+                                    "point" => 0,
+                                    "weapon" => [
+                                                "main" => [
+                                                            "type" => "assaultrifle",
+                                                            "id" => "AK-47"
+                                                        ],
+                                                "sub" => [
+                                                            0 => [
+                                                                "type" => "handgun",
+                                                                "id" => "TT-33"
+                                                                ]
+                                                        ]
+                                                ]
+                                ];
 
-    /*Mainクラスのオブジェクト*/
-    protected $plugin;
-    /*使用中のセーブデータのバージョン*/
-    protected $version;
-    /*セーブデータ*/
-    protected $data;
-
-    public function __construct($plugin)
+    public function isRegistered(IPlayer $player)
     {
-        $this->plugin = $plugin;
-        $this->open();
+        return isset($this->data[$player->getName()]);
     }
 
-    public function open()
+    public function register(IPlayer $player)
     {
-        $this->config = new Config($this->plugin->getDataFolder() . static::FILE_NAME . ".yml", Config::YAML, ["version" => static::VERSION, "data" => static::DATA_DEFAULT]);
-        $this->version = $this->config->get("version");
-        $this->data = $this->config->get("data");
+        $this->data[$player->getName()] = self::DATA_PLAYER_DAFAULT;
     }
 
-    public function save()
+    public function unregister(IPlayer $player)
     {
-        $this->config->set("data", $this->data);
-        $this->config->save();
+        unset($this->data[$player->getName()]);
     }
 
-    public function close()
+    public function initialize(IPlayer $player)
     {
-        $this->save();
+        $this->register($player);
     }
 
-    public function getId()
+    public function getExp(IPlayer $player)
     {
-        return static::PROVIDER_ID;
+        return $this->data[$player->getName()]["exp"];
     }
 
-    public function getVersion()
+    public function setExp(IPlayer $player, int $exp)
     {
-        return $this->version;
+        $this->data[$player->getName()]["exp"] = $exp;
     }
 
-    public function getAllData()
+    public function addExp(IPlayer $player, int $exp)
     {
-        return $this->data;
+        $this->data[$player->getName()]["exp"] += $exp;
+    }
+
+    public function getKill(IPlayer $player)
+    {
+        return $this->data[$player->getName()]["kill"];
+    }
+
+    public function setKill(IPlayer $player, int $count)
+    {
+        $this->data[$player->getName()]["kill"] = $count;
+    }
+
+    public function addKill(IPlayer $player, int $amount)
+    {
+        $this->data[$player->getName()]["kill"] += $amount;
+    }
+
+    public function getDeath(IPlayer $player)
+    {
+        return $this->data[$player->getName()]["death"];
+    }
+
+    public function setDeath(IPlayer $player, int $count)
+    {
+        $this->data[$player->getName()]["death"] = $count;
+    }
+
+    public function addDeath(IPlayer $player, int $amount)
+    {
+        $this->data[$player->getName()]["death"] += $amount;
+    }
+
+    public function getKillRatio(IPlayer $player, int $precision = 2)
+    {
+        return round($this->data[$player->getName()]["kill"] / $this->data[$player->getName()]["death"], $precision);
+    }
+
+    public function getPoint(IPlayer $player)
+    {
+        return $this->data[$player->getName()]["point"];
+    }
+
+    public function setPoint(IPlayer $player, int $point)
+    {
+        $this->data[$player->getName()]["point"] = $point;
+    }
+
+    public function addPoint(IPlayer $player, int $point)
+    {
+        $this->data[$player->getName()]["point"] += $point;
+    }
+
+    public function subtractPoint(IPlayer $player, int $point)
+    {
+        $this->data[$player->getName()]["point"] -= $point;
+    }
+
+    public function getMainWeaponData(IPlayer $player)
+    {
+        return $this->data[$player->getName()]["weapon"]["main"];
+    }
+
+    public function setMainWeaponData(IPlayer $player, $type, $id)
+    {
+        $this->data[$player->getName()]["weapon"]["main"]["type"] = $type;
+        $this->data[$player->getName()]["weapon"]["main"]["id"] = $id;
+    }
+
+    public function getSubWeaponData(IPlayer $player, $key)
+    {
+        $type = null;
+        if(isset($this->data[$player->getName()]["weapon"]["sub"][$key])) $type = $this->data[$player->getName()]["weapon"]["sub"][$key];
+        return $type;
+    }
+
+    public function setSubWeaponData(IPlayer $player, $key, $type, $id)
+    {
+        $this->data[$player->getName()]["weapon"]["sub"][$key]["type"] = $type;
+        $this->data[$player->getName()]["weapon"]["sub"][$key]["id"] = $id;
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

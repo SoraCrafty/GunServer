@@ -2,6 +2,7 @@
 
 namespace gun;
 
+use pocketmine\item\Item;
 use pocketmine\math\Vector3;
 use pocketmine\level\Position;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
@@ -12,6 +13,8 @@ use gun\fireworks\item\Fireworks;
 
 use gun\provider\ProviderManager;
 use gun\provider\GameSettingProvider;
+use gun\provider\AccountProvider;
+
 class gameManager 
 {
     /*Mainクラスのオブジェクト*/
@@ -55,6 +58,8 @@ class gameManager
                 $this->setSpawns();
                 $this->gotoStageAll();
                 $this->setNameTagsAll();
+                $this->setInventoryAll();
+                $this->setHealthAll();
                 $this->plugin->getServer()->broadcastTitle("§l§cGame Start!!§r", "§f試合開始!!", 5, 20, 10);
                 $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
                 $this->GameTask($this->provider->getGameTime());
@@ -65,9 +70,11 @@ class gameManager
                 return true;
 
             case 3:
+                $this->setDefaultHealthAll();
                 $this->setDefaultSpawns();
                 $this->givePrizeAll();//賞金を渡したかったので書き加えました
                 $this->gotoLobbyAll();
+                $this->setLobbyInventoryAll();
                 $this->setDefaultNameTagsAll();
                 $this->resetGameStatus();
                 $this->TimeTable();//最初に戻る
@@ -189,6 +196,17 @@ class gameManager
     public function gotoLobby($player)
     {
         if($player->isOnline()) $player->teleport($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+    }
+
+    public function setLobbyInventoryAll()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                if($player->isOnline()) $this->plugin->playerManager->setLobbyInventory($player);
+            }    
+        }      
     }
 
     public function GameTask($time)
@@ -410,17 +428,66 @@ class gameManager
 	    	$player->setDisplayName($tag);
     	}
     }
+
+    public function setInventoryAll()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                $this->setInventory($player);
+            }    
+        }   
+    }
+
+    public function setInventory($player)
+    {
+        if(!$player->isOnline()) return true;
+        $content = [];
+        $content[] = $this->plugin->playerManager->getMainWeapon($player);
+        $content = array_merge($content, $this->plugin->playerManager->getSubWeapons($player));
+        $content[] = Item::get(262, 0, 1);
+        $player->getInventory()->setContents($content);   
+    }
+
+    public function setHealthAll()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                $this->setHealth($player);
+            }    
+        }   
+    }
+
+    public function setHealth($player)
+    {
+        if(!$player->isOnline()) return true;
+        $player->setMaxHealth(GameSettingProvider::get()->getHealth());
+        $player->setHealth(GameSettingProvider::get()->getHealth());
+    }
+
+    public function setDefaultHealthAll()
+    {
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                if($player->isOnline()) $this->plugin->playerManager->setDefaultHealth($player);
+            }    
+        }      
+    }
     
     /*賞金*/
     public function givePrizeAll()
     {
-    	/*$playerdata = playerData::getPlayerData();
     	$winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
     	foreach ($this->teamMembers[$winteam] as $player) 
         {
-        	$playerdata->setAccount($player->getName(), 'money', $playerdata->getAccount($player->getName())['money'] + 2000);
+        	AccountProvider::get()->addPoint($player, 2000);
             $player->sendMessage('§aGAME>>§f>>賞金を贈与しました');
-        }*/   
+        }
     }
     
     

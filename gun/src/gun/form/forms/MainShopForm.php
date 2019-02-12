@@ -8,6 +8,7 @@ use gun\form\FormManager;
 
 use gun\provider\ProviderManager;
 use gun\provider\MainWeaponShop;
+use gun\provider\AccountProvider;
 
 use gun\weapons\WeaponManager;
 use gun\weapons\AssaultRifle;
@@ -94,12 +95,13 @@ class MainShopForm extends Form
 				return true;
 
 			case 4://ベータ用のために簡易版、あとでちゃんとしたのつくる
-				$content = [];
-				$content[] = WeaponManager::get($this->weaponType, $this->weaponId);
-				$content[] = WeaponManager::get("handgun", "TT-33");
-				$this->player->getInventory()->setContents($content);
-				if($this->weaponType === SniperRifle::WEAPON_ID) $this->player->getInventory()->addItem(Item::get(262, 0, 1));
-				$this->sendModal("§lMainWeaponShop(メイン武器屋)", "購入が完了しました\nショップを引き続き利用しますか?\n§c※現在開発中のため、購入データは保存されません。\nサーバーに入り直した際は、お手数ですがもう一度ショップをご利用ください。", "はい", "終了する", 1, 0);
+				$result = "所持金が足りません";
+				if(AccountProvider::get()->getPoint($this->player) >= MainWeaponShop::get()->getPrice($this->weaponType, $this->weaponId))
+				{
+					$result = "購入が完了しました";
+					AccountProvider::get()->setMainWeaponData($this->player, $this->weaponType, $this->weaponId);
+				}
+				$this->sendModal("§lMainWeaponShop(メイン武器屋)", "{$result}\nショップを引き続き利用しますか?", "はい", "終了する", 1, 0);
 				return true;
 
 			case 11:

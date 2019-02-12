@@ -28,11 +28,19 @@ abstract class Provider
         $this->open();
     }
 
+    public static function get()
+    {
+        return ProviderManager::get(static::PROVIDER_ID);
+    } 
+
     public function open()
     {
         $this->config = new Config($this->plugin->getDataFolder() . static::FILE_NAME . ".yml", Config::YAML, ["version" => static::VERSION, "data" => static::DATA_DEFAULT]);
         $this->version = $this->config->get("version");
         $this->data = $this->config->get("data");
+        foreach (static::DATA_DEFAULT as $key => $value) {
+            if(!isset($this->data[$key])) $this->data[$key] = $value;
+        }
     }
 
     public function save()

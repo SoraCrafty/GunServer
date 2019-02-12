@@ -20,4 +20,10 @@ permissions:
       description: 武器管理用コマンドを使用することを許可します
      battlefront.command.weaponshop:
       default: true
-      description: 武器管理用コマンドを使用することを許可します
+      description: 武器ショップコマンドを使用することを許可します
+     battlefront.command.guidebook:
+      default: op
+      description: ガイドブック管理用コマンドを使用することを許可します
+     battlefront.command.game:
+      default: true
+      description: ゲーム用コマンドを使用することを許可します

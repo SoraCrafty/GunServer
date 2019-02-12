@@ -29,6 +29,8 @@ use gun\fishing\item\FishingRod;
 
 use gun\discord\DiscordManager;
 
+use gun\player\PlayerManager;
+
 class Main extends PluginBase {
 	
 	public static $datafolder;
@@ -43,6 +45,8 @@ class Main extends PluginBase {
 	public $npcManager;
 	/*DiscordManagerのオブジェクト*/
 	public $discordManager;
+	/*PlayerManagerのオブジェクト*/
+	public $playerManager;
 
 
 	public function onLoad()
@@ -70,6 +74,7 @@ class Main extends PluginBase {
 		$this->listener = new Listener($this);
 		$this->npcManager = new NPCManager($this);
 		$this->discordManager = new DiscordManager($this);
+		$this->playerManager = new PlayerManager($this);
 		//$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 		$this->server->getNetwork()->setName("§l§fBattleFront§c2");

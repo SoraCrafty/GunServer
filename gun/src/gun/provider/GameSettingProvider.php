@@ -17,6 +17,7 @@ class GameSettingProvider extends Provider
     						"Game_Time" => 15 * 60,
     						"Waiting_Time" => 60,
     						"Killcount_Max" => 50,
+                            "Player_Health" => 40,
     						"Team_Data" => [
 				    				0 => [
 				                        "name" => "Red",
@@ -52,6 +53,11 @@ class GameSettingProvider extends Provider
     public function getMaxKillCount()
     {
     	return $this->data["Killcount_Max"];
+    }
+
+    public function getHealth()
+    {
+        return $this->data["Player_Health"];
     }
 
     public function getTeamName($id)

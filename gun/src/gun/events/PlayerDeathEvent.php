@@ -6,14 +6,12 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\item\Item;
 
 use gun\gameManager;
-use gun\data\playerData;
 use gun\weapons\Weapon;
 use gun\weapons\WeaponManager;
 
 class PlayerDeathEvent extends Events {/*要改善*/
 
 	public function __construct($plugin){
-		$this->playerdata = playerdata::getPlayerData();
 		parent::__construct($plugin);
 	}
 
