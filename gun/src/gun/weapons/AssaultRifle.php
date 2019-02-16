@@ -18,6 +18,7 @@ use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 
 use gun\Callback;
 use gun\Blocks;
+use gun\provider\AccountProvider;
 
 class AssaultRifle extends Weapon
 {
@@ -71,6 +72,7 @@ class AssaultRifle extends Weapon
 
 	public function onPreInteract($player, $data)
 	{
+		if(!$this->plugin->playerManager->isPC($player) && !AccountProvider::get()->getSetting($player, "sensitivity") === AccountProvider::SENSITIVITY_HIGH) return true;
 		$this->onInteract($player, $data);
 	}
 
@@ -93,7 +95,8 @@ class AssaultRifle extends Weapon
 		if(!isset($this->shooting[$name])) $this->shooting[$name] = false;
 
 		if($this->shooting[$name]) $this->shooting[$name] = false;
-		else{
+		else
+		{
 			$this->shooting[$name] = true;
 			$this->ShootingTask($player, $data, 0);
 		}

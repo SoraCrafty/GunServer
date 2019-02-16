@@ -11,7 +11,7 @@ class AccountProvider extends Provider
     /*ファイル名(拡張子はなし)*/
     const FILE_NAME = "account";
     /*セーブデータのバージョン*/
-    const VERSION = 1;
+    const VERSION = 2;
     /*デフォルトデータ*/
     const DATA_DEFAULT = [];
     /*デフォルトのプレイヤーデータ*/
@@ -20,6 +20,9 @@ class AccountProvider extends Provider
                                     "kill" => 0,
                                     "death" => 0,
                                     "point" => 0,
+                                    "setting" => [
+                                                "sensitivity" => self::SENSITIVITY_NORMAL
+                                                ],
                                     "weapon" => [
                                                 "main" => [
                                                             "type" => "assaultrifle",
@@ -33,6 +36,20 @@ class AccountProvider extends Provider
                                                         ]
                                                 ]
                                 ];
+
+    const SENSITIVITY_LOW = -1;
+    const SENSITIVITY_NORMAL = 0;
+    const SENSITIVITY_HIGH = 1;
+
+    public function open()
+    {
+        parent::open();
+        foreach (static::DATA_PLAYER_DAFAULT as $key => $value) {
+            foreach ($this->data as $name => $data) {
+                if(!isset($this->data[$name][$key])) $this->data[$name][$key] = $value;
+            }
+        }
+    }
 
     public function isRegistered(IPlayer $player)
     {
@@ -122,6 +139,16 @@ class AccountProvider extends Provider
     public function subtractPoint(IPlayer $player, int $point)
     {
         $this->data[$player->getName()]["point"] -= $point;
+    }
+
+    public function getSetting(IPlayer $player, $key)
+    {
+        return $this->data[$player->getName()]["setting"][$key];
+    }
+
+    public function setSetting(IPlayer $player, $key, $data)
+    {
+        $this->data[$player->getName()]["setting"][$key] = $data;
     }
 
     public function getMainWeaponData(IPlayer $player)

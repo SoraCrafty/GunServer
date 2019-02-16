@@ -8,8 +8,9 @@ use pocketmine\event\player\PlayerQuitEvent;
 
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
+use pocketmine\network\mcpe\protocol\ServerSettingsRequestPacket;
 
-use gun\form\forms\TestForm;
+use gun\form\forms\ServerSettingForm;
 
 class FormListener implements Listener
 {
@@ -28,6 +29,10 @@ class FormListener implements Listener
 		{
 			$form = FormManager::getForm($event->getPlayer());
 			if(!is_null($form)) $form->response($pk->formId, json_decode($pk->formData, true));
+		}
+		elseif($pk instanceof ServerSettingsRequestPacket)
+		{
+			FormManager::register(new ServerSettingForm($this->plugin, $event->getPlayer()));
 		}
 	}
 

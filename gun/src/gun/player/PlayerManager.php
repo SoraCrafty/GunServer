@@ -54,6 +54,11 @@ class PlayerManager
 		return $os;
 	}
 
+	public function isPC(Player $player)
+	{
+		return $this->getOS === self::OS_WINDOWS;
+	}
+
 	public function setLobbyInventory(Player $player)
 	{
 		$content = [];
