@@ -9,7 +9,8 @@ use gun\provider\AccountProvider;
 class ServerSettingForm extends Form
 {
 
-	public function send(int $id){
+	public function send(int $id)
+	{
 		$content = [];
 		$content[] = [
 			'type' => "step_slider",
@@ -35,8 +36,8 @@ class ServerSettingForm extends Form
 		$this->player->dataPacket($pk);
 	}
 
-	public function response(int $id, $data){
-		var_dump($data);
+	public function response(int $id, $data)
+	{
 		AccountProvider::get()->setSetting($this->player, "sensitivity", $data[0]);
 		return true;
 	}
