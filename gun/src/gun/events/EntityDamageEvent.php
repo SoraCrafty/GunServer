@@ -2,6 +2,7 @@
 namespace gun\events;
 
 use pocketmine\Player;
+use pocketmine\event\entity\EntityDamageEvent as EntityDamageEventRaw;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 use gun\gameManager;
@@ -26,6 +27,12 @@ class EntityDamageEvent extends Events {
 					}
 				}
 			}
+		}
+		if($event->getCause() === EntityDamageEventRaw::CAUSE_FALL)//テスト用のため分割して実装
+		{
+			$damage = round($event->getBaseDamage() / 5);
+			if($damage <= 1) $event->setCancelled(true);
+			$event->setBaseDamage(round($damage));
 		}
 	}
 	
