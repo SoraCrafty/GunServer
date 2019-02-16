@@ -14,7 +14,7 @@ class DiscordProvider extends Provider
     const VERSION = 1;
     /*デフォルトデータ*/
     const DATA_DEFAULT = [
-                            "enable" => true,
+                            "enable" => false,
                             "username" => "BattleFront2",
                             "webhook" => ""
     					];

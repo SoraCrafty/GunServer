@@ -94,7 +94,7 @@ class MainShopForm extends Form
 				$this->sendModal("§lMainWeaponShop(メイン武器屋)", $content, "購入", "戻る", 4, 1);
 				return true;
 
-			case 4://ベータ用のために簡易版、あとでちゃんとしたのつくる
+			case 4:
 				$result = "所持金が足りません";
 				if(AccountProvider::get()->getPoint($this->player) >= MainWeaponShop::get()->getPrice($this->weaponType, $this->weaponId))
 				{

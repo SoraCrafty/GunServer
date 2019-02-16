@@ -18,7 +18,7 @@ class DiscordManager{
 
     public function sendMessage($message)
     {
-    	if(!$this->provider->isEnable()) return false;
+    	if(!$this->provider->isEnable() || $this->provider->getWebhook() === "") return false;
     	
 		$message = [
 				  'username' => $this->provider->getUserName(),
