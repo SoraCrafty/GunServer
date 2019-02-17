@@ -44,6 +44,7 @@ class GameCommand extends BattleFrontCommand
                     $this->plugin->gameManager->gotoStage($sender, $team);
                     $this->plugin->gameManager->setNameTags($sender, $team);
                     $this->plugin->gameManager->setInventory($sender);
+                    $this->plugin->gameManager->setHealth($sender);
                 }
                 return true;
 
