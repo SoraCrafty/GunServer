@@ -24,6 +24,11 @@ class DiscordProvider extends Provider
     	return $this->data["enable"];
     }
 
+    public function setEnable(bool $value)
+    {
+        $this->data["enable"] = $value;
+    }
+
     public function getUserName()
     {
         return $this->data["username"];
@@ -32,6 +37,11 @@ class DiscordProvider extends Provider
     public function getWebhook()
     {
     	return $this->data["webhook"];
+    }
+
+    public function setWebhook($webhook)
+    {
+        $this->data["webhook"] = $webhook;
     }
 
 }
