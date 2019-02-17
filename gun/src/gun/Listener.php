@@ -60,6 +60,7 @@ class Listener implements MainListener {
 		$this->entitydamage = new events\EntityDamageEvent($this);
 		$this->playerdropitem = new events\PlayerDropItemEvent($this);
 		$this->playerchat = new events\PlayerChatEvent($this);
+		$this->playerrespawn = new events\PlayerRespawnEvent($this);
 	}
 	
 	public function onJoin(PlayerJoinEvent $event){
@@ -107,4 +108,9 @@ class Listener implements MainListener {
 		$this->playerchat->call($event);
 	}
 	
+	public function onRespawn(PlayerRespawnEvent $event)
+	{
+		$this->playerrespawn->call($event);
+	}
+
 }

@@ -12,6 +12,8 @@ class PlayerRespawnEvent extends Events{
 		if ($player->getInventory()->contains(Item::get(322 , 0)) ){
 			$player->getInventory()->removeItem(Item::get(322, 0, 1000));
 		}
+
+		$player->setHealth($player->getMaxHealth());
 	}
 
 
