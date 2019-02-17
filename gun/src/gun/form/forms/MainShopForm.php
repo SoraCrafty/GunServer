@@ -80,7 +80,7 @@ class MainShopForm extends Form
 				break;
 
 			case 3://武器購入確認画面(雑いので改善したい)
-				$weaponId = array_keys(WeaponManager::getAllData($this->weaponType))[$this->lastData];
+				$weaponId = array_keys(MainWeaponShop::get()->getItems($this->weaponType))[$this->lastData];
 				$this->weaponId = $weaponId;
 				$provider = ProviderManager::get(MainWeaponShop::PROVIDER_ID);
 				$price = $provider->getPrice($this->weaponType, $weaponId);
