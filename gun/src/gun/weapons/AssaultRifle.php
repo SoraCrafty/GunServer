@@ -124,13 +124,13 @@ class AssaultRifle extends Weapon
 	public function onDeath($player, $data, $args)
 	{
 		$name = $player->getName();
-		if(!isset($this->shooting[$name]) || $this->shooting[$name]) $this->shooting[$name] = false;
+		if(!isset($this->shooting[$name]) || $this->shooting[$name] === true) $this->shooting[$name] = false;
 	}
 
 	public function ShootingTask($player, $data, $tick)
 	{
 		$name = $player->getName();
-		if(!$this->shooting[$name]) return true;
+		if($this->shooting[$name] === false) return true;
 
 		if(!$player->isOnline()){
 			$this->shooting[$name] = false;
