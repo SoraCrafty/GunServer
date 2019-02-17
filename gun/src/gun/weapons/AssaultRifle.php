@@ -72,7 +72,7 @@ class AssaultRifle extends Weapon
 
 	public function onPreInteract($player, $data)
 	{
-		if(!$this->plugin->playerManager->isPC($player) && !AccountProvider::get()->getSetting($player, "sensitivity") === AccountProvider::SENSITIVITY_HIGH) return true;
+		if($this->plugin->playerManager->isPC($player) || AccountProvider::get()->getSetting($player, "sensitivity") !== AccountProvider::SENSITIVITY_HIGH) return true;
 		$this->onInteract($player, $data);
 	}
 
