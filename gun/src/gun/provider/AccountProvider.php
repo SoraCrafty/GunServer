@@ -3,6 +3,9 @@
 namespace gun\provider;
 
 use pocketmine\IPlayer;
+use pocketmine\Player;
+
+use gun\scoreboard\scoreboard;
 
 class AccountProvider extends Provider
 {
@@ -79,13 +82,14 @@ class AccountProvider extends Provider
     public function setExp(IPlayer $player, int $exp)
     {
         $this->data[$player->getName()]["exp"] = $exp;
+        $this->SCupdate("exp", $this->data[$player->getName()]["exp"], $player); 
     }
 
     public function addExp(IPlayer $player, int $exp)
     {
         $this->data[$player->getName()]["exp"] += $exp;
+        $this->SCupdate("exp", $this->data[$player->getName()]["exp"], $player);  
     }
-
     public function getKill(IPlayer $player)
     {
         return $this->data[$player->getName()]["kill"];
@@ -94,11 +98,13 @@ class AccountProvider extends Provider
     public function setKill(IPlayer $player, int $count)
     {
         $this->data[$player->getName()]["kill"] = $count;
+        $this->SCupdate("kill", $this->data[$player->getName()]["kill"], $player); 
     }
 
     public function addKill(IPlayer $player, int $amount)
     {
         $this->data[$player->getName()]["kill"] += $amount;
+        $this->SCupdate("kill", $this->data[$player->getName()]["kill"], $player); 
     }
 
     public function getDeath(IPlayer $player)
@@ -109,11 +115,13 @@ class AccountProvider extends Provider
     public function setDeath(IPlayer $player, int $count)
     {
         $this->data[$player->getName()]["death"] = $count;
+        $this->SCupdate("death", $this->data[$player->getName()]["death"], $player); 
     }
 
     public function addDeath(IPlayer $player, int $amount)
     {
         $this->data[$player->getName()]["death"] += $amount;
+        $this->SCupdate("death", $this->data[$player->getName()]["death"], $player);
     }
 
     public function getKillRatio(IPlayer $player, int $precision = 2)
@@ -129,11 +137,13 @@ class AccountProvider extends Provider
     public function setPoint(IPlayer $player, int $point)
     {
         $this->data[$player->getName()]["point"] = $point;
+        $this->SCupdate("point", $this->data[$player->getName()]["point"], $player);
     }
 
     public function addPoint(IPlayer $player, int $point)
     {
         $this->data[$player->getName()]["point"] += $point;
+        $this->SCupdate("point", $this->data[$player->getName()]["point"], $player);
     }
 
     public function subtractPoint(IPlayer $player, int $point)
@@ -171,8 +181,20 @@ class AccountProvider extends Provider
 
     public function setSubWeaponData(IPlayer $player, $key, $type, $id)
     {
-        $this->data[$player->getName()]["weapon"]["sub"][$key]["type"] = $type;
+	$this->data[$player->getName()]["weapon"]["sub"][$key]["type"] = $type;
         $this->data[$player->getName()]["weapon"]["sub"][$key]["id"] = $id;
+    }
+    
+    public function getAll(IPlayer $player)
+    {
+        return $this->data[$player->getName()];
+    }
+    
+    public function SCupdate($type, $data, $player)
+    {
+        if($player instanceof Player){
+            scoreboard::getScoreBoard()->updateScoreBoard($type, $this->data[$player->getName()][$type], $player); 
+        }
     }
 
 }
