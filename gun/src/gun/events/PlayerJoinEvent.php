@@ -31,6 +31,6 @@ class PlayerJoinEvent extends Events {
 
 		$this->plugin->playerManager->setLobbyInventory($player);
 
-		$this->plugin->discordManager->sendMessage('**⭕' . $player->getName() . 'がログインしました**');
+		$this->plugin->discordManager->sendMessage('**⭕' . $player->getName() . 'がログインしました** ' . '(' . count($this->plugin->getServer()->getOnlinePlayers()) . '/' . $this->plugin->getServer()->getMaxPlayers() . ')');
 	}
 }

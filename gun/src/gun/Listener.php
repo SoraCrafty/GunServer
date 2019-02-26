@@ -25,6 +25,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\DataPacketSendEvent;
+use pocketmine\event\server\CommandEvent;
 
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
@@ -61,6 +62,7 @@ class Listener implements MainListener {
 		$this->playerdropitem = new events\PlayerDropItemEvent($this);
 		$this->playerchat = new events\PlayerChatEvent($this);
 		$this->playerrespawn = new events\PlayerRespawnEvent($this);
+		$this->command = new events\CommandEvent($this);
 	}
 	
 	public function onJoin(PlayerJoinEvent $event){
@@ -111,6 +113,11 @@ class Listener implements MainListener {
 	public function onRespawn(PlayerRespawnEvent $event)
 	{
 		$this->playerrespawn->call($event);
+	}
+
+	public function onCommand(CommandEvent $event)
+	{
+		$this->command->call($event);
 	}
 
 }

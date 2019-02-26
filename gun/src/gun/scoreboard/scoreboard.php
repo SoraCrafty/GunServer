@@ -16,7 +16,7 @@ class scoreboard implements Listener{
 	//分からんけど多分id的なものだと思う
 	const objectiveName = 'gunserver';
 	//スコアボードのタイトル
-	const displayName = 'BattleFront';
+	const displayName = 'BattleFront§c2§f';
 	//並べ方 0が昇順 1が降順
 	const sortOrder = 0;
 	
@@ -67,7 +67,7 @@ class scoreboard implements Listener{
 		$pk->objectiveName = self::objectiveName;
 		$pk->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
 							/*行の長さを揃えるため*/
-		$pk->customName = str_pad($message, ((strlen(self::displayName) * 2) - strlen($message)));
+		$pk->customName = str_pad("・" . $message, ((strlen(self::displayName) * 2) - strlen($message)));
 		$pk->score = $line;
 		$pk->scoreboardId = $line;
 		
