@@ -160,7 +160,7 @@ class TeamDeathMatch extends Game
 
     public function WaitingTask()
     {
-        if(count($this->applicants) >= 1)
+        if(count($this->applicants) >= 2)
         {
             $this->waitingCount--;
             if($this->waitingCount === 0)

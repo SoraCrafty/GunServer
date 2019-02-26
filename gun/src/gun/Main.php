@@ -85,10 +85,10 @@ class Main extends PluginBase {
 
 	public function onDisable()
 	{
+		$this->discordManager->sendMessageDirect('**❗サーバーが停止しました  **(' . date("m/d H:i") . ')');
+
 		WeaponManager::close();
 		ProviderManager::close();
-
-		$this->discordManager->sendMessage('**❗サーバーが停止しました  **(' . date("m/d H:i") . ')');
 	}
 }
 

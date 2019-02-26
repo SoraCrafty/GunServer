@@ -28,4 +28,25 @@ class DiscordManager{
     	return true;
     }
 
+    public function sendMessageDirect($message)
+    {
+        if(!$this->provider->isEnable() || $this->provider->getWebhook() === "") return false;
+        
+        $message = [
+                  'username' => $this->provider->getUserName(),
+                  'content' => $message,
+                ];
+        $options = [
+                'http' => [
+                              'method' => 'POST',
+                              'header' => 'Content-Type: application/json',
+                              'content' => json_encode($message),
+                        ]
+                    ];
+        $options['ssl']['verify_peer']=false;
+        $options['ssl']['verify_peer_name']=false;
+        $response = file_get_contents($this->provider->getWebhook(), false, stream_context_create($options));
+        return $response;
+    }
+
 }
