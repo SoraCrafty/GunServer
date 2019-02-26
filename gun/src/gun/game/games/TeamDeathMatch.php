@@ -147,10 +147,10 @@ class TeamDeathMatch extends Game
 
     public function leave($player)
     {
-        $this->setDefaultHealth($player);
+        $this->plugin->playerManager->setDefaultHealth($player);
         $this->setDefaultSpawn($player);
         $this->gotoLobby($player);
-        $this->setLobbyInventory($player);
+        $this->plugin->playerManager->setLobbyInventory($player);
         $this->setDefaultNameTags($player);
         $this->bossbar->unregister($player);
     }

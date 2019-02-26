@@ -151,7 +151,7 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "発射レート", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Delay_Between_Shots"] : 1];
 						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
 						$content[] = ["type" => "slider", "text" => "射程", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Range"] : 1];
-						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 10];
+						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 0];
 						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 30, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
 						$content[] = ["type" => "toggle", "text" => "スニーク時の機能のon/off", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["Enable"] : true];
 						$content[] = ["type" => "toggle", "text" => "スニーク時に反動を消す", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["No_Recoil"] : true];
@@ -165,7 +165,7 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "発射後のクールタイム", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Cooltime_Between_Shots"] : 20];
 						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
 						$content[] = ["type" => "slider", "text" => "射程", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Range"] : 1];
-						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 10];
+						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 0];
 						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 30, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
 						$content[] = ["type" => "toggle", "text" => "スニーク時の機能のon/off", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["Enable"] : true];
 						$content[] = ["type" => "toggle", "text" => "スニーク時に反動を消す", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["No_Recoil"] : true];
@@ -187,7 +187,7 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "移動速度(入力値の1/10倍されます)", "min" => 0, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Move"]["Move_Speed"] * 10 : 10];
 						break;
 				}
-				$content[] = ["type" => "toggle", "text" => "送信後この武器をインベントリへ追加", "default" => true];
+				$content[] = ["type" => "toggle", "text" => "送信後この武器をインベントリへ追加", "default" => false];
 				$data = [
 					'type'=>'custom_form',
 					'title'   => "§l武器編集/追加/削除画面",
