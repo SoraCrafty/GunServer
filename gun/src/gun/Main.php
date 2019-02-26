@@ -9,7 +9,7 @@ use pocketmine\entity\Entity;
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 
-use gun\bossbar\BossBar;
+use gun\bossbar\BossBarManager;
 
 use gun\fireworks\FireworksAPI;
 use gun\fireworks\item\Fireworks;
@@ -31,6 +31,8 @@ use gun\discord\DiscordManager;
 
 use gun\player\PlayerManager;
 
+use gun\game\GameManager;
+
 class Main extends PluginBase {
 	
 	public static $datafolder;
@@ -48,7 +50,6 @@ class Main extends PluginBase {
 	/*PlayerManagerのオブジェクト*/
 	public $playerManager;
 
-
 	public function onLoad()
 	{
 		ItemFactory::registerItem(new Fireworks(), true);
@@ -61,16 +62,16 @@ class Main extends PluginBase {
 	
 	public function onEnable(){
 		if (!file_exists($this->getDataFolder())) @mkdir($this->getDataFolder(), 0744, true);
+		date_default_timezone_set('Asia/Tokyo');
 		ProviderManager::init($this);
 		WeaponManager::init($this);
 		CommandManager::init($this);
 		FormManager::init($this);
-		$this->BossBar = new BossBar($this);
+		BossBarManager::init($this);
+		GameManager::init($this);
 		$this->Fireworks = new FireworksAPI($this);
 		self::$datafolder = $this->getDataFolder();
 		$this->server = $this->getServer();
-		//$this->data = new dataManager($this);
-		$this->gameManager = new gameManager($this);
 		$this->listener = new Listener($this);
 		$this->npcManager = new NPCManager($this);
 		$this->discordManager = new DiscordManager($this);
@@ -78,12 +79,16 @@ class Main extends PluginBase {
 		//$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 		$this->server->getNetwork()->setName("§l§fBattleFront§c2");
+
+		$this->discordManager->sendMessage('**❗サーバーが`' . GameManager::getObject()->getName() . '`モードで起動しました  **(' . date("m/d H:i") . ')');
 	}
 
 	public function onDisable()
 	{
 		WeaponManager::close();
 		ProviderManager::close();
+
+		$this->discordManager->sendMessage('**❗サーバーが停止しました  **(' . date("m/d H:i") . ')');
 	}
 }
 

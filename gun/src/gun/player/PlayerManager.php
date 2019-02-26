@@ -86,4 +86,11 @@ class PlayerManager
 		$player->setHealth(20);
 	}
 
+	public function setDefaultNameTags(Player $player)
+	{
+    	$tag = $player->getName();
+    	$player->setNameTag($tag);
+    	$player->setDisplayName($tag);
+	}
+
 }

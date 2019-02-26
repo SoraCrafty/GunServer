@@ -11,7 +11,8 @@ class ProviderManager
 
     public static function init($plugin)
     {
-        self::register(new GameSettingProvider($plugin));
+        self::register(new TDMSettingProvider($plugin));
+        self::register(new MainSettingProvider($plugin));
         self::register(new MainWeaponShop($plugin));
         self::register(new DiscordProvider($plugin));
         self::register(new AccountProvider($plugin));

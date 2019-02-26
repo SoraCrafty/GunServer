@@ -42,6 +42,8 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 	private $messageQueue = [];
 	/*コマンドを設定するための変数*/
 	private $commandQueue = [];
+	/*イベントを設定するための変数*/
+	private $eventQueue = [];
 
 	public function __construct($plugin)
 	{
@@ -66,6 +68,9 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 					break;
 				case CommandNPC::TYPE:
 					$npc = CommandNPC::fromSimpleData($this->plugin, $data);
+					break;
+				case EventNPC::TYPE:
+					$npc = EventNPC::fromSimpleData($this->plugin, $data);
 					break;
 			}
 			$this->npcs[$npc->getId()] = $npc;
@@ -102,8 +107,11 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 					case "command":
 						$npc = CommandNPC::fromPlayerObject($sender, $this->plugin);
 						break;
+					case "event":
+						$npc = EventNPC::fromPlayerObject($sender, $this->plugin);
+						break;
 					default:
-						$sender->sendMessage("使い方: /npc create <normal|message|command>");
+						$sender->sendMessage("使い方: /npc create <normal|message|command|event>");
 						return true;
 				}
 
@@ -269,8 +277,20 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				$sender->sendMessage("コマンドを設定したいNPCをタッチしてください");
 				return true;
 
+			case "event":
+				if(!$sender instanceof Player){
+					$sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
+					return true;
+				}
+
+				$event = implode(" ", $args);
+
+				$this->eventQueue[$sender->getName()] = $event;
+				$sender->sendMessage("イベントを設定したいNPCをタッチしてください");
+				return true;
+
 			default:
-				$sender->sendMessage(TextFormat::RED . "使い方: /npc <create|delete|name|size|skin|gaze|inventory|message|command|>");
+				$sender->sendMessage(TextFormat::RED . "使い方: /npc <create|delete|name|size|skin|gaze|inventory|message|command|event>");
 				return true;
 		}
 	}
@@ -338,7 +358,8 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				   !isset($this->commandQueue[$name]) && 
 				   !isset($this->skinQueue[$name]) &&
 				   !isset($this->gazeQueue[$name]) &&
-				   !isset($this->inventoryQueue[$name])
+				   !isset($this->inventoryQueue[$name]) &&
+				   !isset($this->eventQueue[$name])
 				  )
 				{
 					$npc->onTouch($player);
@@ -441,6 +462,20 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 						$npc->setCommand($this->commandQueue[$name]);
 						unset($this->commandQueue[$name]);
 						$player->sendMessage(TextFormat::GREEN . "コマンドを設定しました");
+					}
+				}
+
+				if(isset($this->eventQueue[$name]))
+				{
+					if($npc->getType() !== EventNPC::TYPE)
+					{
+						$player->sendMessage(TextFormat::RED . "このNPCはイベントタイプのNPCではありません");
+					}
+					else
+					{
+						$npc->setEvent($this->eventQueue[$name]);
+						unset($this->eventQueue[$name]);
+						$player->sendMessage(TextFormat::GREEN . "イベントを設定しました");
 					}
 				}
 			}

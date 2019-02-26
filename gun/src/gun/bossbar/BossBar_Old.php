@@ -7,6 +7,9 @@ use pocketmine\Server;
 use pocketmine\math\Vector3;
 use pocketmine\entity\Entity;
 
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
+
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\BossEventPacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
@@ -14,8 +17,10 @@ use pocketmine\network\mcpe\protocol\MoveEntityAbsolutePacket;
 use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 
-class BossBar{
+class BossBar implements Listener{
 
+	/*Mainクラスのオブジェクト*/
+	private $plugin;
 	/*用いるEid*/
 	private $eid;
 	/*タイトル*/
@@ -23,25 +28,36 @@ class BossBar{
 	/*ゲージの割合*/
 	private $percentage = 1;
 	/*ボスバーが表示状態かどうか*/
-	private $visible = true;
-	/*このボスバーを表示するプレイヤーの配列*/
-	private $players = [];
+	private $visible = false;
 
-	public function __construct()
+	public function __construct($plugin)
 	{
+		$this->plugin = $plugin;
 		$this->eid = Entity::$entityCount++;
-		BossBarManager::register($this);
+
+		$this->plugin->getScheduler()->scheduleRepeatingTask(new BossBarTask($this), 20);
+		$this->plugin->getServer()->getPluginManager()->registerEvents($this, $this->plugin);
 	}
 
-	public function getEid()
+	public function onJoin(PlayerJoinEvent $event)//BossBar系は単体で動くようにしたかったので…
 	{
-		return $this->eid;
+		if($this->visible)
+		{
+			$player = $event->getPlayer();
+
+			$this->showBossBar($player);
+
+			$this->updateTitle($player);
+			$this->updatePercentage($player);
+		}
 	}
+
+	/*以下API部分*/
 
 	public function show()
 	{
 		$this->visible = true;
-		foreach ($this->players as $player) {
+		foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
 			$this->showBossBar($player);
 		}
 	}
@@ -49,7 +65,7 @@ class BossBar{
 	public function hide()
 	{
 		$this->visible = false;
-		foreach ($this->players as $player) {
+		foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
 			$this->hideBossBar($player);
 		}
 	}
@@ -61,7 +77,7 @@ class BossBar{
 
 	public function move()
 	{
-		foreach ($this->players as $player) {
+		foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
 			$this->moveToPlayer($player);
 		}
 	}
@@ -69,7 +85,7 @@ class BossBar{
 	public function setTitle($title)
 	{
 		$this->title = $title;
-		foreach ($this->players as $player) {
+		foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
 			$this->updateTitle($player);
 		}
 	}
@@ -82,27 +98,10 @@ class BossBar{
 			$this->show();
 		}
 		else{
-			foreach ($this->players as $player) {
+			foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
 				$this->updatePercentage($player);
 			}
 		}
-	}
-
-	public function register(Player $player)
-	{
-		$this->players[$player->getName()] = $player;
-		if($this->visible) $this->showBossBar($player);
-	}
-
-	public function unregister(Player $player)
-	{
-		unset($this->players[$player->getName()]);
-		if($this->visible) $this->hideBossBar($player);
-	}
-
-	public function isRegistered(Player $player)
-	{
-		return isset($this->players[$player->getName()]);
 	}
 
 	public function showBossBar($player)
