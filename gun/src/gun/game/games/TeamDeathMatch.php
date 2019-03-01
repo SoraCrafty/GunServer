@@ -7,6 +7,7 @@ use pocketmine\Player;
 use pocketmine\math\Vector3;
 use pocketmine\level\Position;
 use pocketmine\nbt\NBT;
+use pocketmine\entity\Attribute;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -155,6 +156,8 @@ class TeamDeathMatch extends Game
         $this->plugin->playerManager->setLobbyInventory($player);
         $this->setDefaultNameTags($player);
         $this->bossbar->unregister($player);
+        $attribute = $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
+        $attribute->setValue($player->isSprinting() ? 1.3 : 1, false, true);
     }
 
     /*ゲーム開始まであと何秒か*/
