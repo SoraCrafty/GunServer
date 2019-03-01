@@ -188,4 +188,3 @@ class MainShopForm extends Form
 	}
 
 }
-		

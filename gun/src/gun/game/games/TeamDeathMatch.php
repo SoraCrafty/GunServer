@@ -8,6 +8,8 @@ use pocketmine\math\Vector3;
 use pocketmine\level\Position;
 use pocketmine\nbt\NBT;
 use pocketmine\entity\Attribute;
+use pocketmine\entity\EffectInstance;
+use pocketmine\entity\Effect;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -654,6 +656,18 @@ class TeamDeathMatch extends Game
                 }
             }
         }
+    }
+
+    public function onRespawn($event)
+    {
+        $player = $event->getPlayer();
+        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(10), 20 * 3, 10, false)]), 1);
+        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(11), 20 * 3, 10, false)]), 1);
+    }
+
+    public function delayAddEffect($player, $effect)
+    {
+        $player->addEffect($effect);
     }
     
 }

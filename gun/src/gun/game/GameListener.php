@@ -5,6 +5,7 @@ namespace gun\game;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 
 use gun\npc\EventNPCTouchEvent;
@@ -37,6 +38,11 @@ class GameListener implements Listener
 	public function onDamage(EntityDamageEvent $event)
 	{
 		GameManager::getObject()->onDamage($event);
+	}
+
+	public function onRespawn(PlayerRespawnEvent $event)
+	{
+		GameManager::getObject()->onRespawn($event);
 	}
 
 }

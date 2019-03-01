@@ -43,5 +43,10 @@ abstract class Game
 
     }
 
+    public function onRespawn($event)
+    {
+
+    }
+
 
 }
