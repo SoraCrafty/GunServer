@@ -32,6 +32,11 @@ class MainWeaponShop extends Provider
         return $items;
     }
 
+    public function deleteItem($type, $id)
+    {
+        unset($this->data[$type][$id]);
+    }
+
     public function getPrice($type, $id)
     {
         $price = null;

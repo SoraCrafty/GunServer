@@ -11,6 +11,8 @@ use gun\weapons\AssaultRifle;
 use gun\weapons\SniperRifle;
 use gun\weapons\HandGun;
 
+use gun\provider\MainWeaponShop;
+
 class EditWeaponForm extends Form
 {
 /*雑*/
@@ -299,6 +301,7 @@ class EditWeaponForm extends Form
 			case 12:
 				$this->sendModal("§l武器編集/追加/削除画面", "削除しました", $label1 = "戻る", $label2 = "閉じる", $jump1 = 1, $jump2 = 0);
 				WeaponManager::unset($this->weaponType, $this->weaponId);
+				MainWeaponShop::get()->deleteItem($this->weaponType, $this->weaponId);
 				return true;
 
 			default:

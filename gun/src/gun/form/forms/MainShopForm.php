@@ -39,6 +39,8 @@ class MainShopForm extends Form
 				{
 					$buttons[] = ["text" => "§l§e★§8商品の編集 -Edit goods-§r§8\n商品を編集します"];
 					$cache[] = 11;
+					$buttons[] = ["text" => "§l§e★§c商品の削除 -Edit goods-§r§8\n商品を削除します"];
+					$cache[] = 21;
 				}
 				$data = [
 					'type'    => "form",
@@ -137,6 +139,40 @@ class MainShopForm extends Form
 				$provider = ProviderManager::get(MainWeaponShop::PROVIDER_ID);
 				$provider->setPrice($this->weaponType, array_keys(WeaponManager::getAllData($this->weaponType))[$this->lastData[0]], $this->lastData[1]);
 				$this->sendModal("§lMainWeaponShop(メイン武器屋)", "設定を反映しました", $label1 = "戻る", $label2 = "閉じる", $jump1 = 1, $jump2 = 0);
+				return true;
+
+			case 21:
+				$content = [];
+				$content[] = ["type" => "dropdown", "text" => "商品として削除する武器の武器種を選択してください\n\n武器種", "options" => WeaponManager::getNames()];
+				$data = [
+					'type'=>'custom_form',
+					'title'   => "§lMainWeaponShop(メイン武器屋)",
+					'content' => $content
+				];
+				$cache = [22];
+				break;
+
+			case 22:
+				$this->weaponType = WeaponManager::getIds()[$this->lastData[0]];
+				$content = [];
+				$text = "商品として削除する武器の武器IDを選択してください\n武器種>>" . WeaponManager::getNames()[$this->lastData[0]] . "\n武器ID";
+				$array = [];
+				foreach (array_keys(MainWeaponShop::get()->getItems($this->weaponType)) as $key => $value) {
+					$array[] = (string) $value;
+				}
+				$content[] = ["type" => "dropdown", "text" => $text, "options" => $array];
+				$data = [
+					'type'=>'custom_form',
+					'title'   => "§lMainWeaponShop(メイン武器屋)",
+					'content' => $content
+				];
+				$cache = [23];
+				break;
+
+			case 23:
+				$provider = MainWeaponShop::get();
+				$provider->deleteItem($this->weaponType, array_keys(MainWeaponShop::get()->getItems($this->weaponType))[$this->lastData[0]]);
+				$this->sendModal("§lMainWeaponShop(メイン武器屋)", "商品を削除しました", $label1 = "戻る", $label2 = "閉じる", $jump1 = 1, $jump2 = 0);
 				return true;
 
 			default:
