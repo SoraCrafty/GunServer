@@ -6,6 +6,7 @@ use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\math\Vector3;
 use pocketmine\level\Position;
+use pocketmine\nbt\NBT;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -384,6 +385,7 @@ class TeamDeathMatch extends Game
                         1 => 0
                         ];
         $this->killstreak = [];
+        $this->applicants = [];
     }
 
     public function setTeam($player, $team)
@@ -524,6 +526,7 @@ class TeamDeathMatch extends Game
         $player->getInventory()->setContents($content);   
         
         $helmet = Item::get(298, 0, 1);
+        $helmet->setNamedTag(NBT::parseJSON("{Unbreakable:1}"));
         $helmet->setCustomColor($this->provider->getTeamColor($this->getTeam($player)));
         $player->getArmorInventory()->setHelmet($helmet);
     }
