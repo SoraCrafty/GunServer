@@ -3,6 +3,7 @@
 namespace gun\provider;
 
 use pocketmine\utils\Config;
+use pocketmine\utils\Color;
 
 class TDMSettingProvider extends Provider
 {
@@ -26,7 +27,12 @@ class TDMSettingProvider extends Provider
 				                        			"x" => 0,
 				                        			"y" => 5,
 				                        			"z" => 0
-				                        		]
+				                        		],
+                                        "color" => [
+                                                    "r" => 255,
+                                                    "g" => 0,
+                                                    "b" => 0
+                                                ]
 				                        ],
 				                    1 => [
 				                        "name" => "Blue",
@@ -35,10 +41,22 @@ class TDMSettingProvider extends Provider
 				                        			"x" => 0,
 				                        			"y" => 5,
 				                        			"z" => 0
-				                        		]
+				                        		],
+                                        "color" => [
+                                                    "r" => 0,
+                                                    "g" => 0,
+                                                    "b" => 255
+                                                ]
 				                       	]
 				                    ]
     					];
+
+    public function open()
+    {
+        parent::open();
+        if(!isset($this->data["Team_Data"][0]["color"])) $this->data["Team_Data"][0]["color"] = self::DATA_DEFAULT["Team_Data"][0]["color"];
+        if(!isset($this->data["Team_Data"][1]["color"])) $this->data["Team_Data"][1]["color"] = self::DATA_DEFAULT["Team_Data"][1]["color"];
+    }
 
     public function getGameTime()
     {
@@ -73,6 +91,11 @@ class TDMSettingProvider extends Provider
     public function getTeamSpawn($id)
     {
     	return $this->data["Team_Data"][$id]["spawn"];
+    }
+
+    public function getTeamColor($id)
+    {
+        return new Color($this->data["Team_Data"][$id]["color"]["r"], $this->data["Team_Data"][$id]["color"]["g"], $this->data["Team_Data"][$id]["color"]["b"]);
     }
 
 }

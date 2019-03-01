@@ -482,6 +482,7 @@ class TeamDeathMatch extends Game
 	    	$tag = $this->provider->getTeamNameDecoration($team) . $player->getName() . "§f";
 	    	$player->setNameTag($tag);
 	    	$player->setDisplayName($tag);
+            $player->setNameTagAlwaysVisible(false);
     	}
     }
 
@@ -515,11 +516,16 @@ class TeamDeathMatch extends Game
     public function setInventory($player)
     {
         if(!$player->isOnline()) return true;
+
         $content = [];
         $content[] = $this->plugin->playerManager->getMainWeapon($player);
         $content = array_merge($content, $this->plugin->playerManager->getSubWeapons($player));
         $content[] = Item::get(262, 0, 1);
         $player->getInventory()->setContents($content);   
+        
+        $helmet = Item::get(298, 0, 1);
+        $helmet->setCustomColor($this->provider->getTeamColor($this->getTeam($player)));
+        $player->getArmorInventory()->setHelmet($helmet);
     }
 
     public function setHealthAll()

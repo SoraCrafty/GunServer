@@ -4,8 +4,8 @@ namespace gun\game\games;
 
 abstract class Game 
 {
-    const GAME_ID = "";
-    const GAME_NAME = "";
+    const GAME_ID = "ffa";
+    const GAME_NAME = "FFA";
 
     public static function getId()
     {
@@ -19,18 +19,23 @@ abstract class Game
 
     public function isGaming()
     {
-
         return false;
     }
 
-    public function onInteract($event)
+
+    public function join($player)
+    {
+
+    }
+
+    public function leave($player)
     {
 
     }
 
     public function onEventNPCTouch($event)
     {
-
+        if($event->getEventId() !== "game") return true;
     }
 
     public function onPlayerDeath($event)
