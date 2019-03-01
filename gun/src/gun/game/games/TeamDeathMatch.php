@@ -157,7 +157,7 @@ class TeamDeathMatch extends Game
         $this->setDefaultNameTags($player);
         $this->bossbar->unregister($player);
         $attribute = $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
-        $attribute->setValue($player->isSprinting() ? 1.3 : 1, false, true);
+        $attribute->setValue($player->isSprinting() ? 1.3 * $attribute->getDefaultValue() : $attribute->getDefaultValue(), false, true);
     }
 
     /*ゲーム開始まであと何秒か*/

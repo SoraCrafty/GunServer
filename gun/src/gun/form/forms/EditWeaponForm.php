@@ -96,12 +96,20 @@ class EditWeaponForm extends Form
 						break;
 					case 1:
 						$mode = self::MODE_EDIT;
-						$content[] = ["type" => "dropdown", "text" => "編集する武器の武器IDを選択してください\n\n武器ID", "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+						$array = [];
+						foreach (array_keys(WeaponManager::getAllData($this->weaponType)) as $key => $value) {
+							$array[] = (string) $value;
+						}
+						$content[] = ["type" => "dropdown", "text" => "編集する武器の武器IDを選択してください\n\n武器ID", "options" => $array];
 						$cache = [4];
 						break;
 					case 2:
 						$mode = self::MODE_DELETE;
-						$content[] = ["type" => "dropdown", "text" => "削除する武器の武器IDを選択してください\n\n武器ID", "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+						$array = [];
+						foreach (array_keys(WeaponManager::getAllData($this->weaponType)) as $key => $value) {
+							$array[] = (string) $value;
+						}
+						$content[] = ["type" => "dropdown", "text" => "削除する武器の武器IDを選択してください\n\n武器ID", "options" => $array];
 						$cache = [11];
 						break;
 					default:
@@ -140,11 +148,11 @@ class EditWeaponForm extends Form
 
 				$data = WeaponManager::getData($this->weaponType, $this->weaponId);
 				$content = [];
-				$content[] = ["type" => "label", "text" => "武器ID >> " . $this->weaponId];
-				$content[] = ["type" => "input", "text" => "武器名(装飾コード使用可)", "default" => $this->mode === self::MODE_EDIT ? $data["Item_Information"]["Item_Name"]:""];
+				$content[] = ["type" => "label", "text" => "武器ID >> " . (string) $this->weaponId];
+				$content[] = ["type" => "input", "text" => "武器名(装飾コード使用可)", "default" => $this->mode === self::MODE_EDIT ? (string) $data["Item_Information"]["Item_Name"]:""];
 				$content[] = ["type" => "input", "text" => "アイテムID", "default" => $this->mode === self::MODE_EDIT ? (string) $data["Item_Information"]["Item_Id"]:""];
 				$content[] = ["type" => "input", "text" => "アイテムのダメージ値", "default" => $this->mode === self::MODE_EDIT ? (string) $data["Item_Information"]["Item_Damage"]:""];
-				$content[] = ["type" => "input", "text" => "武器の説明文", "default" => $this->mode === self::MODE_EDIT ? $data["Item_Information"]["Item_Lore"]:""];
+				$content[] = ["type" => "input", "text" => "武器の説明文", "default" => $this->mode === self::MODE_EDIT ? (string) $data["Item_Information"]["Item_Lore"]:""];
 				switch($this->weaponType)
 				{
 					case AssaultRifle::WEAPON_ID:

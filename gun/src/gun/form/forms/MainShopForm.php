@@ -119,7 +119,11 @@ class MainShopForm extends Form
 				$this->weaponType = WeaponManager::getIds()[$this->lastData[0]];
 				$content = [];
 				$text = "商品として追加する、または値段を変更する武器の武器IDを選択し、値段を入力してください\n武器種>>" . WeaponManager::getNames()[$this->lastData[0]] . "\n武器ID";
-				$content[] = ["type" => "dropdown", "text" => $text, "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+				$array = [];
+				foreach (array_keys(WeaponManager::getAllData($this->weaponType)) as $key => $value) {
+					$array[] = (string) $value;
+				}
+				$content[] = ["type" => "dropdown", "text" => $text, "options" => $array];
 				$content[] = ["type" => "input", "text" => "値段", "placeholder" => "値段を入力"];
 				$data = [
 					'type'=>'custom_form',
