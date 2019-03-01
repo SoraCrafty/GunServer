@@ -148,6 +148,7 @@ class TeamDeathMatch extends Game
 
     public function leave($player)
     {
+        if(!$player->isOnline()) return true;
         $this->plugin->playerManager->setDefaultHealth($player);
         $this->setDefaultSpawn($player);
         $this->gotoLobby($player);
@@ -526,7 +527,6 @@ class TeamDeathMatch extends Game
         $player->getInventory()->setContents($content);   
         
         $helmet = Item::get(298, 0, 1);
-        $helmet->setNamedTag(NBT::parseJSON("{Unbreakable:1}"));
         $helmet->setCustomColor($this->provider->getTeamColor($this->getTeam($player)));
         $player->getArmorInventory()->setHelmet($helmet);
     }
