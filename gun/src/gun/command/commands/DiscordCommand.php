@@ -35,13 +35,19 @@ class DiscordCommand extends BattleFrontCommand
                 return true;
 
             case "webhook":
+                $channel = array_shift($args);
+                if(is_null($channel))
+                {
+                    $sender->sendMessage(TextFormat::RED . "チャンネル名を指定してください");
+                    return false;
+                }
                 $webhook = array_shift($args);
                 if(is_null($webhook))
                 {
                     $sender->sendMessage(TextFormat::RED . "Discordとの連携用URLを指定してください");
                     return false;
                 }
-                DiscordProvider::get()->setWebhook($webhook);
+                DiscordProvider::get()->setWebhook($webhook, $channel);
                 $sender->sendMessage("Discordとの連携用URLを変更しました");
                 return true;
 
