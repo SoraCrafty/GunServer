@@ -19,7 +19,6 @@ class PlayerDeathEvent extends Events {/*要改善*/
 	public function call($event){
 		$event->setKeepInventory(true);
 		$player = $event->getPlayer();
-
 		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
 			$killer = $player->getLastDamageCause()->getDamager();
 			if($killer instanceof Player)
