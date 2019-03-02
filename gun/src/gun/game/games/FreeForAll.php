@@ -19,7 +19,7 @@ abstract class Game
 
     public function isGaming()
     {
-        return false;
+        return true;
     }
 
 

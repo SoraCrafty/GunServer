@@ -18,7 +18,6 @@ class RebootTask extends Task{
 
 	public function onRun($currentTick){
 		$this->count--;
-		var_dump($this->count);
 
 		if($this->count === 60 * 10){
 			$this->plugin->getServer()->broadcastMessage("§bSystem>>§f再起動まで残り10分です");

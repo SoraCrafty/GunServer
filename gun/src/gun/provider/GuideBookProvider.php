@@ -26,6 +26,11 @@ class GuideBookProvider extends Provider
                             "pages" => []
     					];
 
+    public function open()
+    {
+        parent::open();
+    }
+
     public function setGuideBook(WrittenBook $book)
     {
         $this->data["title"] = $book->getTitle();
@@ -47,7 +52,7 @@ class GuideBookProvider extends Provider
     public function getWritableGuideBook()
     {
         $book = new WritableBook();
-        $book->setPages($this->data["pages"]);
+        $book->setPages($this->arrayConvertToTags($this->data["pages"]));
         return $book;
     }
 
