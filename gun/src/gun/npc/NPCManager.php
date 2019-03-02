@@ -170,6 +170,20 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				}
 
 				$this->skinQueue[$sender->getName()] = $sender->getSkin();
+
+				$target = array_shift($args);
+				if(!is_null($target))
+				{
+					$player = $this->plugin->getServer()->getPlayer($target);
+					if(!is_null($player)) $this->skinQueue[$sender->getName()] = $player->getSkin();
+					else
+					{
+						$sender->sendMessage(TextFormat::RED . "そのプレイヤー存在しません");
+						unset($this->skinQueue[$sender->getName()]);
+						return true;
+					}
+				}
+
 				$sender->sendMessage("スキンを設定したいNPCをタッチしてください");
 				return true;
 

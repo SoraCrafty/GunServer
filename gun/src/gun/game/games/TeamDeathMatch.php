@@ -72,6 +72,7 @@ class TeamDeathMatch extends Game
             case 1:
                 $this->joinAll();
                 $this->sendTitle("§l§cGame Start!!§r", "§f試合開始!!", 5, 20, 10);
+                $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が開始されました  **(' . date("m/d H:i") . ')', "game");
                 $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
                 $this->GameTask($this->provider->getGameTime());
                 return true;
@@ -334,6 +335,7 @@ class TeamDeathMatch extends Game
             case 1:
                 $winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
                 $this->sendMessage("§aGAME>>§f" . $this->provider->getTeamNameDecoration($winteam) . $this->provider->getTeamName($winteam) . "§fチームの勝利!!");
+                $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が終了しました 勝利チーム:' . $this->provider->getTeamName($winteam) . ' **(' . date("m/d H:i") . ')', "game");
                 $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 10);
                 return true;
 
@@ -449,6 +451,7 @@ class TeamDeathMatch extends Game
         if($this->killstreak[$name] >= 5)
         {
             $this->sendMessage("§aGAME>>§f" . $player->getNameTag() . "§fが" . $this->killstreak[$name] . "キルストリークを達成しました");
+            $this->plugin->discordManager->sendConvertedMessage('**❗❗❗' . $player->getNameTag() . 'が' . $this->killstreak[$name] . 'キルストリークを達成しました**');
         }
     }
 
