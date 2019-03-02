@@ -81,6 +81,7 @@ class Main extends PluginBase {
 		$this->server->getNetwork()->setName("§l§fBattleFront§c2");
 
 		$this->discordManager->sendMessage('**❗サーバーが`' . GameManager::getObject()->getName() . '`モードで起動しました  **(' . date("m/d H:i") . ')');
+		$this->getScheduler()->scheduleRepeatingTask(new RebootTask($this), 20);
 	}
 
 	public function onDisable()
