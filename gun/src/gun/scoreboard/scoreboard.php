@@ -20,8 +20,8 @@ class scoreboard implements Listener{
 	//並べ方 0が昇順 1が降順
 	const sortOrder = 0;
 	
-	const placeLine = ['exp' => 1, 'kill' => 2, 'death' => 3, 'point' => 4];
-	const deco = ['exp' => '§e', 'kill' => '§c', 'death' => '§a', 'point' => '§d'];
+	const placeLine = ['exp' => 1, 'kill' => 2, 'death' => 3, 'point' => 4, 'killratio' => 5];
+	const deco = ['exp' => '§e', 'kill' => '§c', 'death' => '§a', 'point' => '§d', 'killratio' => '§b'];
 	
 	private static $instance;
 	

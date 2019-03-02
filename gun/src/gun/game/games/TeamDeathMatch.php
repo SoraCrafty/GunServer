@@ -17,6 +17,8 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use gun\Callback;
 use gun\fireworks\item\Fireworks;
 
+use gun\ranking\Ranking;
+
 use gun\provider\ProviderManager;
 use gun\provider\TDMSettingProvider;
 use gun\provider\AccountProvider;
@@ -80,6 +82,7 @@ class TeamDeathMatch extends Game
 
             case 3:
                 $this->givePrizeAll();//賞金を渡したかったので書き加えました
+                $this->updateRanking();//ランキングアップデート用
                 $this->leaveAll();
                 $this->resetGameStatus();
                 $this->TimeTable();//最初に戻る
@@ -607,6 +610,11 @@ class TeamDeathMatch extends Game
         	AccountProvider::get()->addPoint($player, 2000);
             $player->sendMessage('§aGAME>>§f>>賞金を贈与しました');
         }
+    }
+    
+    public function updateRanking()
+    {
+        Ranking::get()->Ranking();
     }
 
     public function onEventNPCTouch($event)

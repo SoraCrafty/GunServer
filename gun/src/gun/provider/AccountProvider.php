@@ -98,13 +98,15 @@ class AccountProvider extends Provider
     public function setKill(IPlayer $player, int $count)
     {
         $this->data[$player->getName()]["kill"] = $count;
-        $this->SCupdate("kill", $this->data[$player->getName()]["kill"], $player); 
+        $this->SCupdate("kill", $this->data[$player->getName()]["kill"], $player);
+        $this->SCupdate("killratio", $this->getKillRatio($player), $player); 
     }
 
     public function addKill(IPlayer $player, int $amount)
     {
         $this->data[$player->getName()]["kill"] += $amount;
         $this->SCupdate("kill", $this->data[$player->getName()]["kill"], $player); 
+        $this->SCupdate("killratio", $this->getKillRatio($player), $player); 
     }
 
     public function getDeath(IPlayer $player)
@@ -116,17 +118,23 @@ class AccountProvider extends Provider
     {
         $this->data[$player->getName()]["death"] = $count;
         $this->SCupdate("death", $this->data[$player->getName()]["death"], $player); 
+        $this->SCupdate("killratio", $this->getKillRatio($player), $player); 
     }
 
     public function addDeath(IPlayer $player, int $amount)
     {
         $this->data[$player->getName()]["death"] += $amount;
         $this->SCupdate("death", $this->data[$player->getName()]["death"], $player);
+        $this->SCupdate("killratio", $this->getKillRatio($player), $player); 
     }
 
     public function getKillRatio(IPlayer $player, int $precision = 2)
     {
-        return round($this->data[$player->getName()]["kill"] / $this->data[$player->getName()]["death"], $precision);
+    	if($this->data[$player->getName()]["death"] === 0){
+    	    return 0;
+    	}else{
+            return round($this->data[$player->getName()]["kill"] / $this->data[$player->getName()]["death"], $precision);
+        }
     }
 
     public function getPoint(IPlayer $player)
@@ -187,7 +195,9 @@ class AccountProvider extends Provider
     
     public function getAll(IPlayer $player)
     {
-        return $this->data[$player->getName()];
+        $data = $this->data[$player->getName()];
+        $data['killratio'] = $this->getKillRatio($player);
+        return $data;
     }
     
     public function SCupdate($type, $data, $player)
@@ -195,6 +205,11 @@ class AccountProvider extends Provider
         if($player instanceof Player){
             scoreboard::getScoreBoard()->updateScoreBoard($type, $this->data[$player->getName()][$type], $player); 
         }
+    }
+    
+    /*ranking用*/
+    public function getData(){
+    	return $this->data;
     }
 
 }

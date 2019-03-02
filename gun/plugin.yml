@@ -30,3 +30,6 @@ permissions:
      battlefront.command.discord:
       default: op
       description: Discord連携管理用コマンドを使用することを許可します
+     battlefront.command.ranking:
+      default: op
+      description: ランキング関連コマンドを使用することを許可します

@@ -17,6 +17,7 @@ class ProviderManager
         self::register(new DiscordProvider($plugin));
         self::register(new AccountProvider($plugin));
         self::register(new GuideBookProvider($plugin));
+        self::register(new RankingProvider($plugin));
     }
 
     public static function register(Provider $provider)
