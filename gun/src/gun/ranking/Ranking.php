@@ -53,7 +53,8 @@ class Ranking implements Listener{
 		$i = 1;
 		$this->name = "§eキルレランキング§f\n";
 		foreach($this->data as $name => $amount){
-			$this->name .= "{$i}位 {$name} {$amount}\n";
+			$padname = str_pad($name, 15, ' ', STR_PAD_BOTH);
+			$this->name  .= "{$i}位 {$padname} {$amount}\n";
 			$i++;
 		}
 		foreach($this->plugin->getServer()->getOnlinePlayers() as $player){

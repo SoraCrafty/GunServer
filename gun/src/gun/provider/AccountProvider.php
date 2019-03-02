@@ -203,7 +203,7 @@ class AccountProvider extends Provider
     public function SCupdate($type, $data, $player)
     {
         if($player instanceof Player){
-            scoreboard::getScoreBoard()->updateScoreBoard($type, $this->data[$player->getName()][$type], $player); 
+            scoreboard::getScoreBoard()->updateScoreBoard($type, $data, $player); 
         }
     }
     
