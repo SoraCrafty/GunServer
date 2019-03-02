@@ -39,7 +39,7 @@ class Ranking implements Listener{
 			if($data['death'] === 0){
 				$rank[$name] = 0;
 			}else{
-				$rank[$name] = $data['kill']/$data['death'];
+				$rank[$name] = round($data['kill']/$data['death'], 4);
 			}
 		}
 		if(!isset($rank)) return false;

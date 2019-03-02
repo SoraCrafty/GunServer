@@ -128,7 +128,7 @@ class AccountProvider extends Provider
         $this->SCupdate("killratio", $this->getKillRatio($player), $player); 
     }
 
-    public function getKillRatio(IPlayer $player, int $precision = 2)
+    public function getKillRatio(IPlayer $player, int $precision = 4)
     {
     	if($this->data[$player->getName()]["death"] === 0){
     	    return 0;
