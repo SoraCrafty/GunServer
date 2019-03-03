@@ -16,8 +16,15 @@ class MainSettingProvider extends Provider
     const VERSION = 1;
     /*デフォルトデータ*/
     const DATA_DEFAULT = [
-    						"GameMode" => TeamDeathMatch::GAME_ID
+    						"GameMode" => TeamDeathMatch::GAME_ID,
+                            "LobbyWorld" => ""
     					];
+
+    public function open()
+    {
+        parent::open();
+        if($this->data["LobbyWorld"] === "") $this->data["LobbyWorld"] = $this->plugin->getServer()->getDefaultLevel()->getFolderName();
+    }
 
     public function getGameMode()
     {

@@ -102,6 +102,7 @@ class MainShopForm extends Form
 				{
 					$result = "購入が完了しました";
 					AccountProvider::get()->setMainWeaponData($this->player, $this->weaponType, $this->weaponId);
+					AccountProvider::get()->subtractPoint($this->player, MainWeaponShop::get()->getPrice($this->weaponType, $this->weaponId));
 				}
 				$this->sendModal("§lMainWeaponShop(メイン武器屋)", "{$result}\nショップを引き続き利用しますか?", "はい", "終了する", 1, 0);
 				return true;
