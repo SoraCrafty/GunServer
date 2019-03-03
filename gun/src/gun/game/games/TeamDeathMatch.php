@@ -457,7 +457,7 @@ class TeamDeathMatch extends Game
     public function resetKillStreak($player, $killer)
     {
         $name = $player->getName();
-        if(!isset($this->killstreak[$name[)) return false;
+        if(!isset($this->killstreak[$name])) return false;
         if($this->killstreak[$name] >= 5)
         {
             $this->sendMessage("§aGAME>>§f" . $killer->getNameTag() . "§fが" . $player->getNameTag() . "§fの" . $this->killstreak[$name] . "キルストリークを阻止しました");
