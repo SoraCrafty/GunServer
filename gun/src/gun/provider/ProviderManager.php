@@ -14,6 +14,7 @@ class ProviderManager
         self::register(new TDMSettingProvider($plugin));
         self::register(new MainSettingProvider($plugin));
         self::register(new MainWeaponShop($plugin));
+        self::register(new SubWeaponShop($plugin));
         self::register(new DiscordProvider($plugin));
         self::register(new AccountProvider($plugin));
         self::register(new GuideBookProvider($plugin));

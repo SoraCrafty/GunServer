@@ -157,6 +157,7 @@ class AccountProvider extends Provider
     public function subtractPoint(IPlayer $player, int $point)
     {
         $this->data[$player->getName()]["point"] -= $point;
+        $this->SCupdate("point", $this->data[$player->getName()]["point"], $player);
     }
 
     public function getSetting(IPlayer $player, $key)

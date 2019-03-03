@@ -8,6 +8,7 @@ use pocketmine\command\CommandSender;
 
 use gun\form\FormManager;
 use gun\form\forms\MainShopForm;
+use gun\form\forms\SubShopForm;
 
 class WeaponShopCommand extends BattleFrontCommand
 {
@@ -32,6 +33,9 @@ class WeaponShopCommand extends BattleFrontCommand
         {
             case "main":
                 FormManager::register(new MainShopForm($this->plugin, $sender));
+                return true;
+            case "sub":
+                FormManager::register(new SubShopForm($this->plugin, $sender));
                 return true;
             default:
                 $sender->sendMessage("使用法 : /weaponshop <main>");
