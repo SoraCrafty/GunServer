@@ -13,6 +13,7 @@ class WeaponManager
 		self::registerWeapon(new SniperRifle($plugin));
 
 		self::registerWeapon(new HandGun($plugin));
+		self::registerWeapon(new ThrowingKnife($plugin));
 		
 		$plugin->getServer()->getPluginManager()->registerEvents(new WeaponListener($plugin), $plugin);
 	}

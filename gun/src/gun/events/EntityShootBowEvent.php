@@ -3,11 +3,13 @@ namespace gun\events;
 
 use pocketmine\Player;
 
+use gun\game\GameManager;
+
 class EntityShootBowEvent extends Events {
 
 	public function call($event)
 	{
-		if(!$this->plugin->gameManager->isGaming()) $event->setCancelled(true);
+		if(!GameManager::getObject()->isGaming()) $event->setCancelled(true);
 	}
 
 }

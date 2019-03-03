@@ -10,6 +10,7 @@ use gun\command\commands\WeaponShopCommand;
 use gun\command\commands\GuideBookCommand;
 use gun\command\commands\GameCommand;
 use gun\command\commands\DiscordCommand;
+use gun\command\commands\RankingCommand;
 
 class CommandManager{
 
@@ -22,6 +23,7 @@ class CommandManager{
         $map->register("battlefront", new GuideBookCommand($plugin));
         $map->register("battlefront", new GameCommand($plugin));
         $map->register("battlefront", new DiscordCommand($plugin));
+        $map->register("battlefront", new RankingCommand($plugin));
     }
 
 }

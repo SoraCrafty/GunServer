@@ -11,6 +11,8 @@ use gun\weapons\AssaultRifle;
 use gun\weapons\SniperRifle;
 use gun\weapons\HandGun;
 
+use gun\provider\MainWeaponShop;
+
 class EditWeaponForm extends Form
 {
 /*雑*/
@@ -96,12 +98,20 @@ class EditWeaponForm extends Form
 						break;
 					case 1:
 						$mode = self::MODE_EDIT;
-						$content[] = ["type" => "dropdown", "text" => "編集する武器の武器IDを選択してください\n\n武器ID", "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+						$array = [];
+						foreach (array_keys(WeaponManager::getAllData($this->weaponType)) as $key => $value) {
+							$array[] = (string) $value;
+						}
+						$content[] = ["type" => "dropdown", "text" => "編集する武器の武器IDを選択してください\n\n武器ID", "options" => $array];
 						$cache = [4];
 						break;
 					case 2:
 						$mode = self::MODE_DELETE;
-						$content[] = ["type" => "dropdown", "text" => "削除する武器の武器IDを選択してください\n\n武器ID", "options" => array_keys(WeaponManager::getAllData($this->weaponType))];
+						$array = [];
+						foreach (array_keys(WeaponManager::getAllData($this->weaponType)) as $key => $value) {
+							$array[] = (string) $value;
+						}
+						$content[] = ["type" => "dropdown", "text" => "削除する武器の武器IDを選択してください\n\n武器ID", "options" => $array];
 						$cache = [11];
 						break;
 					default:
@@ -140,18 +150,18 @@ class EditWeaponForm extends Form
 
 				$data = WeaponManager::getData($this->weaponType, $this->weaponId);
 				$content = [];
-				$content[] = ["type" => "label", "text" => "武器ID >> " . $this->weaponId];
-				$content[] = ["type" => "input", "text" => "武器名(装飾コード使用可)", "default" => $this->mode === self::MODE_EDIT ? $data["Item_Information"]["Item_Name"]:""];
+				$content[] = ["type" => "label", "text" => "武器ID >> " . (string) $this->weaponId];
+				$content[] = ["type" => "input", "text" => "武器名(装飾コード使用可)", "default" => $this->mode === self::MODE_EDIT ? (string) $data["Item_Information"]["Item_Name"]:""];
 				$content[] = ["type" => "input", "text" => "アイテムID", "default" => $this->mode === self::MODE_EDIT ? (string) $data["Item_Information"]["Item_Id"]:""];
 				$content[] = ["type" => "input", "text" => "アイテムのダメージ値", "default" => $this->mode === self::MODE_EDIT ? (string) $data["Item_Information"]["Item_Damage"]:""];
-				$content[] = ["type" => "input", "text" => "武器の説明文", "default" => $this->mode === self::MODE_EDIT ? $data["Item_Information"]["Item_Lore"]:""];
+				$content[] = ["type" => "input", "text" => "武器の説明文", "default" => $this->mode === self::MODE_EDIT ? (string) $data["Item_Information"]["Item_Lore"]:""];
 				switch($this->weaponType)
 				{
 					case AssaultRifle::WEAPON_ID:
 						$content[] = ["type" => "slider", "text" => "発射レート", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Delay_Between_Shots"] : 1];
 						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
 						$content[] = ["type" => "slider", "text" => "射程", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Range"] : 1];
-						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 10];
+						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 0];
 						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 30, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
 						$content[] = ["type" => "toggle", "text" => "スニーク時の機能のon/off", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["Enable"] : true];
 						$content[] = ["type" => "toggle", "text" => "スニーク時に反動を消す", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["No_Recoil"] : true];
@@ -165,7 +175,7 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "発射後のクールタイム", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Cooltime_Between_Shots"] : 20];
 						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
 						$content[] = ["type" => "slider", "text" => "射程", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Range"] : 1];
-						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 10];
+						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 0];
 						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 30, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
 						$content[] = ["type" => "toggle", "text" => "スニーク時の機能のon/off", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["Enable"] : true];
 						$content[] = ["type" => "toggle", "text" => "スニーク時に反動を消す", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["No_Recoil"] : true];
@@ -187,7 +197,7 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "移動速度(入力値の1/10倍されます)", "min" => 0, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Move"]["Move_Speed"] * 10 : 10];
 						break;
 				}
-				$content[] = ["type" => "toggle", "text" => "送信後この武器をインベントリへ追加", "default" => true];
+				$content[] = ["type" => "toggle", "text" => "送信後この武器をインベントリへ追加", "default" => false];
 				$data = [
 					'type'=>'custom_form',
 					'title'   => "§l武器編集/追加/削除画面",
@@ -291,6 +301,7 @@ class EditWeaponForm extends Form
 			case 12:
 				$this->sendModal("§l武器編集/追加/削除画面", "削除しました", $label1 = "戻る", $label2 = "閉じる", $jump1 = 1, $jump2 = 0);
 				WeaponManager::unset($this->weaponType, $this->weaponId);
+				MainWeaponShop::get()->deleteItem($this->weaponType, $this->weaponId);
 				return true;
 
 			default:

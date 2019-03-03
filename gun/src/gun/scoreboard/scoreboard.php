@@ -7,7 +7,7 @@ use pocketmine\event\Listener;
 use pocketmine\network\mcpe\protocol\ { SetScorePacket, RemoveObjectivePacket, SetDisplayObjectivePacket };
 use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 
-use gun\data\playerData;
+use gun\Provider\AccountProvider;
 
 class scoreboard implements Listener{
 	
@@ -16,11 +16,12 @@ class scoreboard implements Listener{
 	//分からんけど多分id的なものだと思う
 	const objectiveName = 'gunserver';
 	//スコアボードのタイトル
-	const displayName = 'BattleFront';
+	const displayName = 'BattleFront§c2§f';
 	//並べ方 0が昇順 1が降順
 	const sortOrder = 0;
 	
-	const placeLine = ['exp' => 1, 'kill' => 2, 'death' => 3, 'money' => 4];
+	const placeLine = ['exp' => 1, 'kill' => 2, 'death' => 3, 'point' => 4, 'killratio' => 5];
+	const deco = ['exp' => '§e', 'kill' => '§c', 'death' => '§a', 'point' => '§d', 'killratio' => '§b'];
 	
 	private static $instance;
 	
@@ -37,6 +38,7 @@ class scoreboard implements Listener{
 	public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
 		$this->create($player);	
+		$this->showThisServerScoreBoard($player);
 	}
 	
 	/*恐らく送る準備的な??*/
@@ -65,7 +67,7 @@ class scoreboard implements Listener{
 		$pk->objectiveName = self::objectiveName;
 		$pk->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
 							/*行の長さを揃えるため*/
-		$pk->customName = str_pad($message, ((strlen(self::displayName) * 2) - strlen($message)));
+		$pk->customName = str_pad("・" . $message, ((strlen(self::displayName) * 2) - strlen($message)));
 		$pk->score = $line;
 		$pk->scoreboardId = $line;
 		
@@ -91,7 +93,7 @@ class scoreboard implements Listener{
 	
 	/*プレイヤーにスコアボードを表示*/
 	public function showThisServerScoreBoard($player){
-		$data = playerData::getPlayerData()->getAccount($player->getName());
+		$data = AccountProvider::get()->getAll($player);
 		foreach(array_keys(self::placeLine) as $key){
 			$this->updateScoreBoard($key, $data[$key], $player);
 		}
@@ -100,7 +102,8 @@ class scoreboard implements Listener{
 	/*playerdataが書き換えられたときに呼び出し*/
 	public function updateScoreBoard(string $place, int $data, Player $player){
 		$line = self::placeLine[$place];
-		$marge = "{$place} : {$data}";
+		$deco = self::deco[$place];
+		$marge = "{$deco}{$place} : {$data}";
 		$this->removeLine($line, $player);
 		$this->setLine($line, $marge, $player);
 		

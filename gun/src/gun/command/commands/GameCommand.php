@@ -6,6 +6,8 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\command\CommandSender;
 
+use gun\game\GameManager;
+
 class GameCommand extends BattleFrontCommand
 {
     const NAME = "game";
@@ -16,41 +18,9 @@ class GameCommand extends BattleFrontCommand
 
     public function execute(CommandSender $sender, string $label, array $args) : bool
     {
-        if(parent::execute($sender, $label, $args) === false) {
-            return false;
-        }
-        
-        switch(array_shift($args))
+        if(parent::execute($sender, $label, $args) === false)
         {
-            case "join":
-                if(!$sender instanceof Player)
-                {
-                    $sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
-                    return false;
-                }
-                if($this->plugin->gameManager->isGaming())
-                {
-                    $team = $this->plugin->gameManager->getTeam($sender);
-                    if($team === false)
-                    {
-                        $this->plugin->gameManager->lotteryTeam($sender);
-                        $team = $this->plugin->gameManager->getTeam($sender);
-                    }
-                    else
-                    {
-                        $this->plugin->gameManager->setTeam($sender, $team);
-                    }
-                    $this->plugin->gameManager->setSpawn($sender, $team);
-                    $this->plugin->gameManager->gotoStage($sender, $team);
-                    $this->plugin->gameManager->setNameTags($sender, $team);
-                    $this->plugin->gameManager->setInventory($sender);
-                    $this->plugin->gameManager->setHealth($sender);
-                }
-                return true;
-
-            default:
-                $sender->sendMessage("使い方: /game <join>");
-                return true;
+            return false;
         }
     }
 }

@@ -27,6 +27,8 @@ class AsyncSendTask extends AsyncTask
                               'content' => json_encode($this->message),
                         ]
                     ];
+        $options['ssl']['verify_peer']=false;
+        $options['ssl']['verify_peer_name']=false;
         $this->response = file_get_contents($this->webhook, false, stream_context_create($options));
     }
 

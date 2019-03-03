@@ -62,8 +62,10 @@ class PlayerManager
 	public function setLobbyInventory(Player $player)
 	{
 		$content = [];
-		$content[] = ProviderManager::get(GuideBookProvider::PROVIDER_ID)->getGuideBook();
+		$content[] = GuideBookProvider::get()->getGuideBook();
 		$player->getInventory()->setContents($content);
+		$armorContent = [];
+		$player->getArmorInventory()->setContents([]);
 	}
 
 	public function getMainWeapon(Player $player)
@@ -84,6 +86,14 @@ class PlayerManager
 	{
 		$player->setMaxHealth(20);
 		$player->setHealth(20);
+	}
+
+	public function setDefaultNameTags(Player $player)
+	{
+    	$tag = $player->getName();
+    	$player->setNameTag($tag);
+    	$player->setDisplayName($tag);
+    	$player->setNameTagAlwaysVisible(true);
 	}
 
 }

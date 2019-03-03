@@ -16,7 +16,10 @@ class DiscordProvider extends Provider
     const DATA_DEFAULT = [
                             "enable" => false,
                             "username" => "BattleFront2",
-                            "webhook" => ""
+                            "webhook" => [
+                                            "server_chat" => "",
+                                            "game" => ""
+                                        ]
     					];
 
     public function isEnable()
@@ -34,14 +37,14 @@ class DiscordProvider extends Provider
         return $this->data["username"];
     }
 
-    public function getWebhook()
+    public function getWebhook($channel = "server_chat")
     {
-    	return $this->data["webhook"];
+    	return $this->data["webhook"][$channel];
     }
 
-    public function setWebhook($webhook)
+    public function setWebhook($webhook, $channel = "server_chat")
     {
-        $this->data["webhook"] = $webhook;
+        $this->data["webhook"][$channel] = $webhook;
     }
 
 }

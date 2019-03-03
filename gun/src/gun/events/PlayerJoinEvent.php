@@ -21,6 +21,8 @@ class PlayerJoinEvent extends Events {
 		$player = $event->getPlayer();
     	$name = $player->getName();
 
+    	$player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+    	
         $player->sendMessage('§b--------------------------------------------------');
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
@@ -31,6 +33,6 @@ class PlayerJoinEvent extends Events {
 
 		$this->plugin->playerManager->setLobbyInventory($player);
 
-		$this->plugin->discordManager->sendMessage('**⭕' . $player->getName() . 'がログインしました**');
+		$this->plugin->discordManager->sendMessage('**⭕' . $player->getName() . 'がログインしました** ' . '(' . count($this->plugin->getServer()->getOnlinePlayers()) . '/' . $this->plugin->getServer()->getMaxPlayers() . ')');
 	}
 }

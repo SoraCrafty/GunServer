@@ -16,9 +16,12 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\mcpe\protocol\MovePlayerPacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 
 use gun\fishing\event\PlayerUseFishRodEvent;
+
+use gun\game\GameManager;
 
 class WeaponListener implements Listener
 {
@@ -32,7 +35,7 @@ class WeaponListener implements Listener
 
 	public function onEvent($eventname, $player, ...$args)
 	{
-		if(!$this->plugin->gameManager->isGaming()) return true;
+		if(!GameManager::getObject()->isGaming()) return true;
 
 		$weapon = $player->getInventory()->getItemInHand();
 
@@ -77,7 +80,7 @@ class WeaponListener implements Listener
 
 	public function onItemHeld(PlayerItemHeldEvent $event)//後々改善したい
 	{
-		if(!$this->plugin->gameManager->isGaming()) return true;
+		if(!GameManager::getObject()->isGaming()) return true;
 		
 		$player =  $event->getPlayer();
 
