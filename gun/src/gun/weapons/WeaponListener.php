@@ -53,9 +53,6 @@ class WeaponListener implements Listener
 		$this->onEvent(Weapon::EVENT_INTERACT, $event->getPlayer(), $event);
 	}*/
 
-	/*
-	*@priority LOWEST
-	*/
 	public function onPacketReceive(DataPacketReceiveEvent $event)
 	{
 		$pk = $event->getPacket();
