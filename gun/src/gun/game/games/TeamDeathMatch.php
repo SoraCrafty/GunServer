@@ -451,13 +451,20 @@ class TeamDeathMatch extends Game
         if($this->killstreak[$name] >= 5)
         {
             $this->sendMessage("§aGAME>>§f" . $player->getNameTag() . "§fが" . $this->killstreak[$name] . "キルストリークを達成しました");
-            $this->plugin->discordManager->sendConvertedMessage('**❗❗❗' . $player->getNameTag() . 'が' . $this->killstreak[$name] . 'キルストリークを達成しました**');
+            $this->plugin->discordManager->sendConvertedMessage('**❗❗' . $player->getNameTag() . 'が' . $this->killstreak[$name] . 'キルストリークを達成しました**', "game");
         }
     }
 
-    public function resetKillStreak($player)
+    public function resetKillStreak($player, $killer)
     {
-        unset($this->killstreak[$player->getName()]);
+        $name = $player->getName();
+        if($this->killstreak[$name] >= 5)
+        {
+            $this->sendMessage("§aGAME>>§f" . $killer->getNameTag() . "§fが" . $player->getNameTag() . "§fの" . $this->killstreak[$name] . "キルストリークを阻止しました");
+            $this->plugin->discordManager->sendConvertedMessage('**❗❗' . $killer->getNameTag() . "§fが" . $player->getNameTag() . "§fの" . $this->killstreak[$name] . 'キルストリークを阻止しました**', "game");
+        }
+
+        unset($this->killstreak[$name]);
     }
 
     public function isGaming()
@@ -467,12 +474,19 @@ class TeamDeathMatch extends Game
 
     /*PMMPのアプデきたら処理変える*/
     public function playSoundIndivudually($id, $pitch){
-        foreach ($this->plugin->getServer()->getOnlinePlayers() as $player) {
-            $pk = new LevelEventPacket();
-            $pk->evid = $id;
-            $pk->position = $player->getPosition();
-            $pk->data = $pitch;
-            $player->dataPacket($pk);
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                if($player->isOnline())
+                {
+                    $pk = new LevelEventPacket();
+                    $pk->evid = $id;
+                    $pk->position = $player->getPosition();
+                    $pk->data = $pitch;
+                    $player->dataPacket($pk);
+                }
+            }
         }
     }
 
@@ -647,7 +661,7 @@ class TeamDeathMatch extends Game
                 $killer->getInventory()->addItem($item);
                 $this->addKillCount($killerteam);
                 $this->addKillStreak($killer);
-                $this->resetKillStreak($player);
+                $this->resetKillStreak($player, $killer);
                 AccountProvider::get()->addPoint($killer, 100);
             }
         }
