@@ -457,8 +457,7 @@ class TeamDeathMatch extends Game
     public function resetKillStreak($player, $killer)
     {
         $name = $player->getName();
-        if(!isset($this->killstreak[$name])) return false;
-        if($this->killstreak[$name] >= 5)
+        if(isset($this->killstreak[$name]) && $this->killstreak[$name] >= 5)
         {
             $this->sendMessage("§aGAME>>§f" . $killer->getNameTag() . "§fが" . $player->getNameTag() . "§fの" . $this->killstreak[$name] . "キルストリークを阻止しました");
             $this->plugin->discordManager->sendConvertedMessage('**❗❗' . $killer->getNameTag() . "§fが" . $player->getNameTag() . "§fの" . $this->killstreak[$name] . 'キルストリークを阻止しました**', "game");
@@ -508,6 +507,7 @@ class TeamDeathMatch extends Game
     	if($player->isOnline())
     	{
 	    	$tag = $this->provider->getTeamNameDecoration($team) . $player->getName() . "§f";
+            if($player->isOp()) $tag = "§r§b★§f{$tag}";
 	    	$player->setNameTag($tag);
 	    	$player->setDisplayName($tag);
             $player->setNameTagAlwaysVisible(false);

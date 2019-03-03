@@ -91,6 +91,7 @@ class PlayerManager
 	public function setDefaultNameTags(Player $player)
 	{
     	$tag = $player->getName();
+    	if($player->isOp()) $tag = "§b★§f{$tag}";
     	$player->setNameTag($tag);
     	$player->setDisplayName($tag);
     	$player->setNameTagAlwaysVisible(true);

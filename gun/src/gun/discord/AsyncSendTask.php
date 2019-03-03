@@ -29,7 +29,7 @@ class AsyncSendTask extends AsyncTask
                     ];
         $options['ssl']['verify_peer']=false;
         $options['ssl']['verify_peer_name']=false;
-        $this->response = file_get_contents($this->webhook, false, stream_context_create($options));
+        @$this->response = file_get_contents($this->webhook, false, stream_context_create($options));
     }
 
     public function onCompletion(Server $server)

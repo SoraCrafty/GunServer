@@ -59,7 +59,7 @@ class DiscordManager{
                     ];
         $options['ssl']['verify_peer']=false;
         $options['ssl']['verify_peer_name']=false;
-        $response = file_get_contents($this->provider->getWebhook($channel), false, stream_context_create($options));
+        @$response = file_get_contents($this->provider->getWebhook($channel), false, stream_context_create($options));
         return $response;
     }
 

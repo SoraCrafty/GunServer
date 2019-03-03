@@ -20,12 +20,6 @@ class PlayerJoinEvent extends Events {
 	public function call($event){
 		$player = $event->getPlayer();
 		$name = $player->getName();
-		
-		if($player->isOP()){
-			$player->setDisplayName("§b☆ §r{$name}");
-				$player->setNameTag("§b☆ §r{$name}");
-				return false;
-		}
 
     	$player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
     	
@@ -38,6 +32,7 @@ class PlayerJoinEvent extends Events {
 		Server::getInstance()->broadcastPopup('§b参加>>'.$event->getPlayer()->getName().'さん');
 
 		$this->plugin->playerManager->setLobbyInventory($player);
+		$this->plugin->playerManager->setDefaultNameTags($player);
 
 		$this->plugin->discordManager->sendMessage('**⭕' . $player->getName() . 'がログインしました** ' . '(' . count($this->plugin->getServer()->getOnlinePlayers()) . '/' . $this->plugin->getServer()->getMaxPlayers() . ')');
 	}

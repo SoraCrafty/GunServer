@@ -79,7 +79,7 @@ class Main extends PluginBase {
 		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->ranking = new ranking\Ranking($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
-		$this->server->getNetwork()->setName("§l§fBattleFront§c2");
+		$this->server->getNetwork()->setName("§l§fBattleFront§c2§r §bβ");
 
 		$this->discordManager->sendMessage('**❗サーバーが`' . GameManager::getObject()->getName() . '`モードで起動しました  **(' . date("m/d H:i") . ')');
 		$this->getScheduler()->scheduleRepeatingTask(new RebootTask($this), 20);
