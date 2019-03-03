@@ -4,7 +4,7 @@ namespace gun\events;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket; 
 use pocketmine\entity\Effect;
 use pocketmine\entity\EffectInstance;
-use pocketmine\item\Item;
+use pocketmine\item\Item
 
 class PlayerInteractEvent extends Events {
 
