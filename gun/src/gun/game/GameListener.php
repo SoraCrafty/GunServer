@@ -8,6 +8,7 @@ use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityArmorChangeEvent;
 
 use gun\npc\EventNPCTouchEvent;
 
@@ -49,6 +50,11 @@ class GameListener implements Listener
 	public function onQuit(PlayerQuitEvent $event)
 	{
 		GameManager::getObject()->onQuit($event);
+	}
+
+	public function onArmorChange(EntityArmorChangeEvent $event)
+	{
+		GameManager::getObject()->onArmorChange($event);
 	}
 
 }
