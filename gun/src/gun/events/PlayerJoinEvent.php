@@ -19,7 +19,13 @@ class PlayerJoinEvent extends Events {
 
 	public function call($event){
 		$player = $event->getPlayer();
-    	$name = $player->getName();
+		$name = $player->getName();
+		
+		if($player->isOP()){
+			$player->setDisplayName("§b☆ §r{$name}");
+				$player->setNameTag("§b☆ §r{$name}");
+				return false;
+		}
 
     	$player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
     	
