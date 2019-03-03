@@ -6,6 +6,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 
 use gun\npc\EventNPCTouchEvent;
@@ -43,6 +44,11 @@ class GameListener implements Listener
 	public function onRespawn(PlayerRespawnEvent $event)
 	{
 		GameManager::getObject()->onRespawn($event);
+	}
+
+	public function onQuit(PlayerQuitEvent $event)
+	{
+		GameManager::getObject()->onQuit($event);
 	}
 
 }

@@ -148,14 +148,13 @@ class TeamDeathMatch extends Game
         {
             foreach ($members as $player) 
             {
-                $this->leave($player);
+                if($player->isOnline()) $this->leave($player);
             }    
         }
     }
 
     public function leave($player)
     {
-        if(!$player->isOnline()) return true;
         $this->plugin->playerManager->setDefaultHealth($player);
         $this->setDefaultSpawn($player);
         $this->gotoLobby($player);
@@ -686,13 +685,18 @@ class TeamDeathMatch extends Game
     public function onRespawn($event)
     {
         $player = $event->getPlayer();
-        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(10), 20 * 3, 10, false)]), 1);
-        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(11), 20 * 3, 10, false)]), 1);
+        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(10), 20 * 5, 10, false)]), 1);
+        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(11), 20 * 5, 10, false)]), 1);
     }
 
     public function delayAddEffect($player, $effect)
     {
         $player->addEffect($effect);
+    }
+
+    public function onQuit($event)
+    {
+        $this->leave($event->getPlayer());
     }
     
 }

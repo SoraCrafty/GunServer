@@ -48,5 +48,9 @@ abstract class Game
 
     }
 
+    public function onQuit($event)
+    {
+        
+    }
 
 }
