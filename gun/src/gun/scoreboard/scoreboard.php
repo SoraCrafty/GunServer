@@ -100,7 +100,7 @@ class scoreboard implements Listener{
 	}
 			
 	/*playerdataが書き換えられたときに呼び出し*/
-	public function updateScoreBoard(string $place, int $data, Player $player){
+	public function updateScoreBoard(string $place, $data, Player $player){
 		$line = self::placeLine[$place];
 		$deco = self::deco[$place];
 		$marge = "{$deco}{$place} : {$data}";
