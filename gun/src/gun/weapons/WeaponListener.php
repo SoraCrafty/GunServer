@@ -62,7 +62,7 @@ class WeaponListener implements Listener
 
 		if($pk instanceof InventoryTransactionPacket)
 		{
-			if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM || $pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY)
+			if($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM)
 			{
 				$this->onEvent(Weapon::EVENT_INTERACT, $event->getPlayer());
 			}
