@@ -11,6 +11,7 @@ use pocketmine\entity\Attribute;
 use pocketmine\entity\EffectInstance;
 use pocketmine\entity\Effect;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
+use pocketmine\inventory\ArmorInventory;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
@@ -698,6 +699,15 @@ class TeamDeathMatch extends Game
     public function onQuit($event)
     {
         $this->leave($event->getPlayer());
+    }
+
+    public function onArmorChange($event)//雑!!
+    {
+        $player = $event->getEntity();
+
+        if(!$player instanceof Player) return true;
+
+        if($this->isGaming() && $this->getTeam($player) !== false && $event->getSlot() === ArmorInventory::SLOT_HEAD && $event->getNewItem()->getId() === 0) $event->setCancelled(true);
     }
     
 }

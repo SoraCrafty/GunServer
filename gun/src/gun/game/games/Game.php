@@ -53,4 +53,9 @@ abstract class Game
         
     }
 
+    public function onArmorChange($event)
+    {
+
+    }
+
 }
