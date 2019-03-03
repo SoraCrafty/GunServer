@@ -55,8 +55,17 @@ class Ranking implements Listener{
 		foreach($this->data as $name => $amount){
 			$padname = str_pad($name, 15, ' ', STR_PAD_BOTH);
 			$this->name  .= "{$i}位 {$padname} {$amount}\n";
+			if($i <= 3) {
+				$this->top3[] = $name;
+				$player = $this->plugin->getServer()->getPlayer($name);
+				if(isset($player)){
+					$player->setNameTag('§c★§f'.($tag = $player->getNameTag()));
+					$player->setDisplayName('§c★§f'.($display = $player->getDisplayName()));
+				}
+			}
 			$i++;
 		}
+		unset($this->data);
 		foreach($this->plugin->getServer()->getOnlinePlayers() as $player){
 			$this->remove($player);
 			$this->spawnTo($player);
@@ -97,12 +106,17 @@ class Ranking implements Listener{
 	
 	public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
+		if(array_search($player->getName(), $this->top3) !== false){
+			$player->setNameTag('§c★§f'.($tag = $player->getNameTag()));
+			$player->setDisplayName('§c★§f'.($display = $player->getDisplayName()));
+		}
 		$this->spawnTo($player);
 	}
 	
 	public static function get(){
 		return self::$instance;
 	}
+			
 }
 	
 	
