@@ -23,13 +23,13 @@ class PlayerJoinEvent extends Events {
 
     	$player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
     	
-        $player->sendMessage('§b--------------------------------------------------');
+        
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
-		$player->sendMessage('§bInfo>>§fリロードはスニークして地面タッチです');
 		$player->sendMessage('§bInfo>>§fタップして操作している方は分割コントロールを推奨します');
-		$player->sendMessage('§b--------------------------------------------------');
+		$player->sendMessage('§bInfo>>§fルールの確認をお願い致します');
+
 		$event->setJoinMessage(null);
-		Server::getInstance()->broadcastPopup('§b参加>>'.$event->getPlayer()->getName().'さん');
+		Server::getInstance()->broadcastPopup('§b§l'.$event->getPlayer()->getName().'さんがログインしました');
 
 		$this->plugin->playerManager->setLobbyInventory($player);
 		$this->plugin->playerManager->setDefaultNameTags($player);
