@@ -172,6 +172,7 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "移動速度(入力値の1/10倍されます)", "min" => 0, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Move"]["Move_Speed"] * 10 : 10];
 						break;
 					case SniperRifle::WEAPON_ID:
+					case HandGun::WEAPON_ID:
 						$content[] = ["type" => "slider", "text" => "発射後のクールタイム", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Cooltime_Between_Shots"] : 20];
 						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
 						$content[] = ["type" => "slider", "text" => "射程", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Range"] : 1];
@@ -179,17 +180,6 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 30, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
 						$content[] = ["type" => "toggle", "text" => "スニーク時の機能のon/off", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["Enable"] : true];
 						$content[] = ["type" => "toggle", "text" => "スニーク時に反動を消す", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["No_Recoil"] : true];
-						$content[] = ["type" => "slider", "text" => "スニーク時の弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 30, "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["Bullet_Spread"] * 10 : 0];
-						$content[] = ["type" => "toggle", "text" => "リロード機能のon/off(offにすると弾数が無限になります)", "default" => $this->mode === self::MODE_EDIT ? $data["Reload"]["Enable"] : true];
-						$content[] = ["type" => "slider", "text" => "弾数", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Reload"]["Reload_Amount"] : 30];
-						$content[] = ["type" => "slider", "text" => "リロードにかかる時間", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Reload"]["Reload_Duration"] : 20];
-						$content[] = ["type" => "slider", "text" => "移動速度(入力値の1/10倍されます)", "min" => 0, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Move"]["Move_Speed"] * 10 : 10];
-						break;
-					case HandGun::WEAPON_ID:
-						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
-						$content[] = ["type" => "slider", "text" => "射程", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Range"] : 1];
-						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 30, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
-						$content[] = ["type" => "toggle", "text" => "スニーク時の機能のon/off", "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["Enable"] : true];
 						$content[] = ["type" => "slider", "text" => "スニーク時の弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 30, "default" => $this->mode === self::MODE_EDIT ? $data["Sneak"]["Bullet_Spread"] * 10 : 0];
 						$content[] = ["type" => "toggle", "text" => "リロード機能のon/off(offにすると弾数が無限になります)", "default" => $this->mode === self::MODE_EDIT ? $data["Reload"]["Enable"] : true];
 						$content[] = ["type" => "slider", "text" => "弾数", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Reload"]["Reload_Amount"] : 30];
@@ -239,6 +229,7 @@ class EditWeaponForm extends Form
 												"Move_Speed" => $this->lastData[16] / 10
 											];
 						break;
+					case HandGun::WEAPON_ID:
 					case SniperRifle::WEAPON_ID:
 						$data["Shooting"] = [
 												"Cooltime_Between_Shots" => $this->lastData[5],
@@ -259,25 +250,6 @@ class EditWeaponForm extends Form
 											];
 						$data["Move"] = [
 												"Move_Speed" => $this->lastData[16] / 10
-											];
-						break;
-					case HandGun::WEAPON_ID:
-						$data["Shooting"] = [
-												"Shooting_Damage" => $this->lastData[5],
-												"Shooting_Range" => $this->lastData[6],
-												"Bullet_Spread" => $this->lastData[7] / 10
-											];
-						$data["Sneak"] = [
-												"Enable" => $this->lastData[8],
-												"Bullet_Spread" => $this->lastData[9] / 10
-											];
-						$data["Reload"] = [
-												"Enable" => $this->lastData[10],
-												"Reload_Amount" => $this->lastData[11],
-												"Reload_Duration" => $this->lastData[12]
-											];
-						$data["Move"] = [
-												"Move_Speed" => $this->lastData[13] / 10
 											];
 						break;
 				}

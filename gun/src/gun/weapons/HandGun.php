@@ -320,7 +320,7 @@ class HandGun extends Weapon
 			}
 			else
 			{
-				$text = "§lCooltime §b" . str_repeat("‖", 30 - $progress) . "§f" . str_repeat("‖",$progress) . "\n§r§o" . $weapon->getCustomName() . "©";
+				$text = "§lCooltime §8" . str_repeat("‖", 30 - $progress) . "§f" . str_repeat("‖",$progress) . "\n§r§o" . $weapon->getCustomName() . "©";
 			}
 
 			if(!$this->reloading[$name]) $player->sendPopUp($text);
