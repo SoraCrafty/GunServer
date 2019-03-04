@@ -29,7 +29,7 @@ class SniperRifle extends Weapon
 	/*Loreに書く数値*/
 	const ITEM_LORE = [
 					"Shooting" => [
-								"Cooltime_Between_Shots" => "発射不可時間",
+								"Cooltime_Between_Shots" => "クールタイム",
 								"Shooting_Damage" => "火力",
 								"Shooting_Range" => "射程",
 								"Recoil_Amount" => "反動",
@@ -43,6 +43,37 @@ class SniperRifle extends Weapon
 								"Move_Speed" => "移動速度"
 							]
 					];
+	/*デフォルト武器のデータ*/
+	const DEFAULT_DATA = [
+							"Kar98k" => [
+								"Item_Information" => [
+											"Item_Name" => "§cKar98k",
+											"Item_Id" => 261,
+											"Item_Damage" => 0,
+											"Item_Lore" => "ドイツで開発されたボルトアクション式小銃"
+											],
+								"Shooting" => [
+											"Cooltime_Between_Shots" => 20,
+											"Shooting_Damage" => 20,
+											"Shooting_Range" => 50,
+											"Recoil_Amount" => 1.5,
+											"Bullet_Spread" => 1
+											],
+								"Sneak" => [
+											"Enable" => true,
+											"No_Recoil" => true,
+											"Bullet_Spread" => 0
+											],
+								"Reload" => [
+											"Enable" => true,
+											"Reload_Amount" => 9,
+											"Reload_Duration" => 100
+											],
+								"Move" =>[
+											"Move_Speed" => 0.7
+										]
+									   ]
+						];
 
 	private $reloading = [];
 	private $cooltime = [];

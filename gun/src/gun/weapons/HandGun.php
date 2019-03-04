@@ -17,6 +17,7 @@ use pocketmine\network\mcpe\protocol\EntityEventPacket;
 
 use gun\Callback;
 use gun\Blocks;
+use gun\provider\AccountProvider;
 
 class HandGun extends Weapon
 {
@@ -29,8 +30,10 @@ class HandGun extends Weapon
 	/*Loreに書く数値*/
 	const ITEM_LORE = [
 					"Shooting" => [
+								"Cooltime_Between_Shots" => "クールタイム",
 								"Shooting_Damage" => "火力",
 								"Shooting_Range" => "射程",
+								"Recoil_Amount" => "反動",
 								"Bullet_Spread" => "弾ブレ"
 								],
 					"Reload" => [
@@ -41,8 +44,40 @@ class HandGun extends Weapon
 								"Move_Speed" => "移動速度"
 							]
 					];
+	/*デフォルト武器のデータ*/
+	const DEFAULT_DATA = [
+							"TT-33" => [
+								"Item_Information" => [
+											"Item_Name" => "§1TT-33",
+											"Item_Id" => 352,
+											"Item_Damage" => 0,
+											"Item_Lore" => "ソ連陸軍が1933年に正式採用した軍用自動拳銃"
+											],
+								"Shooting" => [
+											"Cooltime_Between_Shots" => 5,
+											"Shooting_Damage" => 3,
+											"Shooting_Range" => 20,
+											"Recoil_Amount" => 0,
+											"Bullet_Spread" => 0.5
+											],
+								"Sneak" => [
+											"Enable" => false,
+											"No_Recoil" => true,
+											"Bullet_Spread" => 0
+											],
+								"Reload" => [
+											"Enable" => true,
+											"Reload_Amount" => 16,
+											"Reload_Duration" => 20
+											],
+								"Move" =>[
+											"Move_Speed" => 1.5
+										]
+									   ]
+						];
 
 	private $reloading = [];
+	private $cooltime = [];
 
 	public function get($type)
 	{
@@ -79,6 +114,21 @@ class HandGun extends Weapon
 			$this->ReloadTask($player, $data, 0);
 			return true;
 		}
+
+		if($this->plugin->playerManager->isPC($player)) $this->onPreInteract($player, $data);
+	}
+
+	public function onPreInteract($player, $data)
+	{
+		$name = $player->getName();
+
+		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
+
+		if($this->reloading[$name]) return true;
+
+		if(!isset($this->cooltime[$name])) $this->cooltime[$name] = false;
+
+		if(!$this->cooltime[$name]) $this->Shoot($player, $data);
 	}
 
 	public function onDropItem($player, $data, $args)
@@ -100,7 +150,7 @@ class HandGun extends Weapon
 		}
 	}
 
-	public function onUseFishRod($player, $data)
+	/*public function onUseFishRod($player, $data)
 	{
 		$name = $player->getName();
 
@@ -109,7 +159,7 @@ class HandGun extends Weapon
 		if($this->reloading[$name]) return true;
 
 		$this->Shoot($player, $data);
-	}
+	}*/
 
 	public function Shoot($player, $data)
 	{
@@ -138,6 +188,20 @@ class HandGun extends Weapon
 		}
 
 		$player->sendPopUp("§o" . $weapon->getCustomName());
+
+		if($data["Shooting"]["Recoil_Amount"] > 0)//反動つける処理
+		{
+			if(!($player->isSneaking() && $data["Sneak"]["Enable"] && $data["Sneak"]["No_Recoil"]))
+			{
+				$motion = $player->getDirectionVector()->multiply(-0.2);
+				if(!$player->isOnGround() && !$player->isUnderwater())//地に足がついてない状態では反動が軽減され下に落下する(水中は例外)
+				{
+					$motion->multiply(0.5);
+					$motion->y = -1;
+				}
+				$player->setMotion($motion);
+			}
+		}
 
 		/*銃弾の処理*/
 		$level = $player->getLevel();
@@ -190,6 +254,9 @@ class HandGun extends Weapon
 		}
 
 		$level->addSound(new DoorCrashSound($player->asVector3(), -100));
+
+		$this->cooltime[$player->getName()] = true;
+		$this->CooltimeTask($player, $data, 0);
 	}
 
 	public function giveTask($player, $weapon)//minecraftの仕様対策
@@ -230,6 +297,43 @@ class HandGun extends Weapon
 		$player->sendPopUp($text);
 		if($phase % 2 === 0) $player->getLevel()->addSound(new ClickSound($player->asVector3(), -100), [$player]);
 		$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "ReloadTask"], [$player, $data, $phase]), 1);
+	}
+
+	public function CooltimeTask($player, $data, $phase){//クールタイム関連は要改善
+		$name = $player->getName();
+
+		if(!$player->isOnline()){
+			$this->cooltime[$name] = false;
+			return true;
+		}
+
+		$weapon = $player->getInventory()->getItemInHand();
+		$tag = $weapon->getNamedTagEntry(Weapon::TAG_WEAPON);
+
+		if(!is_null($tag) && $this->getData($tag->getTag(Weapon::TAG_TYPE)->getValue()) === $data)
+		{
+			$progress = round($phase / $data["Shooting"]["Cooltime_Between_Shots"] * 30);
+			if($phase >= $data["Shooting"]["Cooltime_Between_Shots"])
+			{
+				$text = "§r§o" . $weapon->getCustomName();
+				$player->getLevel()->addSound(new EndermanTeleportSound($player->asVector3(), 0), [$player]);
+			}
+			else
+			{
+				$text = "§lCooltime §b" . str_repeat("‖", 30 - $progress) . "§f" . str_repeat("‖",$progress) . "\n§r§o" . $weapon->getCustomName() . "©";
+			}
+
+			if(!$this->reloading[$name]) $player->sendPopUp($text);
+		}
+
+		if($phase >= $data["Shooting"]["Cooltime_Between_Shots"]){
+			$this->cooltime[$name] = false;
+			return true;
+		}
+
+		$phase ++;
+
+		$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "CooltimeTask"], [$player, $data, $phase]), 1);
 	}
 }
 

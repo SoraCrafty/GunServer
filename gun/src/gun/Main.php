@@ -79,9 +79,13 @@ class Main extends PluginBase {
 		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->ranking = new ranking\Ranking($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
-		$this->server->getNetwork()->setName("§l§fBattleFront§c2§r §bβ");
 
-		$this->discordManager->sendMessage('**❗サーバーが`' . GameManager::getObject()->getName() . '`モードで起動しました  **(' . date("m/d H:i") . ')');
+		if($this->server->hasWhitelist()) $this->server->getNetwork()->setName("現在メンテナンス中 §l§fBattleFront§c2§r §bβ§r");
+		else $this->server->getNetwork()->setName("§l§fBattleFront§c2§r §bβ§r");
+
+		if($this->server->hasWhitelist()) $this->discordManager->sendMessage('**❗サーバーがメンテナンスモードで起動しました**');
+		else $this->discordManager->sendMessage('**❗サーバーが`' . GameManager::getObject()->getName() . '`モードで起動しました  **(' . date("m/d H:i") . ')');
+
 		$this->getScheduler()->scheduleRepeatingTask(new RebootTask($this), 20);
 	}
 

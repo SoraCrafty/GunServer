@@ -653,7 +653,6 @@ class TeamDeathMatch extends Game
             case "leave":
                 $player = $event->getPlayer();
                 $this->leave($player);
-                $player->sendMessage("§aGame>>§f試合から途中退出しました");
                 break;
         }
     }

@@ -9,16 +9,34 @@ class CommandEvent extends Events{
 	public function call($event)
 	{
 		$sender = $event->getSender();
-		if(!$sender instanceof Player)
+		$command = $event->getCommand();
+		$commandArray = explode(" ", $command);
+
+		switch($commandArray[0])
 		{
-			$command = $event->getCommand();
-			$commandArray = explode(" ", $command);
-			if($commandArray[0] === "say")
-			{
+
+			case "say":
+			case "me":
 				array_shift($commandArray);
 				$message = implode(" ", $commandArray);
 				$this->plugin->discordManager->sendMessage('<' . $sender->getName() . '>' . $message);
-			}
+				break;
+
+			case "whitelist":
+				array_shift($commandArray);
+				switch(array_shift($commandArray))
+				{
+					case "on":
+						$this->plugin->getServer()->getNetwork()->setName("現在メンテナンス中 §l§fBattleFront§c2§r §bβ§r");
+						$this->plugin->discordManager->sendMessage('**❗❗サーバーがメンテナンスモードになりました  **(' . date("m/d H:i") . ')');
+						break;
+
+					case "off":
+						$this->plugin->getServer()->getNetwork()->setName("§l§fBattleFront§c2§r §bβ§r");
+						$this->plugin->discordManager->sendMessage('**❗❗サーバーのメンテナンスモードが解除されました  **(' . date("m/d H:i") . ')');
+						break;
+				}
+				break;
 		}
 	}
 

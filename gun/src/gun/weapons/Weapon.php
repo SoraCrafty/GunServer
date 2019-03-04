@@ -21,6 +21,8 @@ abstract class Weapon
 	const WEAPON_NAME = "";
 	/*Loreに書く数値*/
 	const ITEM_LORE = [];
+	/*デフォルト武器のデータ*/
+	const DEFAULT_DATA = [];
 
 	const TAG_WEAPON = "weapon";
 	const TAG_WEAPON_ID = "weapon_id";
@@ -60,6 +62,8 @@ abstract class Weapon
 				$this->weapons[$key] = $data[$key];
 			}
 		}
+
+		if($this->weapons === []) $this->weapons = static::DEFAULT_DATA;
 	}
 
 	public function save()

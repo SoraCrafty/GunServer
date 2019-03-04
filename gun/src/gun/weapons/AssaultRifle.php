@@ -45,6 +45,37 @@ class AssaultRifle extends Weapon
 								"Move_Speed" => "移動速度"
 							]
 					];
+	/*デフォルト武器のデータ*/
+	const DEFAULT_DATA = [
+							"AK-47" => [
+								"Item_Information" => [
+											"Item_Name" => "§eAK-47",
+											"Item_Id" => 280,
+											"Item_Damage" => 0,
+											"Item_Lore" => "1949年にソビエト連邦軍が制式採用した自動小銃"
+											],
+								"Shooting" => [
+											"Delay_Between_Shots" => 3,
+											"Shooting_Damage" => 3,
+											"Shooting_Range" => 70,
+											"Recoil_Amount" => 0,
+											"Bullet_Spread" => 0
+											],
+								"Sneak" => [
+											"Enable" => true,
+											"No_Recoil" => true,
+											"Bullet_Spread" => 0
+											],
+								"Reload" => [
+											"Enable" => true,
+											"Reload_Amount" => 30,
+											"Reload_Duration" => 40
+											],
+								"Move" =>[
+											"Move_Speed" => 1
+										]
+									   ]
+						];
 
 	private $shooting = [];
 	private $reloading = [];

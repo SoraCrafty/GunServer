@@ -28,5 +28,7 @@ class ThrowingKnife extends Weapon
 	const WEAPON_NAME = "ThrowingKnife";
 	/*Loreに書く数値*/
 	const ITEM_LORE = [];
+	/*デフォルト武器のデータ*/
+	const DEFAULT_DATA = [];
 }
 
