@@ -216,7 +216,7 @@ class TeamDeathMatch extends Game
 
     public function setDefaultSpawn($player)
     {
-        if($player->isOnline()) $player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+        if($player->isOnline()) $this->plugin->playerManager->setDefaultSpawn($player);
     }
 
     public function setDefaultSpawns()
@@ -637,17 +637,23 @@ class TeamDeathMatch extends Game
 
     public function onEventNPCTouch($event)
     {
-        if($event->getEventId() !== "game") return true;
-
-        $player = $event->getPlayer();
-
-        if($this->isGaming()) $this->join($player);
-        else
+        switch($event->getEventId())
         {
-            if($this->isApplied($player)) $this->unapply($player);
-            else $this->apply($player);
+
+            case "game":
+                $player = $event->getPlayer();
+                if($this->isGaming()) $this->join($player);
+                else
+                {
+                    if($this->isApplied($player)) $this->unapply($player);
+                    else $this->apply($player);
+                }
+                break; 
+
+            case "leave":
+                $this->leave($event->getPlayer());
+                break;
         }
-        return true;
     }
 
     public function onPlayerDeath($event)

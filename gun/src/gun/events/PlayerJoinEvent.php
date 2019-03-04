@@ -21,7 +21,7 @@ class PlayerJoinEvent extends Events {
 		$player = $event->getPlayer();
 		$name = $player->getName();
 
-    	$player->setSpawn($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+    	$this->plugin->playerManager->setDefaultSpawn($player);
     	
         
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');

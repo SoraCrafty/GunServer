@@ -9,6 +9,7 @@ use gun\weapons\WeaponManager;
 use gun\provider\ProviderManager;
 use gun\provider\AccountProvider;
 use gun\provider\GuideBookProvider;
+use gun\provider\MainSettingProvider;
 
 class PlayerManager
 {
@@ -95,6 +96,11 @@ class PlayerManager
     	$player->setNameTag($tag);
     	$player->setDisplayName($tag);
     	$player->setNameTagAlwaysVisible(true);
+	}
+
+	public function setDefaultSpawn(Player $player)
+	{
+		$player->setSpawn(MainSettingProvider::get()->getLobbyWorld()->getSpawnLocation());
 	}
 
 }
