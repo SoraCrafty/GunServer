@@ -31,7 +31,7 @@ class PlayerManagerListener implements Listener
 		$pk = $event->getPacket();
 		if($pk instanceof LoginPacket)
 		{
-			$this->manager->setOS($event->getPlayer(), $pk->clientData["DeviceOS"]);
+			$this->manager->setOS($pk->username, $pk->clientData["DeviceOS"]);
 		}
 	}
 }

@@ -42,9 +42,11 @@ class PlayerManager
 		unset($this->data[$player->getName()]);
 	}
 
-	public function setOS(Player $player, $os)
+	public function setOS($player, $os)
 	{
-		$this->data[$player->getName()]["os"] = $os;
+		if(!$player instanceof Player) $name = $player;
+		else $name = $player->getName();
+		$this->data[$name]["os"] = $os;
 	}
 
 	public function getOS(Player $player)

@@ -22,7 +22,6 @@ class PlayerJoinEvent extends Events {
 		$name = $player->getName();
 
     	$this->plugin->playerManager->setDefaultSpawn($player);
-    	
         
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fタップして操作している方は分割コントロールを推奨します');
