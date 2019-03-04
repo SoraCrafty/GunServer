@@ -102,20 +102,7 @@ class HandGun extends Weapon
 
 	public function onInteract($player, $data)
 	{
-		$name = $player->getName();
-
-		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
-
-		if($this->reloading[$name]) return true;
-
-		if($player->isSneaking() && $data["Reload"]["Enable"])
-		{
-			$this->reloading[$name] = true;
-			$this->ReloadTask($player, $data, 0);
-			return true;
-		}
-
-		if($this->plugin->playerManager->isPC($player)) $this->onPreInteract($player, $data);
+		$this->onPreInteract($player, $data);
 	}
 
 	public function onPreInteract($player, $data)
@@ -123,6 +110,13 @@ class HandGun extends Weapon
 		$name = $player->getName();
 
 		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
+
+		if($player->isSneaking() && $data["Reload"]["Enable"])
+		{
+			$this->reloading[$name] = true;
+			$this->ReloadTask($player, $data, 0);
+			return true;
+		}
 
 		if($this->reloading[$name]) return true;
 
