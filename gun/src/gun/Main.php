@@ -33,6 +33,8 @@ use gun\player\PlayerManager;
 
 use gun\game\GameManager;
 
+use gun\weapons\Bullet;
+
 class Main extends PluginBase {
 	
 	public static $datafolder;
@@ -56,6 +58,8 @@ class Main extends PluginBase {
 		Entity::registerEntity(FireworksRocket::class, true);
 
 		ItemFactory::registerItem(new FishingRod(), true);
+
+		Entity::registerEntity(Bullet::class, true);
 
 		Item::initCreativeItems();
 	}

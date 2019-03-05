@@ -4,6 +4,7 @@ namespace gun\weapons;
 
 use pocketmine\math\Vector3;
 use pocketmine\block\Block;
+use pocketmine\entity\Entity;
 
 use pocketmine\level\sound\ClickSound;
 use pocketmine\level\sound\DoorCrashSound;
@@ -31,7 +32,7 @@ class SniperRifle extends Weapon
 					"Shooting" => [
 								"Cooltime_Between_Shots" => "クールタイム",
 								"Shooting_Damage" => "火力",
-								"Shooting_Range" => "射程",
+								"Bullet_Speed" => "弾速",
 								"Recoil_Amount" => "反動",
 								"Bullet_Spread" => "弾ブレ"
 								],
@@ -55,7 +56,7 @@ class SniperRifle extends Weapon
 								"Shooting" => [
 											"Cooltime_Between_Shots" => 20,
 											"Shooting_Damage" => 20,
-											"Shooting_Range" => 50,
+											"Bullet_Speed" => 5,
 											"Recoil_Amount" => 1.5,
 											"Bullet_Spread" => 1
 											],
@@ -194,53 +195,17 @@ class SniperRifle extends Weapon
 
 		/*銃弾の処理*/
 		$level = $player->getLevel();
-		$pos = $player->asVector3();
-		$pos->y += $player->getEyeHeight();
-		$speread = ($player->isSneaking() && $data["Sneak"]["Enable"]) ? $data["Sneak"]["Bullet_Spread"] : $data["Shooting"]["Bullet_Spread"];
-		$pitch = $player->pitch + mt_rand(-$speread * 10, $speread * 10) * 0.1;
-		$yaw = $player->yaw + mt_rand(-$speread * 10, $speread * 10) * 0.1;
-		$motionY = -sin(deg2rad($pitch));
-		$motionXZ = cos(deg2rad($pitch));
-		$motionX = -$motionXZ * sin(deg2rad($yaw));
-		$motionZ = $motionXZ * cos(deg2rad($yaw));
-		$motion = new Vector3($motionX, $motionY, $motionZ);
-		for ($i = 0; $i < $data["Shooting"]["Shooting_Range"]; $i++) { 
-			$pos = $pos->add($motion);
-			$block = $level->getBlock($pos);
-			if(Blocks::isSolid($block->getId()))
-			{
-				$level->addParticle(new DestroyBlockParticle($pos, $block));
-				break;
-			}
 
-			foreach ($level->getEntities() as $entity) {
-				if($entity->getId() != $player->getId()){//エラー吐くので
-					if($pos->distance($entity->asVector3()->add(0, $entity->height / 2, 0)) <= sqrt($entity->height ** 2 + $entity->width ** 2) / 2 + 0.5 && $entity->isAlive())
-					{
-						$damage = $data["Shooting"]["Shooting_Damage"];
-						if($pos->distance($entity->asVector3()->add(0, $entity->getEyeHeight(), 0)) <= 0.5)
-						{
-							$damage *= 1.5;
-							$level->addParticle(new DestroyBlockParticle($pos, Block::get(216, 0)));
-							$player->addTitle('§4>   <', '', 1, 1, 1);
-						}
-						else{
-							$player->addTitle('>   <', '', 1, 1, 1);
-						}
-						$event = new EntityDamageByEntityEvent($player, $entity, EntityDamageByEntityEvent::CAUSE_ENTITY_ATTACK, $damage, [], 0);
-						$event->call();
-						if(!$event->isCancelled())
-						{
-    						$entity->setLastDamageCause($event);
-    						$entity->broadcastEntityEvent(EntityEventPacket::HURT_ANIMATION, null, $level->getPlayers());
-    						$entity->setHealth($entity->getHealth() - $damage);
-    						$level->addParticle(new DestroyBlockParticle($pos, Block::get(236,14)));
-						}
-						break 2;
-					}
-				}
-			}
-		}
+		$nbt = Entity::createBaseNBT(
+			$player->add(0, $player->getEyeHeight(), 0)->add($player->getDirectionVector()),
+			$player->getDirectionVector()->multiply($data["Shooting"]["Bullet_Speed"]),
+			($player->yaw > 180 ? 360 : 0) - $player->yaw,
+			-$player->pitch
+		);
+
+		$entity = new Bullet($level, $nbt, $player);//Entity::create(Bullet::class, $player->getLevel(), $nbt, $player);
+		$entity->setBaseDamage($data["Shooting"]["Shooting_Damage"]);
+		$entity->spawnToAll();
 
 		$level->addSound(new DoorCrashSound($player->asVector3(), -100));
 
