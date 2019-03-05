@@ -196,9 +196,18 @@ class SniperRifle extends Weapon
 		/*銃弾の処理*/
 		$level = $player->getLevel();
 
+		$speread = ($player->isSneaking() && $data["Sneak"]["Enable"]) ? $data["Sneak"]["Bullet_Spread"] : $data["Shooting"]["Bullet_Spread"];
+		$pitch = $player->pitch + mt_rand(-$speread * 10, $speread * 10) * 0.1;
+		$yaw = $player->yaw + mt_rand(-$speread * 10, $speread * 10) * 0.1;
+		$motionY = -sin(deg2rad($pitch));
+		$motionXZ = cos(deg2rad($pitch));
+		$motionX = -$motionXZ * sin(deg2rad($yaw));
+		$motionZ = $motionXZ * cos(deg2rad($yaw));
+		$motion = new Vector3($motionX, $motionY, $motionZ);
+
 		$nbt = Entity::createBaseNBT(
 			$player->add(0, $player->getEyeHeight(), 0)->add($player->getDirectionVector()),
-			$player->getDirectionVector()->multiply($data["Shooting"]["Bullet_Speed"]),
+			$motion->multiply($data["Shooting"]["Bullet_Speed"]),
 			($player->yaw > 180 ? 360 : 0) - $player->yaw,
 			-$player->pitch
 		);

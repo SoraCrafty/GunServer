@@ -33,7 +33,7 @@ class HandGun extends Weapon
 					"Shooting" => [
 								"Cooltime_Between_Shots" => "クールタイム",
 								"Shooting_Damage" => "火力",
-								"Shooting_Range" => "射程",
+								"Bullet_Speed" => "弾速",
 								"Recoil_Amount" => "反動",
 								"Bullet_Spread" => "弾ブレ"
 								],
@@ -57,7 +57,7 @@ class HandGun extends Weapon
 								"Shooting" => [
 											"Cooltime_Between_Shots" => 5,
 											"Shooting_Damage" => 3,
-											"Shooting_Range" => 20,
+											"Bullet_Speed" => 5,
 											"Recoil_Amount" => 0,
 											"Bullet_Spread" => 0.5
 											],
@@ -201,9 +201,18 @@ class HandGun extends Weapon
 		/*銃弾の処理*/
 		$level = $player->getLevel();
 
+		$speread = ($player->isSneaking() && $data["Sneak"]["Enable"]) ? $data["Sneak"]["Bullet_Spread"] : $data["Shooting"]["Bullet_Spread"];
+		$pitch = $player->pitch + mt_rand(-$speread * 10, $speread * 10) * 0.1;
+		$yaw = $player->yaw + mt_rand(-$speread * 10, $speread * 10) * 0.1;
+		$motionY = -sin(deg2rad($pitch));
+		$motionXZ = cos(deg2rad($pitch));
+		$motionX = -$motionXZ * sin(deg2rad($yaw));
+		$motionZ = $motionXZ * cos(deg2rad($yaw));
+		$motion = new Vector3($motionX, $motionY, $motionZ);
+
 		$nbt = Entity::createBaseNBT(
 			$player->add(0, $player->getEyeHeight(), 0)->add($player->getDirectionVector()),
-			$player->getDirectionVector()->multiply($data["Shooting"]["Bullet_Speed"]),
+			$motion->multiply($data["Shooting"]["Bullet_Speed"]),
 			($player->yaw > 180 ? 360 : 0) - $player->yaw,
 			-$player->pitch
 		);
@@ -211,6 +220,7 @@ class HandGun extends Weapon
 		$entity = new Bullet($level, $nbt, $player);//Entity::create(Bullet::class, $player->getLevel(), $nbt, $player);
 		$entity->setBaseDamage($data["Shooting"]["Shooting_Damage"]);
 		$entity->spawnToAll();
+
 
 		$level->addSound(new DoorCrashSound($player->asVector3(), -100));
 
