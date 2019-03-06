@@ -33,3 +33,6 @@ permissions:
      battlefront.command.ranking:
       default: op
       description: ランキング関連コマンドを使用することを許可します
+     battlefront.command.summon:
+      default: op
+      description: Entity召喚関連コマンドを使用することを許可します

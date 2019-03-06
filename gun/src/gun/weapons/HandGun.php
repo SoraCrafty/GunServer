@@ -211,7 +211,7 @@ class HandGun extends Weapon
 		$motion = new Vector3($motionX, $motionY, $motionZ);
 
 		$nbt = Entity::createBaseNBT(
-			$player->add(0, $player->getEyeHeight(), 0)),
+			$player->add(0, $player->getEyeHeight(), 0),
 			$motion->multiply($data["Shooting"]["Bullet_Speed"]),
 			($player->yaw > 180 ? 360 : 0) - $player->yaw,
 			-$player->pitch

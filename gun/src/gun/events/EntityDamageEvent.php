@@ -15,8 +15,12 @@ use gun\game\GameManager;
 
 class EntityDamageEvent extends Events {
 	
+
+	/*
+	*@priority HIGH
+	*/
 	public function call($event){
-        if($event instanceof EntityDamageByEntityEvent)
+        if($event instanceof EntityDamageByEntityEvent && !$event->isCancelled())
         {
             if(!GameManager::getObject()->isGaming() && $event->getEntity() instanceof Player)
             {
