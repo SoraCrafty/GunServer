@@ -35,7 +35,7 @@ class WeaponListener implements Listener
 
 	public function onEvent($eventname, $player, ...$args)
 	{
-		if(!GameManager::getObject()->isGaming()) return true;
+		if(!WeaponManager::hasPermission($player)) return true;
 
 		$weapon = $player->getInventory()->getItemInHand();
 
@@ -79,10 +79,10 @@ class WeaponListener implements Listener
 	}
 
 	public function onItemHeld(PlayerItemHeldEvent $event)//後々改善したい
-	{
-		if(!GameManager::getObject()->isGaming()) return true;
-		
+	{		
 		$player =  $event->getPlayer();
+
+		if(!WeaponManager::hasPermission($player)) return true;
 
 		$item_off = $player->getInventory()->getItemInHand();
 		$item_on = $event->getItem();

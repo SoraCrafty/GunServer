@@ -26,6 +26,8 @@ use gun\provider\AccountProvider;
 
 use gun\bossbar\BossBar;
 
+use gun\weapons\WeaponManager;
+
 class TeamDeathMatch extends Game
 {
     const GAME_ID = "tdm";
@@ -141,6 +143,7 @@ class TeamDeathMatch extends Game
         $this->setInventory($player);
         $this->setHealth($player);
         $this->bossbar->register($player);
+        WeaponManager::setPermission($this->plugin, $player, true);
     }
 
     public function leaveAll()
@@ -164,6 +167,7 @@ class TeamDeathMatch extends Game
         $this->bossbar->unregister($player);
         $attribute = $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
         $attribute->setValue($player->isSprinting() ? 1.3 * $attribute->getDefaultValue() : $attribute->getDefaultValue(), false, true);
+        WeaponManager::setPermission($this->plugin, $player, false);
     }
 
     /*ゲーム開始まであと何秒か*/

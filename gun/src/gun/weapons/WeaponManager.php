@@ -4,6 +4,10 @@ namespace gun\weapons;
 
 class WeaponManager
 {
+
+	const PERMISSION_NAME = "weapon";
+	const PERMISSION_DEFAULT = false;
+
 	/*Weaponの配列*/
 	private static $class = [];
 
@@ -104,6 +108,16 @@ class WeaponManager
 		}
 
 		return $name;	
+	}
+
+	public static function setPermission($plugin, $player, $value)
+	{
+		$player->addAttachment($plugin, self::PERMISSION_NAME, $value);
+	}
+
+	public static function hasPermission($player)
+	{
+		return $player->hasPermission(self::PERMISSION_NAME);
 	}
 
 }
