@@ -11,6 +11,10 @@ use gun\bossbar\BossBar;
 
 use gun\weapons\WeaponManager;
 
+use pocketmine\entity\Entity;
+
+use gun\entity\target\Target;
+
 class PlayerJoinEvent extends Events {
   
   	public function __construct($api){
@@ -36,5 +40,15 @@ class PlayerJoinEvent extends Events {
 		WeaponManager::setPermission($this->plugin, $player, false);
 
 		$this->plugin->discordManager->sendMessage('**⭕' . $player->getName() . 'がログインしました** ' . '(' . count($this->plugin->getServer()->getOnlinePlayers()) . '/' . $this->plugin->getServer()->getMaxPlayers() . ')');
+
+		/*$nbt = Entity::createBaseNBT(
+			$player,
+			$player->getMotion(),
+			$player->yaw,
+			$player->pitch
+		);
+		$nbt->setTag($player->namedtag->getCompoundTag("Skin"));
+		$entity = new Target($player->getLevel(), $nbt);
+		$entity->spawnToAll();*/
 	}
 }
