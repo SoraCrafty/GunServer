@@ -11,6 +11,7 @@ use pocketmine\level\particle\SnowballPoofParticle;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\math\Vector3;
 
 class Bullet extends Projectile
 {
@@ -21,6 +22,7 @@ class Bullet extends Projectile
 
 	protected $gravity = 0.005;
 
+	private $MotionProgress = 0;
 	private $progress = 0;
 
 	protected function onHitBlock(Block $blockHit, RayTraceResult $hitResult) : void{
@@ -49,11 +51,20 @@ class Bullet extends Projectile
 		$result = parent::onUpdate($currentTick);
 		if($result === false) return false;
 
+		$this->MotionProgress += $this->motion->asVector3()->distance(new Vector3(0, 0, 0));
+		if($this->MotionProgress > 80)
+		{
+			$this->level->addParticle(new SnowballPoofParticle($this->asVector3()));
+			$this->flagForDespawn();
+			return true;
+		}
+
 		$this->progress++;
 		if($this->progress > 20)
 		{
 			$this->level->addParticle(new SnowballPoofParticle($this->asVector3()));
 			$this->flagForDespawn();
+			return true;
 		}
 
 		return true;

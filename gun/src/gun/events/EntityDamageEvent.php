@@ -43,7 +43,7 @@ class EntityDamageEvent extends Events {
 		$eid = Entity::$entityCount++;
 		$pk->entityRuntimeId = $eid;
 		$pk->type = Entity::ITEM;
-		$pk->position = $damager->asVector3()->add(mt_rand(-8, 8) * 0.1, $damager->getEyeHeight() + 0.5 + mt_rand(-5, 5) * 0.1, mt_rand(-8, 8) * 0.1);
+		$pk->position = $damager->asVector3()->add(mt_rand(-8, 8) * 0.1, $damager->getEyeHeight() / 2 + mt_rand(-5, 5) * 0.1, mt_rand(-8, 8) * 0.1);
 		$pk->motion = new Vector3(0, 0.15, 0);
         $flags = 0;
         $flags |= 1 << Entity::DATA_FLAG_CAN_SHOW_NAMETAG;
