@@ -157,7 +157,7 @@ class TeamDeathMatch extends Game
         }
     }
 
-    public function leave($player)
+    public function leave_temporary($player)
     {
         $this->plugin->playerManager->setDefaultHealth($player);
         $this->setDefaultSpawn($player);
@@ -168,6 +168,12 @@ class TeamDeathMatch extends Game
         $attribute = $player->getAttributeMap()->getAttribute(Attribute::MOVEMENT_SPEED);
         $attribute->setValue($player->isSprinting() ? 1.3 * $attribute->getDefaultValue() : $attribute->getDefaultValue(), false, true);
         WeaponManager::setPermission($this->plugin, $player, false);
+    }
+
+    public function leave($player)
+    {
+        $this->unsetTeam($player);
+        $this->leave_temporary($player);
     }
 
     /*ゲーム開始まであと何秒か*/
@@ -417,6 +423,22 @@ class TeamDeathMatch extends Game
         $this->teamMembers[$team][] = $player;
     }
 
+    public function unsetTeam($player)//要改善
+    {
+        foreach ($this->teamMembers as $teamKey => $teamMembers) 
+        {
+            foreach ($teamMembers as $memberKey => $member) {
+                if($player->getName() === $member->getName())
+                {
+                    unset($this->teamMembers[$teamKey][$memberKey]);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function getTeam($player) {//要改善
         foreach ($this->teamMembers as $team => $members) 
         {
@@ -656,7 +678,7 @@ class TeamDeathMatch extends Game
 
             case "leave":
                 $player = $event->getPlayer();
-                $this->leave($player);
+                $this->leave_temporary($player);
                 break;
         }
     }
