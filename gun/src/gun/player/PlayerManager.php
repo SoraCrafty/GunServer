@@ -105,4 +105,9 @@ class PlayerManager
 		$player->setSpawn(MainSettingProvider::get()->getLobbyWorld()->getSpawnLocation());
 	}
 
+	public function gotoLobby(Player $player)
+	{
+		$player->teleport(MainSettingProvider::get()->getLobbyWorld()->getSpawnLocation());
+	}
+
 }

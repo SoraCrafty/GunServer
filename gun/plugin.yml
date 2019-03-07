@@ -36,3 +36,6 @@ permissions:
      battlefront.command.summon:
       default: op
       description: Entity召喚関連コマンドを使用することを許可します
+     battlefront.command.testfire:
+      default: true
+      description: 試し打ち関連コマンドを使用することを許可します

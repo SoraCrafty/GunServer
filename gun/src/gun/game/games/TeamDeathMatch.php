@@ -439,6 +439,11 @@ class TeamDeathMatch extends Game
         return false;
     }
 
+    public function isPlayer($player)
+    {
+        return $this->getTeam($player) !== false;
+    }
+
     public function getTeam($player) {//要改善
         foreach ($this->teamMembers as $team => $members) 
         {
@@ -678,7 +683,7 @@ class TeamDeathMatch extends Game
 
             case "leave":
                 $player = $event->getPlayer();
-                $this->leave_temporary($player);
+                $this->leave($player);
                 break;
         }
     }

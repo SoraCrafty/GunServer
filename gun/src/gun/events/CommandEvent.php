@@ -15,6 +15,14 @@ class CommandEvent extends Events{
 		switch($commandArray[0])
 		{
 
+			case "help":
+				if($sender instanceof Player && !$sender->isOp())
+				{
+					$event->setCencelled(true);
+					$sender->sendMessage("§cこのコマンドを実行する権限がありません");
+				}
+				break;
+
 			case "say":
 			case "me":
 				array_shift($commandArray);

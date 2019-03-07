@@ -33,6 +33,18 @@ class TestFiringFieldProvider extends Provider
         return new Position($this->data["position"]["x"], $this->data["position"]["y"], $this->data["position"]["z"], $this->plugin->getServer()->getLevelByName($this->data["world"]));
     }
 
+    public function setPosition(Position $position)
+    {
+        $this->data = [
+                        "world" => $position->getLevel()->getFolderName(),
+                        "position" => [
+                                    "x" => $position->getX(),
+                                    "y" => $position->getY(),
+                                    "z" => $position->getZ()
+                                    ]
+                    ];
+    }
+
 }
 
 
