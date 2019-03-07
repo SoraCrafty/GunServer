@@ -7,6 +7,7 @@ use pocketmine\item\Item;
 use pocketmine\entity\Attribute;
 
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\ByteTag;
 
 abstract class Weapon
 {
@@ -136,6 +137,7 @@ abstract class Weapon
 		$nbt->setString(self::TAG_WEAPON_ID, static::WEAPON_ID);
 		$nbt->setString(self::TAG_TYPE, $id);
 		$item->setNamedTagEntry($nbt);
+		$item->setNamedTagEntry(new ByteTag("Unbreakable", 1));
 
 		return $item;
 	}
