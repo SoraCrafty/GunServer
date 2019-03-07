@@ -13,7 +13,7 @@ use gun\weapons\WeaponManager;
 use gun\game\GameManager;
 use gun\game\games\TeamDeathMatch;
 
-class GuideBookCommand extends BattleFrontCommand
+class TestFireCommand extends BattleFrontCommand
 {
     const NAME = "testfire";
     const DESCRIPTION = "試し打ち関連コマンドです";
