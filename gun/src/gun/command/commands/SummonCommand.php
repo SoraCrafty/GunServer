@@ -50,7 +50,6 @@ class SummonCommand extends BattleFrontCommand
                         $yaw = 360;
                         break;
                 }
-                var_dump($sender->yaw);
                 $nbt = Entity::createBaseNBT(
                     $sender,
                     $sender->getMotion(),
