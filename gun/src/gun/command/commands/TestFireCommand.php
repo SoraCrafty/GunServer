@@ -73,7 +73,7 @@ class TestFireCommand extends BattleFrontCommand
 
                 $this->plugin->playerManager->gotoLobby($sender);
                 WeaponManager::setPermission($this->plugin, $sender, false);
-                $this->playerManager->setLobbyInventory($sender);
+                $this->plugin->playerManager->setLobbyInventory($sender);
                 return true;
 
             case "set":

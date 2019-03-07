@@ -53,7 +53,10 @@ class Target extends Human
 		if($source->getCause() === EntityDamageEvent::CAUSE_MAGIC) $this->kill();
 	}
 
+	public function setHealth()
+	{
 
+	}
 
 }
 
