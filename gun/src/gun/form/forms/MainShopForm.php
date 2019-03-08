@@ -13,6 +13,7 @@ use gun\provider\AccountProvider;
 use gun\weapons\WeaponManager;
 use gun\weapons\AssaultRifle;
 use gun\weapons\SniperRifle;
+use gun\weapons\ShotGun;
 
 class MainShopForm extends Form
 {
@@ -32,9 +33,12 @@ class MainShopForm extends Form
 						],
 						[
 							"text" => "§lスナイパーライフル -SniperRifle-§r§8\n狙撃用に特化した小銃"
+						],
+						[
+							"text" => "§lショットガン -SniperRifle-§r§8\n多数の小さい弾丸を発射する大型銃"
 						]
 						];
-				$cache = [2, 2];
+				$cache = [2, 2, 2];
 				if($this->player->isOp())
 				{
 					$buttons[] = ["text" => "§l§e★§8商品の編集 -Edit goods-§r§8\n商品を編集します"];
@@ -60,6 +64,9 @@ class MainShopForm extends Form
 						break;
 					case 1:
 						$type = SniperRifle::WEAPON_ID;
+						break;
+					case 2:
+						$type = ShotGun::WEAPON_ID;
 						break;
 					default:
 						$this->close();

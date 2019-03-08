@@ -15,6 +15,7 @@ class WeaponManager
 	{
 		self::registerWeapon(new AssaultRifle($plugin));
 		self::registerWeapon(new SniperRifle($plugin));
+		self::registerWeapon(new ShotGun($plugin));
 
 		self::registerWeapon(new HandGun($plugin));
 		self::registerWeapon(new ThrowingKnife($plugin));

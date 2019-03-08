@@ -6,6 +6,7 @@ use pocketmine\utils\Config;
 
 use gun\weapons\AssaultRifle;
 use gun\weapons\SniperRifle;
+use gun\weapons\ShotGun;
 
 class MainWeaponShop extends Provider
 {
@@ -22,6 +23,9 @@ class MainWeaponShop extends Provider
                                         ],
                         SniperRifle::WEAPON_ID => [
                             "Kar98k" => 500
+                                        ],
+                        ShotGun::WEAPON_ID => [
+                            "Remington870" => 500
                                         ]
                         ];
 
