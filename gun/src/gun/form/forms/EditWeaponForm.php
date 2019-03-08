@@ -280,12 +280,12 @@ class EditWeaponForm extends Form
 												"Bullet_Speed" => $this->lastData[7],
 												"Recoil_Amount" => $this->lastData[8] / 10,
 												"Bullet_Spread" => $this->lastData[9] / 10,
-												"Bullet_Amount" => $this->lastData[13]
+												"Bullet_Amount" => $this->lastData[10]
 											];
 						$data["Sneak"] = [
-												"Enable" => $this->lastData[10],
-												"No_Recoil" => $this->lastData[11],
-												"Bullet_Spread" => $this->lastData[12] / 10
+												"Enable" => $this->lastData[11],
+												"No_Recoil" => $this->lastData[12],
+												"Bullet_Spread" => $this->lastData[13] / 10
 											];
 						$data["Reload"] = [
 												"Enable" => $this->lastData[14],
