@@ -50,7 +50,7 @@ class EditWeaponForm extends Form
 					'content' => "追加/編集/削除したい武器種を選択してください",
 					'buttons' => $buttons
 				];
-				$cache = [2, 2, 2];
+				$cache = [2, 2, 2, 2];
 				break;
 
 			case 2:
