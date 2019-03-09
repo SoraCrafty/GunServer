@@ -76,7 +76,7 @@ class TestFireForm extends Form
 					case 3:
 						$type = HandGun::WEAPON_ID;
 						$provider = ProviderManager::get(SubWeaponShop::PROVIDER_ID);
-						$this->weaponCategory = Weapon::CATEGORY_MAIN;
+						$this->weaponCategory = Weapon::CATEGORY_SUB;
 						break;
 					default:
 						$this->close();
@@ -115,6 +115,7 @@ class TestFireForm extends Form
 				$weaponId = array_keys($provider->getItems($this->weaponType))[$this->lastData];
 				$item = WeaponManager::get($this->weaponType, $weaponId);
 				$this->player->getInventory()->addItem($item);
+				if($this->weaponType === SniperRifle::WEAPON_ID && !$this->player->getInventory()->contains(Item::get(262, 0, 1))) $this->player->getInventory()->addItem(Item::get(262, 0, 1));
 				$this->close();
 				return true;
 
