@@ -725,9 +725,12 @@ class TeamDeathMatch extends Game
     public function onRespawn($event)
     {
         $player = $event->getPlayer();
-        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(10), 20 * 5, 10, false)]), 1);
-        $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(11), 20 * 5, 10, false)]), 1);
-        $this->setInventory($player);
+        if($this->isPlayer($player))
+        {
+            $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(10), 20 * 7, 10, false)]), 1);
+            $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'delayAddEffect'], [$player, new EffectInstance(Effect::getEffect(11), 20 * 7, 10, false)]), 1);
+            $this->setInventory($player);
+        }    
     }
 
     public function delayAddEffect($player, $effect)
