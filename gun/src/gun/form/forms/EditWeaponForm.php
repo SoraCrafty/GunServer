@@ -165,7 +165,7 @@ class EditWeaponForm extends Form
 				{
 					case AssaultRifle::WEAPON_ID:
 						$content[] = ["type" => "slider", "text" => "発射レート", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Delay_Between_Shots"] : 1];
-						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
+						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 40, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
 						$content[] = ["type" => "slider", "text" => "弾速", "min" => 1, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Speed"] : 5];
 						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 0];
 						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
@@ -179,8 +179,8 @@ class EditWeaponForm extends Form
 						break;
 					case SniperRifle::WEAPON_ID:
 					case HandGun::WEAPON_ID:
-						$content[] = ["type" => "slider", "text" => "発射後のクールタイム", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Cooltime_Between_Shots"] : 20];
-						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
+						$content[] = ["type" => "slider", "text" => "発射後のクールタイム", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Cooltime_Between_Shots"] : 20];
+						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 40, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
 						$content[] = ["type" => "slider", "text" => "弾速", "min" => 1, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Speed"] : 5];
 						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 0];
 						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
@@ -193,8 +193,9 @@ class EditWeaponForm extends Form
 						$content[] = ["type" => "slider", "text" => "移動速度(入力値の1/10倍されます)", "min" => 0, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Move"]["Move_Speed"] * 10 : 10];
 						break;
 					case ShotGun::WEAPON_ID:
-						$content[] = ["type" => "slider", "text" => "発射後のクールタイム", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Cooltime_Between_Shots"] : 20];
-						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 20, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
+						$content[] = ["type" => "slider", "text" => "発射後のクールタイム", "min" => 1, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Cooltime_Between_Shots"] : 20];
+						$content[] = ["type" => "slider", "text" => "ダメージ", "min" => 1, "max" => 40, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage"] : 1];
+						$content[] = ["type" => "slider", "text" => "ダメージ減衰レベル(入力値の1/10倍されます)", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Shooting_Damage_Decay"] * 10 : 0];
 						$content[] = ["type" => "slider", "text" => "弾速", "min" => 1, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Speed"] : 5];
 						$content[] = ["type" => "slider", "text" => "反動(入力値の1/10倍されます)", "min" => 0, "max" => 50, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Recoil_Amount"] * 10 : 0];
 						$content[] = ["type" => "slider", "text" => "弾ブレ(入力値の1/10倍されます)", "min" => 0, "max" => 100, "default" => $this->mode === self::MODE_EDIT ? $data["Shooting"]["Bullet_Spread"] * 10 : 10];
@@ -277,23 +278,24 @@ class EditWeaponForm extends Form
 						$data["Shooting"] = [
 												"Cooltime_Between_Shots" => $this->lastData[5],
 												"Shooting_Damage" => $this->lastData[6],
-												"Bullet_Speed" => $this->lastData[7],
-												"Recoil_Amount" => $this->lastData[8] / 10,
-												"Bullet_Spread" => $this->lastData[9] / 10,
-												"Bullet_Amount" => $this->lastData[10]
+												"Shooting_Damage_Decay" => $this->lastData[7] / 10,
+												"Bullet_Speed" => $this->lastData[8],
+												"Recoil_Amount" => $this->lastData[9] / 10,
+												"Bullet_Spread" => $this->lastData[10] / 10,
+												"Bullet_Amount" => $this->lastData[11]
 											];
 						$data["Sneak"] = [
-												"Enable" => $this->lastData[11],
-												"No_Recoil" => $this->lastData[12],
-												"Bullet_Spread" => $this->lastData[13] / 10
+												"Enable" => $this->lastData[12],
+												"No_Recoil" => $this->lastData[13],
+												"Bullet_Spread" => $this->lastData[14] / 10
 											];
 						$data["Reload"] = [
-												"Enable" => $this->lastData[14],
-												"Reload_Amount" => $this->lastData[15],
-												"Reload_Duration" => $this->lastData[16]
+												"Enable" => $this->lastData[15],
+												"Reload_Amount" => $this->lastData[16],
+												"Reload_Duration" => $this->lastData[17]
 											];
 						$data["Move"] = [
-												"Move_Speed" => $this->lastData[17] / 10
+												"Move_Speed" => $this->lastData[18] / 10
 											];
 						break;
 				}

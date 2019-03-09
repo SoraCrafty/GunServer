@@ -33,7 +33,7 @@ class Bullet extends Projectile
 
 	protected function onHitEntity(Entity $entityHit, RayTraceResult $hitResult) : void{
 		$shooter = $this->getOwningEntity();
-		$damage = $entityHit->asVector3()->add(0, $entityHit->getEyeHeight(), 0)->distance($this->asVector3()) < 0.5 ? $this->damage * 2 : $this->damage;
+		$damage = /*$entityHit->asVector3()->add(0, $entityHit->getEyeHeight(), 0)->distance($this->asVector3()) < 0.5 ? $this->damage * 2 : */$this->damage;
 		if(is_null($shooter)) $event = new EntityDamageByEntityEvent($this, $entityHit, EntityDamageByEntityEvent::CAUSE_ENTITY_ATTACK, $damage, [], 0);
 		else $event = new EntityDamageByEntityEvent($this->getOwningEntity(), $entityHit, EntityDamageByEntityEvent::CAUSE_ENTITY_ATTACK, $damage, [], 0);
 		$event->call();

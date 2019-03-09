@@ -61,6 +61,12 @@ abstract class Weapon
 				$data = yaml_parse_file($dir . $file);
 				$key = array_keys($data)[0];
 				$this->weapons[$key] = $data[$key];
+				$defaultData = current(static::DEFAULT_DATA);//以下更新処理(雑かも)
+				foreach ($defaultData as $category => $categoryValue) {
+					foreach ($categoryValue as $keyName => $value) {
+						if(!isset($this->weapons[$key][$category][$keyName])) $this->weapons[$key][$category][$keyName] = $defaultData[$category][$keyName];
+					}
+				}
 			}
 		}
 

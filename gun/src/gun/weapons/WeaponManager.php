@@ -113,7 +113,7 @@ class WeaponManager
 
 	public static function setPermission($plugin, $player, $value)
 	{
-		$player->addAttachment($plugin, self::PERMISSION_NAME, $value);
+		if($player->isOnline()) $player->addAttachment($plugin, self::PERMISSION_NAME, $value);
 	}
 
 	public static function hasPermission($player)

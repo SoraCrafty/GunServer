@@ -33,6 +33,7 @@ class ShotGun extends Weapon
 					"Shooting" => [
 								"Cooltime_Between_Shots" => "クールタイム",
 								"Shooting_Damage" => "火力",
+								"Shooting_Damage_Decay" => "火力減衰",
 								"Bullet_Speed" => "弾速",
 								"Recoil_Amount" => "反動",
 								"Bullet_Spread" => "弾ブレ",
@@ -58,6 +59,7 @@ class ShotGun extends Weapon
 								"Shooting" => [
 											"Cooltime_Between_Shots" => 20,
 											"Shooting_Damage" => 2,
+											"Shooting_Damage_Decay" => 0,
 											"Bullet_Speed" => 10,
 											"Recoil_Amount" => 0,
 											"Bullet_Spread" => 5,
@@ -220,8 +222,9 @@ class ShotGun extends Weapon
 				-$player->pitch
 			);
 
-			$entity = new Bullet($level, $nbt, $player);
+			$entity = new ShotGunBullet($level, $nbt, $player);
 			$entity->setBaseDamage($data["Shooting"]["Shooting_Damage"]);
+			$entity->setDecayLevel($data["Shooting"]["Shooting_Damage_Decay"]);
 			$entity->spawnToAll();
 		}
 
