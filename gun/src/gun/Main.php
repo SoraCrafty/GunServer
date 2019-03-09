@@ -34,6 +34,7 @@ use gun\player\PlayerManager;
 use gun\game\GameManager;
 
 use gun\weapons\Bullet;
+use gun\weapons\ShotGunBullet;
 
 use gun\entity\target\Target;
 
@@ -62,6 +63,7 @@ class Main extends PluginBase {
 		ItemFactory::registerItem(new FishingRod(), true);
 
 		Entity::registerEntity(Bullet::class, true);
+		Entity::registerEntity(ShotGunBullet::class, true);
 		Entity::registerEntity(Target::class, true);
 
 		Item::initCreativeItems();
