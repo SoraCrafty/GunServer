@@ -169,6 +169,12 @@ class AssaultRifle extends Weapon
 			return true;
 		}
 
+		if($this->reloading[$name])
+		{
+			$this->shooting[$name] = false;
+			return true;			
+		}
+
 		/*アイテム持ち替え時の処理*/
 		$weapon = $player->getInventory()->getItemInHand();
 		$tag = $weapon->getNamedTagEntry(Weapon::TAG_WEAPON);
