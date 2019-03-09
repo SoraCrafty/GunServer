@@ -30,6 +30,8 @@ use pocketmine\event\server\CommandEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockBreakEvent;
 
+use gun\npc\EventNPCTouchEvent;
+
 class Listener implements MainListener {
 
 	private static $listener = null;
@@ -63,6 +65,7 @@ class Listener implements MainListener {
 		$this->playerchat = new events\PlayerChatEvent($this);
 		$this->playerrespawn = new events\PlayerRespawnEvent($this);
 		$this->command = new events\CommandEvent($this);
+		$this->eventnpc = new events\EventNPCTouchEvent($this);
 	}
 	
 	public function onJoin(PlayerJoinEvent $event){
@@ -118,6 +121,12 @@ class Listener implements MainListener {
 	public function onCommand(CommandEvent $event)
 	{
 		$this->command->call($event);
+	}
+
+
+	public function onEventNPCTouch(EventNPCTouchEvent $event)
+	{
+		$this->eventnpc->call($event);
 	}
 
 }
