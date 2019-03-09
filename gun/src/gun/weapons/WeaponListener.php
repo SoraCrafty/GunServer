@@ -63,6 +63,10 @@ class WeaponListener implements Listener
 			{
 				$this->onEvent(Weapon::EVENT_INTERACT, $event->getPlayer());
 			}
+			elseif($pk->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY)
+			{
+				$this->onEvent(Weapon::EVENT_USE_ITEM_ON_ENTITY, $event->getPlayer(), $event);
+			}
 		}
 
 		if($pk instanceof LevelSoundEventPacket)

@@ -41,6 +41,7 @@ abstract class Weapon
 	const EVENT_DEATH = "onDeath";
 	const EVENT_KILL = "onKill";
 	const EVENT_USE_FISHROD = "onUseFishRod";
+	const EVENT_USE_ITEM_ON_ENTITY = "onUseItemOnEntity";
 
 	/*Mainクラスのオブジェクト*/
 	protected $plugin;
@@ -203,6 +204,11 @@ abstract class Weapon
 	public function onUseFishRod($player, $data)
 	{
 
+	}
+
+	public function onUseItemOnEntity($player, $data, $args)
+	{
+		$args[0]->setCancelled(true);
 	}
 }
 
