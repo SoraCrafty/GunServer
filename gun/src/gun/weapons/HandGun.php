@@ -15,6 +15,7 @@ use pocketmine\level\particle\DestroyBlockParticle;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket; 
 
 use gun\Callback;
 use gun\Blocks;
@@ -222,7 +223,13 @@ class HandGun extends Weapon
 		$entity->spawnToAll();
 
 
-		$level->addSound(new DoorCrashSound($player->asVector3(), -100));
+		/*音の処理*/
+		$pk = new LevelSoundEventPacket();
+		$pk->sound = LevelSoundEventPacket::SOUND_CONDUIT_ACTIVATE;
+		$pk->position = $player->asVector3();
+		foreach ($level->getPlayers() as $target) {
+			$target->dataPacket($pk);
+		}
 
 		$this->cooltime[$player->getName()] = true;
 		$this->CooltimeTask($player, $data, 0);

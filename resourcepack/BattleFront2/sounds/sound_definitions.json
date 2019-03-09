@@ -1,0 +1,8 @@
+{
+  "bottle.dragonbreath": {
+    "category": "bottle",
+    "sounds": [
+      "sounds/bottle/fill_dragonbreath1"
+    ]
+  }
+}

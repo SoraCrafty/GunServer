@@ -11,6 +11,7 @@ use pocketmine\entity\Attribute;
 use pocketmine\entity\EffectInstance;
 use pocketmine\entity\Effect;
 use pocketmine\network\mcpe\protocol\LevelEventPacket;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\inventory\ArmorInventory;
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -181,7 +182,7 @@ class TeamDeathMatch extends Game
 
     public function WaitingTask()
     {
-        if(count($this->applicants) >= 2)
+        if(count($this->applicants) >= 1)
         {
             $this->waitingCount--;
             if($this->waitingCount === 0)
@@ -192,7 +193,7 @@ class TeamDeathMatch extends Game
             }
             if($this->waitingCount <= 5)
             {
-                $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_ANVIL_FALL, 0);
+                $this->playSoundIndivudually_2(LevelSoundEventPacket::SOUND_NOTE);
             }
             $this->bossbar->setTitle("§lゲーム開始まであと§a" . ($this->waitingCount) . "§f秒");
             $this->bossbar->setPercentage($this->waitingCount / $this->provider->getWaitingTime());
@@ -503,7 +504,7 @@ class TeamDeathMatch extends Game
         return $this->TimeTableStatus === 1;  
     }
 
-    /*PMMPのアプデきたら処理変える*/
+    /*PMMPのアプデきたら処理変える*//*雑*/
     public function playSoundIndivudually($id, $pitch){
         foreach ($this->teamMembers as $team => $members) 
         {
@@ -518,6 +519,37 @@ class TeamDeathMatch extends Game
                     $player->dataPacket($pk);
                 }
             }
+        }
+        foreach ($this->applicants as $applicant) 
+        {
+            $pk = new LevelEventPacket();
+            $pk->evid = $id;
+            $pk->position = $applicant->getPosition();
+            $pk->data = $pitch;
+            $applicant->dataPacket($pk);
+        }
+    }
+
+    public function playSoundIndivudually_2($id){
+        foreach ($this->teamMembers as $team => $members) 
+        {
+            foreach ($members as $player) 
+            {
+                if($player->isOnline())
+                {
+                    $pk = new LevelSoundEventPacket();
+                    $pk->sound = $id;
+                    $pk->position = $player->asVector3();
+                    $player->dataPacket($pk);
+                }
+            }
+        }
+        foreach ($this->applicants as $applicant) 
+        {
+            $pk = new LevelSoundEventPacket();
+            $pk->sound = $id;
+            $pk->position = $applicant->asVector3();
+            $applicant->dataPacket($pk);
         }
     }
 
