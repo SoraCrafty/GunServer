@@ -3,6 +3,7 @@ namespace gun\events;
 
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\item\Item;
 
 use gun\gameManager;
@@ -19,6 +20,7 @@ class PlayerDeathEvent extends Events {/*要改善*/
 	public function call($event){
 		$event->setKeepInventory(true);
 		$player = $event->getPlayer();
+		if($player->getSpawn()->getLevel()!=$player->getPosition()->getLevel()) $this->getServer()->getPluginManager()->callEvent(new EntityTeleportEvent($player, $player->getPosition(), $player->getSpawn()->getLevel()->getSafeSpawn()));
 		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
 			$killer = $player->getLastDamageCause()->getDamager();
 			if($killer instanceof Player)

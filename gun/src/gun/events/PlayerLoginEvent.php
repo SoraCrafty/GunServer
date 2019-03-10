@@ -3,6 +3,7 @@
 namespace gun\events;
 
 use gun\provider\AccountProvider;
+use gun\provider\MainSettingProvider;
 use gun\provider\ProviderManager;
 
 class PlayerLoginEvent extends Events
@@ -13,6 +14,7 @@ class PlayerLoginEvent extends Events
         $player = $event->getPlayer();
         $provider = ProviderManager::get(AccountProvider::PROVIDER_ID);
         if(!$provider->isRegistered($player)) $provider->register($player);
+        $player->teleport(MainSettingProvider::get()->getLobbyWorld()->getSafeSpawn());
 	}
 
 }
