@@ -24,7 +24,8 @@ class AccountProvider extends Provider
                                     "death" => 0,
                                     "point" => 0,
                                     "setting" => [
-                                                "sensitivity" => self::SENSITIVITY_NORMAL
+                                                "sensitivity" => self::SENSITIVITY_NORMAL,
+                                                "auto_heal" => false
                                                 ],
                                     "weapon" => [
                                                 "main" => [
@@ -50,6 +51,12 @@ class AccountProvider extends Provider
         foreach (static::DATA_PLAYER_DAFAULT as $key => $value) {
             foreach ($this->data as $name => $data) {
                 if(!isset($this->data[$name][$key])) $this->data[$name][$key] = $value;
+                if(is_array($value))//雑い
+                {
+                    foreach ($value as $miniKey => $miniValue) {
+                        if(!isset($this->data[$name][$key][$miniKey])) $this->data[$name][$key][$miniKey] = $miniValue;
+                    }
+                }
             }
         }
     }

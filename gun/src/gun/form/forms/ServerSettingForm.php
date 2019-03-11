@@ -18,6 +18,11 @@ class ServerSettingForm extends Form
 			'steps' => [/*"Low", */"Normal", "High"],
 			'default' => AccountProvider::get()->getSetting($this->player, "sensitivity"),
 		];
+		$content[] = [
+			'type' => "toggle",
+			'text' => "被ダメージ時の自動回復アイテム使用(PC使用時無効)",
+			'default' => AccountProvider::get()->getSetting($this->player, "auto_heal"),
+		];
 		$data = [
 			'type'    => 'custom_form',
 			'title'   => 'BattleFront2',
@@ -39,6 +44,7 @@ class ServerSettingForm extends Form
 	public function response(int $id, $data)
 	{
 		AccountProvider::get()->setSetting($this->player, "sensitivity", $data[0]);
+		AccountProvider::get()->setSetting($this->player, "auto_heal", $data[1]);
 		return true;
 	}
 

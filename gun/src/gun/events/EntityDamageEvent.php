@@ -4,6 +4,9 @@ namespace gun\events;
 use pocketmine\Player;
 use pocketmine\math\Vector3;
 use pocketmine\entity\Entity;
+use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
+use pocketmine\item\Item;
 use pocketmine\event\entity\EntityDamageEvent as EntityDamageEventRaw;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
@@ -12,6 +15,7 @@ use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 
 use gun\Callback;
 use gun\game\GameManager;
+use gun\provider\AccountProvider;
 
 class EntityDamageEvent extends Events {
 	
@@ -37,6 +41,22 @@ class EntityDamageEvent extends Events {
 			$damage = round($event->getBaseDamage() / 5);
 			if($damage <= 1) $event->setCancelled(true);
 			$event->setBaseDamage(round($damage));
+		}
+
+		/*雑*/
+		$player = $event->getEntity();
+		if(!$event->isCancelled() && $player instanceof Player)
+		{
+            if(!$this->plugin->playerManager->isPC($player) &&
+               AccountProvider::get()->getSetting($player, "auto_heal") === true &&
+               $player->getMaxHealth() - ($player->getHealth() - $event->getBaseDamage()) >= 12 &&
+               $player->getInventory()->contains(Item::get(322, 0, 1)) &&
+               !$player->hasEffect(Effect::REGENERATION)
+            )
+            {
+				$player->getInventory()->removeItem(Item::get(322, 0, 1));
+				$player->addEffect(new EffectInstance(Effect::getEffect(10), 20 * 3, 3, false));
+            }
 		}
 	}
 
