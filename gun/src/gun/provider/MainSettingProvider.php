@@ -31,33 +31,14 @@ class MainSettingProvider extends Provider
     	return $this->data["GameMode"];
     }
 
+    public function getLobbyWorldName()
+    {
+        return $this->data["LobbyWorld"];
+    }
+
     public function getLobbyWorld()
     {
         return $this->plugin->getServer()->getLevelByName($this->data["LobbyWorld"]);
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

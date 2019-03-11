@@ -4,6 +4,7 @@ namespace gun\provider;
 
 use pocketmine\utils\Config;
 use pocketmine\utils\Color;
+use pocketmine\level\Position;
 
 class TDMSettingProvider extends Provider
 {
@@ -14,7 +15,10 @@ class TDMSettingProvider extends Provider
     /*セーブデータのバージョン*/
     const VERSION = 1;
     /*デフォルトデータ*/
-    const DATA_DEFAULT = [
+    const DATA_DEFAULT = [];
+    /*デフォルトのゲームデータ*/
+    const DATA_GAME_DEFAULT = [
+                            "Stage_Name" => "Default",
     						"Game_Time" => 15 * 60,
     						"Waiting_Time" => 60,
     						"Killcount_Max" => 50,
@@ -54,48 +58,57 @@ class TDMSettingProvider extends Provider
     public function open()
     {
         parent::open();
-        if(!isset($this->data["Team_Data"][0]["color"])) $this->data["Team_Data"][0]["color"] = self::DATA_DEFAULT["Team_Data"][0]["color"];
-        if(!isset($this->data["Team_Data"][1]["color"])) $this->data["Team_Data"][1]["color"] = self::DATA_DEFAULT["Team_Data"][1]["color"];
+        if($this->data === []) $this->data[$this->plugin->getServer()->getDefaultLevel()->getFolderName()] = self::DATA_GAME_DEFAULT;
     }
 
-    public function getGameTime()
+    public function getRandmonLevelName()
     {
-    	return $this->data["Game_Time"];
+        return array_rand($this->data);
     }
 
-    public function getWaitingTime()
+    public function getGameTime($key)
     {
-    	return $this->data["Waiting_Time"];
+    	return $this->data[$key]["Game_Time"];
     }
 
-    public function getMaxKillCount()
+    public function getWaitingTime($key)
     {
-    	return $this->data["Killcount_Max"];
+    	return $this->data[$key]["Waiting_Time"];
     }
 
-    public function getHealth()
+    public function getMaxKillCount($key)
     {
-        return $this->data["Player_Health"];
+    	return $this->data[$key]["Killcount_Max"];
     }
 
-    public function getTeamName($id)
+    public function getHealth($key)
     {
-    	return $this->data["Team_Data"][$id]["name"];
+        return $this->data[$key]["Player_Health"];
     }
 
-    public function getTeamNameDecoration($id)
+    public function getTeamName($key, $id)
     {
-    	return $this->data["Team_Data"][$id]["decoration"];
+    	return $this->data[$key]["Team_Data"][$id]["name"];
     }
 
-    public function getTeamSpawn($id)
+    public function getTeamNameDecoration($key, $id)
     {
-    	return $this->data["Team_Data"][$id]["spawn"];
+    	return $this->data[$key]["Team_Data"][$id]["decoration"];
     }
 
-    public function getTeamColor($id)
+    public function getTeamSpawn($key, $id)
     {
-        return new Color($this->data["Team_Data"][$id]["color"]["r"], $this->data["Team_Data"][$id]["color"]["g"], $this->data["Team_Data"][$id]["color"]["b"]);
+    	return new Position($this->data[$key]["Team_Data"][$id]["spawn"]["x"], $this->data[$key]["Team_Data"][$id]["spawn"]["y"], $this->data[$key]["Team_Data"][$id]["spawn"]["z"], $this->plugin->getServer()->getLevelByName($key));
+    }
+
+    public function getTeamColor($key, $id)
+    {
+        return new Color($this->data[$key]["Team_Data"][$id]["color"]["r"], $this->data[$key]["Team_Data"][$id]["color"]["g"], $this->data[$key]["Team_Data"][$id]["color"]["b"]);
+    }
+
+    public function getStageName($key)
+    {
+        return $this->data[$key]["Stage_Name"];
     }
 
 }

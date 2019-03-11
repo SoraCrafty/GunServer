@@ -24,6 +24,8 @@ use gun\npc\NPCManager;
 use gun\command\CommandManager;
 
 use gun\provider\ProviderManager;
+use gun\provider\TestFiringFieldProvider;
+use gun\provider\MainSettingProvider;
 
 use gun\fishing\item\FishingRod;
 
@@ -101,6 +103,9 @@ class Main extends PluginBase {
 		}
 
 		$this->getScheduler()->scheduleRepeatingTask(new RebootTask($this), 20);
+
+		$this->getServer()->loadLevel(MainSettingProvider::get()->getLobbyWorldName());
+		$this->getServer()->loadLevel(TestFiringFieldProvider::get()->getWorldName());
 	}
 
 	public function onDisable()
@@ -111,5 +116,3 @@ class Main extends PluginBase {
 		ProviderManager::close();
 	}
 }
-
-	

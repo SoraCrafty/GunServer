@@ -24,6 +24,8 @@ use gun\ranking\Ranking;
 use gun\provider\ProviderManager;
 use gun\provider\TDMSettingProvider;
 use gun\provider\AccountProvider;
+use gun\provider\MainSettingProvider;
+use gun\provider\TestFiringFieldProvider;
 
 use gun\bossbar\BossBar;
 
@@ -54,6 +56,8 @@ class TeamDeathMatch extends Game
                         ];
     /*キルストリーク*/
     private $killstreak = [];
+    /*ワールド名*/
+    private $levelName = "";
 
     public function __construct($plugin)
     {
@@ -70,15 +74,16 @@ class TeamDeathMatch extends Game
         switch($this->TimeTableStatus)
         {
             case 0:
+                $this->loadLevel();
                 $this->WaitingTask();
                 return true;
 
             case 1:
                 $this->joinAll();
-                $this->sendTitle("§l§cGame Start!!§r", "§f試合開始!!", 5, 20, 10);
+                $this->sendTitle("§l§cGame Start!!§r", $this->provider->getStageName($this->levelName), 5, 20, 20);
                 $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が開始されました  **(' . date("m/d H:i") . ')', "game");
                 $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
-                $this->GameTask($this->provider->getGameTime());
+                $this->GameTask($this->provider->getGameTime($this->levelName));
                 return true;
 
             case 2:
@@ -187,7 +192,7 @@ class TeamDeathMatch extends Game
             $this->waitingCount--;
             if($this->waitingCount === 0)
             {
-                $this->waitingCount = $this->provider->getWaitingTime();
+                $this->waitingCount = $this->provider->getWaitingTime($this->levelName);
                 $this->TimeTable();
                 return true;
             }
@@ -196,11 +201,11 @@ class TeamDeathMatch extends Game
                 $this->playSoundIndivudually_2(LevelSoundEventPacket::SOUND_NOTE);
             }
             $this->bossbar->setTitle("§lゲーム開始まであと§a" . ($this->waitingCount) . "§f秒");
-            $this->bossbar->setPercentage($this->waitingCount / $this->provider->getWaitingTime());
+            $this->bossbar->setPercentage($this->waitingCount / $this->provider->getWaitingTime($this->levelName));
         }
         else
         {
-            $this->waitingCount = $this->provider->getWaitingTime();
+            $this->waitingCount = $this->provider->getWaitingTime($this->levelName);
             $this->bossbar->setPercentage(1);
             $this->bossbar->setTitle("§l§a参加者を待っています…");
         }
@@ -222,7 +227,7 @@ class TeamDeathMatch extends Game
     {
         $team = (count($this->teamMembers[0]) <= count($this->teamMembers[1])) ? 0 : 1;
         $this->teamMembers[$team][] = $player;
-        $player->sendMessage("§aGAME>>§fあなたは" . $this->provider->getTeamNameDecoration($team) . $this->provider->getTeamName($team) . "§fになりました");
+        $player->sendMessage("§aGAME>>§fあなたは" . $this->provider->getTeamNameDecoration($this->levelName, $team) . $this->provider->getTeamName($this->levelName, $team) . "§fになりました");
     }
 
     public function setDefaultSpawn($player)
@@ -256,8 +261,7 @@ class TeamDeathMatch extends Game
     {
         if($player->isOnline())
         {
-            $vectorArray = $this->provider->getTeamSpawn($team);
-            $player->setSpawn(new Vector3($vectorArray["x"], $vectorArray["y"], $vectorArray["z"]));
+            $player->setSpawn($this->provider->getTeamSpawn($this->levelName, $team));
         }
     }
 
@@ -276,8 +280,7 @@ class TeamDeathMatch extends Game
     {
         if($player->isOnline())
         {
-            $vectorArray = $this->provider->getTeamSpawn($team);
-            $player->teleport(new Vector3($vectorArray["x"], $vectorArray["y"], $vectorArray["z"]));
+            $player->teleport($this->provider->getTeamSpawn($this->levelName, $team));
         }
     }
 
@@ -294,7 +297,7 @@ class TeamDeathMatch extends Game
 
     public function gotoLobby($player)
     {
-        if($player->isOnline()) $player->teleport($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+        if($player->isOnline()) $this->plugin->playerManager->gotoLobby($player);
     }
 
     public function setLobbyInventoryAll()
@@ -318,10 +321,10 @@ class TeamDeathMatch extends Game
             return true;
         }
 
-        $this->bossbar->setPercentage($time / $this->provider->getGameTime());
-        $this->bossbar->setTitle("§a試合時間残り>>§f" . str_pad(floor($time / 60), 2, "0", STR_PAD_LEFT) . " : " . str_pad(round($time % 60), 2, "0", STR_PAD_LEFT) . 
-                                         "  §aキルカウント>>§f" . $this->provider->getTeamNameDecoration(0) . $this->provider->getTeamName(0) . "§f:" . $this->killCount[0] . "/" . $this->provider->getMaxKillCount() . " vs " . 
-                                                              $this->provider->getTeamNameDecoration(1) . $this->provider->getTeamName(1) . "§f:" . $this->killCount[1] . "/" . $this->provider->getMaxKillCount());
+        $this->bossbar->setPercentage($time / $this->provider->getGameTime($this->levelName));
+        $this->bossbar->setTitle('§aステージ>>§f' . $this->provider->getStageName($this->levelName) . " §a試合時間残り>>§f" . str_pad(floor($time / 60), 2, "0", STR_PAD_LEFT) . " : " . str_pad(round($time % 60), 2, "0", STR_PAD_LEFT) . 
+                                         "  §aキルカウント>>§f" . $this->provider->getTeamNameDecoration($this->levelName, 0) . $this->provider->getTeamName($this->levelName, 0) . "§f:" . $this->killCount[0] . "/" . $this->provider->getMaxKillCount($this->levelName) . " vs " . 
+                                                              $this->provider->getTeamNameDecoration($this->levelName, 1) . $this->provider->getTeamName($this->levelName, 1) . "§f:" . $this->killCount[1] . "/" . $this->provider->getMaxKillCount($this->levelName));
         $time--;
         $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'GameTask'], [$time]), 20);
     }
@@ -337,16 +340,16 @@ class TeamDeathMatch extends Game
             	$this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
                 $this->sendTitle("§l§cGame Set!!§r", "§f試合終了!!", 5, 20, 10);
                 $this->bossbar->setPercentage(0);
-                $this->bossbar->setTitle("§8<<試合終了>>§f" . 
-                                         "  §aキルカウント>>§f" . $this->provider->getTeamNameDecoration(0) . $this->provider->getTeamName(0) . "§f:" . $this->killCount[0] . "/" . $this->provider->getMaxKillCount() . " vs " . 
-                                                              $this->provider->getTeamNameDecoration(1) . $this->provider->getTeamName(1) . "§f:" . $this->killCount[1] . "/" . $this->provider->getMaxKillCount());
+                $this->bossbar->setTitle('§aステージ>>§f' . $this->provider->getStageName($this->levelName) . " §8<<試合終了>>§f" . 
+                                         "  §aキルカウント>>§f" . $this->provider->getTeamNameDecoration($this->levelName, 0) . $this->provider->getTeamName($this->levelName, 0) . "§f:" . $this->killCount[0] . "/" . $this->provider->getMaxKillCount($this->levelName) . " vs " . 
+                                                              $this->provider->getTeamNameDecoration($this->levelName, 1) . $this->provider->getTeamName($this->levelName, 1) . "§f:" . $this->killCount[1] . "/" . $this->provider->getMaxKillCount($this->levelName));
                 $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 40);
                 return true;
 
             case 1:
                 $winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
-                $this->sendMessage("§aGAME>>§f" . $this->provider->getTeamNameDecoration($winteam) . $this->provider->getTeamName($winteam) . "§fチームの勝利!!");
-                $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が終了しました 勝利チーム:' . $this->provider->getTeamName($winteam) . ' **(' . date("m/d H:i") . ')', "game");
+                $this->sendMessage("§aGAME>>§f" . $this->provider->getTeamNameDecoration($this->levelName, $winteam) . $this->provider->getTeamName($this->levelName, $winteam) . "§fチームの勝利!!");
+                $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が終了しました 勝利チーム:' . $this->provider->getTeamName($this->levelName, $winteam) . ' **(' . date("m/d H:i") . ')', "game");
                 $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 10);
                 return true;
 
@@ -408,6 +411,7 @@ class TeamDeathMatch extends Game
                         ];
         $this->killstreak = [];
         $this->applicants = [];
+        $this->unloadLevel();
     }
 
     public function setTeam($player, $team)
@@ -463,7 +467,7 @@ class TeamDeathMatch extends Game
     {
         $this->killCount[$team]++;
 
-        if($this->killCount[$team] >= $this->provider->getMaxKillCount() && $this->TimeTableStatus === 1)
+        if($this->killCount[$team] >= $this->provider->getMaxKillCount($this->levelName) && $this->TimeTableStatus === 1)
         {
             $this->TimeTable();
         }
@@ -570,7 +574,7 @@ class TeamDeathMatch extends Game
     {
     	if($player->isOnline())
     	{
-	    	$tag = $this->provider->getTeamNameDecoration($team) . $player->getName() . "§f";
+	    	$tag = $this->provider->getTeamNameDecoration($this->levelName, $team) . $player->getName() . "§f";
             if($player->isOp()) $tag = "§r§b★§f{$tag}";
 	    	$player->setNameTag($tag);
 	    	$player->setDisplayName($tag);
@@ -616,7 +620,7 @@ class TeamDeathMatch extends Game
         $player->getInventory()->setContents($content);   
         
         $helmet = Item::get(298, 0, 1);
-        $helmet->setCustomColor($this->provider->getTeamColor($this->getTeam($player)));
+        $helmet->setCustomColor($this->provider->getTeamColor($this->levelName, $this->getTeam($player)));
         $player->getArmorInventory()->setHelmet($helmet);
     }
 
@@ -634,8 +638,8 @@ class TeamDeathMatch extends Game
     public function setHealth($player)
     {
         if(!$player->isOnline()) return true;
-        $player->setMaxHealth($this->provider->getHealth());
-        $player->setHealth($this->provider->getHealth());
+        $player->setMaxHealth($this->provider->getHealth($this->levelName));
+        $player->setHealth($this->provider->getHealth($this->levelName));
     }
 
     public function setDefaultHealthAll()
@@ -782,6 +786,22 @@ class TeamDeathMatch extends Game
         if(!$player instanceof Player) return true;
 
         if($this->isGaming() && $this->getTeam($player) !== false && $event->getSlot() === ArmorInventory::SLOT_HEAD && $event->getNewItem()->getId() === 0) $event->setCancelled(true);
+    }
+
+    public function loadLevel()
+    {
+        $this->levelName = $this->provider->getRandmonLevelName();
+        $this->plugin->getServer()->loadLevel($this->levelName);
+    }
+
+    public function unloadLevel()
+    {
+        if(MainSettingProvider::get()->getLobbyWorldName() !== $this->levelName && TestFiringFieldProvider::get()->getWorldName() !== $this->levelName)
+        {
+            $level = $this->plugin->getServer()->getLevelByName($this->levelName);
+            if(count($level->getPlayers()) < 1) $this->plugin->getServer()->unloadLevel($level);
+        }
+        $this->levelName = "";
     }
     
 }

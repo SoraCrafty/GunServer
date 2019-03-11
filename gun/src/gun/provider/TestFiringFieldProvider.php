@@ -28,6 +28,11 @@ class TestFiringFieldProvider extends Provider
         if($this->data["world"] === "") $this->data["world"] = $this->plugin->getServer()->getDefaultLevel()->getFolderName();
     }
 
+    public function getWorldName()
+    {
+        return $this->data["world"];
+    }
+
     public function getPosition()
     {
         return new Position($this->data["position"]["x"], $this->data["position"]["y"], $this->data["position"]["z"], $this->plugin->getServer()->getLevelByName($this->data["world"]));
