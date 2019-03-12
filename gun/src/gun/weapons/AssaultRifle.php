@@ -102,6 +102,12 @@ class AssaultRifle extends Weapon
 		return $item;
 	}
 
+	public function onUseItemOnEntity($player, $data, $args)
+	{
+		parent::onUseItemOnEntity($player, $data, $args);
+		if(!$this->plugin->playerManager->isPC($player)) $this->onInteract($player, $data);
+	}
+
 	public function onPreInteract($player, $data)
 	{
 		if($this->plugin->playerManager->isPC($player) || AccountProvider::get()->getSetting($player, "sensitivity") !== AccountProvider::SENSITIVITY_HIGH) return true;

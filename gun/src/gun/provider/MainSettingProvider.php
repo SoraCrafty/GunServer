@@ -17,6 +17,7 @@ class MainSettingProvider extends Provider
     /*デフォルトデータ*/
     const DATA_DEFAULT = [
     						"GameMode" => TeamDeathMatch::GAME_ID,
+                            "Reboot_Count" => 5,
                             "LobbyWorld" => ""
     					];
 
@@ -29,6 +30,11 @@ class MainSettingProvider extends Provider
     public function getGameMode()
     {
     	return $this->data["GameMode"];
+    }
+
+    public function getRebootCount()
+    {
+        return $this->data["Reboot_Count"];
     }
 
     public function getLobbyWorldName()

@@ -107,6 +107,12 @@ class HandGun extends Weapon
 		$this->onPreInteract($player, $data);
 	}
 
+	public function onUseItemOnEntity($player, $data, $args)
+	{
+		parent::onUseItemOnEntity($player, $data, $args);
+		if(!$this->plugin->playerManager->isPC($player)) $this->onInteract($player, $data);
+	}
+
 	public function onPreInteract($player, $data)
 	{
 		$name = $player->getName();

@@ -33,6 +33,8 @@ use gun\discord\DiscordManager;
 
 use gun\player\PlayerManager;
 
+use gun\server\RebootManager;
+
 use gun\game\GameManager;
 
 use gun\weapons\Bullet;
@@ -56,6 +58,8 @@ class Main extends PluginBase {
 	public $discordManager;
 	/*PlayerManagerのオブジェクト*/
 	public $playerManager;
+	/*RebootManagerのオブジェクト*/
+	public $rebootManager;
 
 	public function onLoad()
 	{
@@ -89,6 +93,7 @@ class Main extends PluginBase {
 		$this->playerManager = new PlayerManager($this);
 		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->ranking = new ranking\Ranking($this);
+		$this->rebootManager = new RebootManager($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);
 
 		if($this->server->hasWhitelist())
@@ -101,8 +106,6 @@ class Main extends PluginBase {
 			$this->server->getNetwork()->setName("§l§fBattleFront§c2§r §bβ§r");
 			$this->discordManager->sendMessage('**❗サーバーが`' . GameManager::getObject()->getName() . '`モードで起動しました  **(' . date("m/d H:i") . ')');
 		}
-
-		$this->getScheduler()->scheduleRepeatingTask(new RebootTask($this), 20);
 
 		$this->getServer()->loadLevel(MainSettingProvider::get()->getLobbyWorldName());
 		$this->getServer()->loadLevel(TestFiringFieldProvider::get()->getWorldName());

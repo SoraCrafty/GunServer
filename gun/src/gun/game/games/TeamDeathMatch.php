@@ -95,6 +95,7 @@ class TeamDeathMatch extends Game
                 $this->updateRanking();//ランキングアップデート用
                 $this->leaveAll();
                 $this->resetGameStatus();
+                $this->plugin->rebootManager->advanceRebootCount();
                 $this->TimeTable();//最初に戻る
                 return true;
         }
