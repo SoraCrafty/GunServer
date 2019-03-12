@@ -60,7 +60,7 @@ class Bullet extends Projectile
 		}
 
 		$this->progress++;
-		if($this->progress > 20)
+		if($this->progress > 30)
 		{
 			$this->level->addParticle(new SnowballPoofParticle($this->asVector3()));
 			$this->flagForDespawn();

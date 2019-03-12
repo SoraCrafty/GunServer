@@ -6,7 +6,8 @@ use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\command\CommandSender;
 
-use gun\game\GameManager;
+use gun\form\FormManager;
+use gun\form\forms\GameSettingForm;
 
 class GameCommand extends BattleFrontCommand
 {
@@ -22,5 +23,19 @@ class GameCommand extends BattleFrontCommand
         {
             return false;
         }
+
+        if(!$sender instanceof Player)
+        {
+            $sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
+            return false;
+        }
+        
+        switch(array_shift($args))
+        {
+            case 'setting':
+                FormManager::register(new GameSettingForm($this->plugin, $sender));
+                return true;
+        }
+
     }
 }
