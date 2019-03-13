@@ -134,6 +134,8 @@ class EditWeaponForm extends Form
 				break;
 
 			case 4:
+				$content = [];
+
 				switch($this->mode)
 				{
 					case self::MODE_MAKE:

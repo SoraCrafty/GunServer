@@ -111,6 +111,26 @@ class TDMSettingProvider extends Provider
         return $this->data[$key]["Stage_Name"];
     }
 
+    public function setStageData($key, $data)
+    {
+        $this->data[$key] = $data;
+    }
+
+    public function getStageData($key)
+    {
+        $data = null;
+        if(isset($this->data[$key]))
+        {
+            $data = $this->data[$key];
+        }
+        return $data;
+    }
+
+    public function unsetStageData($key)
+    {
+        unset($this->data[$key]);
+    }
+
 }
 
 

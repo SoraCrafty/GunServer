@@ -81,7 +81,7 @@ class TeamDeathMatch extends Game
             case 1:
                 $this->joinAll();
                 $this->sendTitle("§l§cGame Start!!§r", $this->provider->getStageName($this->levelName), 5, 20, 20);
-                $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が開始されました  **(' . date("m/d H:i") . ')', "game");
+                $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が開始されました ステージ：`' . $this->provider->getStageName($this->levelName) . '` **(' . date("m/d H:i") . ')', "game");
                 $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
                 $this->GameTask($this->provider->getGameTime($this->levelName));
                 return true;
@@ -793,6 +793,8 @@ class TeamDeathMatch extends Game
     {
         $this->levelName = $this->provider->getRandmonLevelName();
         $this->plugin->getServer()->loadLevel($this->levelName);
+        $this->plugin->getServer()->getLevelByName($this->levelName)->setTime(14000);
+        $this->plugin->getServer()->getLevelByName($this->levelName)->stopTime();
     }
 
     public function unloadLevel()

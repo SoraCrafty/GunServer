@@ -35,6 +35,9 @@ class GameCommand extends BattleFrontCommand
             case 'setting':
                 FormManager::register(new GameSettingForm($this->plugin, $sender));
                 return true;
+
+            default:
+                return true;
         }
 
     }

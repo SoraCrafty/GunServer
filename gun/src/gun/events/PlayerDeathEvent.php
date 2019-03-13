@@ -20,7 +20,7 @@ class PlayerDeathEvent extends Events {/*要改善*/
 	public function call($event){
 		$event->setKeepInventory(true);
 		$player = $event->getPlayer();
-		if($player->getSpawn()->getLevel()!=$player->getPosition()->getLevel()) $this->getServer()->getPluginManager()->callEvent(new EntityTeleportEvent($player, $player->getPosition(), $player->getSpawn()->getLevel()->getSafeSpawn()));
+		if($player->getSpawn()->getLevel()!=$player->getPosition()->getLevel()) $this->plugin->getServer()->getPluginManager()->callEvent(new EntityTeleportEvent($player, $player->getPosition(), $player->getSpawn()->getLevel()->getSafeSpawn()));
 		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
 			$killer = $player->getLastDamageCause()->getDamager();
 			if($killer instanceof Player)
