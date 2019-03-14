@@ -12,7 +12,7 @@ abstract class Game
         return static::GAME_ID;
     }
 
-    public function getName()
+    public static function getName()
     {
         return static::GAME_NAME;
     }

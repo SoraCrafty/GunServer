@@ -81,7 +81,7 @@ class TeamDeathMatch extends Game
             case 1:
                 $this->joinAll();
                 $this->sendTitle("§l§cGame Start!!§r", $this->provider->getStageName($this->levelName), 5, 20, 20);
-                $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が開始されました ステージ：`' . $this->provider->getStageName($this->levelName) . '` **(' . date("m/d H:i") . ')', "game");
+                $this->plugin->discordManager->sendConvertedMessage('**❗`' . self::getName() . '`が開始されました ステージ：`' . $this->provider->getStageName($this->levelName) . '` **(' . date("m/d H:i") . ')', "game");
                 $this->playSoundIndivudually(LevelEventPacket::EVENT_SOUND_TOTEM, 0);
                 $this->GameTask($this->provider->getGameTime($this->levelName));
                 return true;
@@ -350,7 +350,7 @@ class TeamDeathMatch extends Game
             case 1:
                 $winteam = $this->killCount[0] > $this->killCount[1] ? 0 : 1;
                 $this->sendMessage("§aGAME>>§f" . $this->provider->getTeamNameDecoration($this->levelName, $winteam) . $this->provider->getTeamName($this->levelName, $winteam) . "§fチームの勝利!!");
-                $this->plugin->discordManager->sendConvertedMessage('**❗`' . $this->getName() . '`が終了しました 勝利チーム:' . $this->provider->getTeamName($this->levelName, $winteam) . ' **(' . date("m/d H:i") . ')', "game");
+                $this->plugin->discordManager->sendConvertedMessage('**❗`' . self::getName() . '`が終了しました 勝利チーム:' . $this->provider->getTeamName($this->levelName, $winteam) . ' **(' . date("m/d H:i") . ')', "game");
                 $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'ResultTask'], [$phase]), 10);
                 return true;
 

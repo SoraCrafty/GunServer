@@ -104,7 +104,7 @@ class Main extends PluginBase {
 		else
 		{
 			$this->server->getNetwork()->setName("§l§fBattleFront§c2§r §bβ§r");
-			$this->discordManager->sendMessage('**❗サーバーが`' . GameManager::getObject()->getName() . '`モードで起動しました  **(' . date("m/d H:i") . ')');
+			$this->discordManager->sendMessage('**❗サーバーが起動しました  **(' . date("m/d H:i") . ')');
 		}
 
 		$this->getServer()->loadLevel(MainSettingProvider::get()->getLobbyWorldName());
