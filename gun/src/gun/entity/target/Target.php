@@ -17,30 +17,38 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 class Target extends Human
 {
 
+	private static $geometryCache = null;
+	private static $skinCache = null;
+
 	public function __construct(Level $level, CompoundTag $nbt)
 	{
-		$geometryData = file_get_contents(__DIR__ . "/geometry.json");
-		$path = __DIR__ . "/skin.png";
-		$img = @imagecreatefrompng($path);
-		$bytes = '';
-		$l = (int) @getimagesize($path)[1];
-		for ($y = 0; $y < $l; $y++) {
-		    for ($x = 0; $x < 64; $x++) {
-		        $rgba = @imagecolorat($img, $x, $y);
-		        $a = ((~((int)($rgba >> 24))) << 1) & 0xff;
-		        $r = ($rgba >> 16) & 0xff;
-		        $g = ($rgba >> 8) & 0xff;
-		        $b = $rgba & 0xff;
-		        $bytes .= chr($r) . chr($g) . chr($b) . chr($a);
-		    }
+		if(is_null(self::$geometryCache)) self::$geometryCache = file_get_contents(__DIR__ . "/geometry.json");
+
+		if(is_null(self::$skinCache))
+		{
+			$path = __DIR__ . "/skin.png";
+			$img = @imagecreatefrompng($path);
+			self::$skinCache = '';
+			$l = (int) @getimagesize($path)[1];
+			for ($y = 0; $y < $l; $y++) {
+			    for ($x = 0; $x < 64; $x++) {
+			        $rgba = @imagecolorat($img, $x, $y);
+			        $a = ((~((int)($rgba >> 24))) << 1) & 0xff;
+			        $r = ($rgba >> 16) & 0xff;
+			        $g = ($rgba >> 8) & 0xff;
+			        $b = $rgba & 0xff;
+			        self::$skinCache .= chr($r) . chr($g) . chr($b) . chr($a);
+			    }
+			}
+			@imagedestroy($img);
 		}
-		@imagedestroy($img);
+
 		$nbt->setTag(new CompoundTag("Skin", [
 			new StringTag("Name", "test"),
-			new ByteArrayTag("Data", $bytes),
+			new ByteArrayTag("Data", self::$skinCache),
 			new ByteArrayTag("CapeData", ""),
 			new StringTag("GeometryName", "geometry.target"),
-			new ByteArrayTag("GeometryData", $geometryData)
+			new ByteArrayTag("GeometryData", self::$geometryCache)
 		]));
 		parent::__construct($level, $nbt);
 	}
