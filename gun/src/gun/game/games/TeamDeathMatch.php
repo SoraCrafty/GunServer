@@ -799,11 +799,11 @@ class TeamDeathMatch extends Game
 
     public function unloadLevel()
     {
-        if(MainSettingProvider::get()->getLobbyWorldName() !== $this->levelName && TestFiringFieldProvider::get()->getWorldName() !== $this->levelName)
+        /*if(MainSettingProvider::get()->getLobbyWorldName() !== $this->levelName && TestFiringFieldProvider::get()->getWorldName() !== $this->levelName)
         {
             $level = $this->plugin->getServer()->getLevelByName($this->levelName);
             if(count($level->getPlayers()) < 1) $this->plugin->getServer()->unloadLevel($level);
-        }
+        }*/
         $this->levelName = "";
     }
     

@@ -313,7 +313,7 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 	{
 		foreach($this->npcs as $npc)
 		{
-			if(!is_null($level = $npc->getLevel()) && $level->getFolderName() === $event->getPlayer()->getLevel()->getFolderName())
+			if($npc->getLevel()->getFolderName() === $event->getPlayer()->getLevel()->getFolderName())
 			{
 				$npc->spawnTo($event->getPlayer());
 			}
@@ -326,7 +326,7 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 
 		foreach($this->npcs as $npc)
 		{
-			if($npc->isGazer() && !is_null($level = $npc->getLevel()) && $level->getFolderName()  === $event->getPlayer()->getLevel()->getFolderName())
+			if($npc->isGazer() && $npc->getLevel()->getFolderName() === $event->getPlayer()->getLevel()->getFolderName())
 			{
 				$npc->gazeAt($player);
 			}
@@ -343,7 +343,7 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 			{
 				foreach($this->npcs as $npc)
 				{
-					if(!is_null($level = $npc->getLevel()) && $level->getFolderName()  === $toLevel)
+					if($npc->getLevel()->getFolderName()  === $toLevel)
 					{
 						$npc->spawnTo($player);
 					}
