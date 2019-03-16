@@ -109,6 +109,11 @@ class Main extends PluginBase {
 
 		$this->getServer()->loadLevel(MainSettingProvider::get()->getLobbyWorldName());
 		$this->getServer()->loadLevel(TestFiringFieldProvider::get()->getWorldName());
+
+		foreach ($this->getServer()->getLevels() as $level) {
+		    $level->setTime(14000);
+        	$level->stopTime();
+		}
 	}
 
 	public function onDisable()

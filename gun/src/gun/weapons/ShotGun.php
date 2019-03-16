@@ -190,7 +190,8 @@ class ShotGun extends Weapon
 			$tag->setInt(Weapon::TAG_BULLET, $bullet, true);
 			$weapon->setNamedTagEntry($tag);
 			$weapon->setCustomName($data["Item_Information"]["Item_Name"] . "§f ▪ «" . $bullet . "»");
-			$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "giveTask"], [$player, $weapon]), 1);//minecraftの仕様対策
+			$player->getInventory()->setItemInHand($weapon);
+			//$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "giveTask"], [$player, $weapon]), 1);//minecraftの仕様対策
 		}
 
 		$player->sendPopUp("§o" . $weapon->getCustomName());
@@ -247,10 +248,10 @@ class ShotGun extends Weapon
 		$this->CooltimeTask($player, $data, 0);
 	}
 
-	public function giveTask($player, $weapon)//minecraftの仕様対策
+	/*public function giveTask($player, $weapon)//minecraftの仕様対策
 	{
 		if($player->isOnline()) $player->getInventory()->setItemInHand($weapon);
- 	}
+ 	}*/
 
 	public function ReloadTask($player, $data, $phase){
 		$name = $player->getName();

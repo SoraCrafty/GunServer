@@ -103,11 +103,20 @@ class SniperRifle extends Weapon
 
 	public function onInteract($player, $data)
 	{
+		$this->onPreInteract($player, $data);
+	}
+
+	public function onUseItemOnEntity($player, $data, $args)
+	{
+		parent::onUseItemOnEntity($player, $data, $args);
+		if(!$this->plugin->playerManager->isPC($player)) $this->onInteract($player, $data);
+	}
+
+	public function onPreInteract($player, $data)
+	{
 		$name = $player->getName();
 
 		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
-
-		if($this->reloading[$name]) return true;
 
 		if($player->isSneaking() && $data["Reload"]["Enable"])
 		{
@@ -115,6 +124,12 @@ class SniperRifle extends Weapon
 			$this->ReloadTask($player, $data, 0);
 			return true;
 		}
+
+		if($this->reloading[$name]) return true;
+
+		if(!isset($this->cooltime[$name])) $this->cooltime[$name] = false;
+
+		if(!$this->cooltime[$name]) $this->Shoot($player, $data);
 	}
 
 	public function onDropItem($player, $data, $args)
@@ -134,22 +149,6 @@ class SniperRifle extends Weapon
 			$this->ReloadTask($player, $data, 0);
 			return true;
 		}
-	}
-
-	public function onShootBow($player, $data, $args)
-	{
-		$event = $args[0];
-		$event->setCancelled(true);
-		
-		$name = $player->getName();
-
-		if(!isset($this->reloading[$name])) $this->reloading[$name] = false;
-
-		if($this->reloading[$name]) return true;
-
-		if(!isset($this->cooltime[$name])) $this->cooltime[$name] = false;
-
-		if(!$this->cooltime[$name]) $this->Shoot($player, $data);
 	}
 
 	public function Shoot($player, $data)
@@ -175,7 +174,8 @@ class SniperRifle extends Weapon
 			$tag->setInt(Weapon::TAG_BULLET, $bullet, true);
 			$weapon->setNamedTagEntry($tag);
 			$weapon->setCustomName($data["Item_Information"]["Item_Name"] . "§f ▪ «" . $bullet . "»");
-			$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "giveTask"], [$player, $weapon]), 1);//minecraftの仕様対策
+			$player->getInventory()->setItemInHand($weapon);
+			//$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "giveTask"], [$player, $weapon]), 1);//minecraftの仕様対策
 		}
 
 		$player->sendPopUp("§o" . $weapon->getCustomName());
@@ -229,10 +229,21 @@ class SniperRifle extends Weapon
 		$this->CooltimeTask($player, $data, 0);
 	}
 
-	public function giveTask($player, $weapon)//minecraftの仕様対策
+	/*public function giveTask($player, $weapon)//minecraftの仕様対策
 	{
-		if($player->isOnline()) $player->getInventory()->setItemInHand($weapon);
- 	}
+		if($player->isOnline())
+		{
+			$uniqueId = $weapon->getNamedTagEntry(self::TAG_WEAPON)->getTag(Weapon::TAG_UNIQUE_ID)->getValue();
+			foreach ($player->getInventory()->getContents() as $slot => $item) {
+				$tag = $item->getNamedTagEntry(self::TAG_WEAPON);
+				if(!is_null($tag) && $tag->getTag(Weapon::TAG_UNIQUE_ID)->getValue() === $uniqueId)
+				{
+					$player->getInventory()->setItem($slot, $weapon);
+					break;
+				}
+			}
+		}
+ 	}*/
 
 	public function CooltimeTask($player, $data, $phase){//クールタイム関連は要改善
 		$name = $player->getName();

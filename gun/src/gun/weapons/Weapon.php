@@ -2,6 +2,8 @@
 
 namespace gun\weapons;
 
+use pocketmine\utils\UUID;
+
 use pocketmine\item\Item;
 
 use pocketmine\entity\Attribute;
@@ -29,6 +31,7 @@ abstract class Weapon
 	const TAG_WEAPON_ID = "weapon_id";
 	const TAG_TYPE = "type";
 	const TAG_BULLET = "bullet";
+	const TAG_UNIQUE_ID = "unique_id";
 
 	const EVENT_PRE_INTERACT = "onPreInteract";
 	const EVENT_INTERACT = "onInteract";
@@ -143,6 +146,7 @@ abstract class Weapon
 		$nbt = new CompoundTag(self::TAG_WEAPON);
 		$nbt->setString(self::TAG_WEAPON_ID, static::WEAPON_ID);
 		$nbt->setString(self::TAG_TYPE, $id);
+		$nbt->setString(self::TAG_UNIQUE_ID, UUID::fromRandom()->toString());
 		$item->setNamedTagEntry($nbt);
 		$item->setNamedTagEntry(new ByteTag("Unbreakable", 1));
 
