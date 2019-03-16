@@ -1,5 +1,5 @@
 {
-	"geometry.humanoid": {
+	"geometry.target": {
 		"texturewidth": 64,
 		"textureheight": 64,
 		"visible_bounds_width": 1,
