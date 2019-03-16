@@ -50,7 +50,7 @@ class SniperRifle extends Weapon
 							"Kar98k" => [
 								"Item_Information" => [
 											"Item_Name" => "§cKar98k",
-											"Item_Id" => 261,
+											"Item_Id" => 280,
 											"Item_Damage" => 0,
 											"Item_Lore" => "ドイツで開発されたボルトアクション式小銃"
 											],

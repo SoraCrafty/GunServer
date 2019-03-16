@@ -2,6 +2,7 @@
 namespace gun\events;
 
 use pocketmine\Player;
+use pocketmine\entity\Human;
 use pocketmine\math\Vector3;
 use pocketmine\entity\Entity;
 use pocketmine\entity\Effect;
@@ -26,7 +27,7 @@ class EntityDamageEvent extends Events {
 	public function call($event){
         if($event instanceof EntityDamageByEntityEvent && !$event->isCancelled())
         {
-            if(!GameManager::getObject()->isGaming() && $event->getEntity() instanceof Player)
+            if(!GameManager::getObject()->isGaming() && $event->getEntity() instanceof Human)
             {
                 $event->setCancelled(true);
             }
@@ -41,6 +42,11 @@ class EntityDamageEvent extends Events {
 			$damage = round($event->getBaseDamage() / 5);
 			if($damage <= 1) $event->setCancelled(true);
 			$event->setBaseDamage(round($damage));
+		}
+		elseif($event->getCause() === EntityDamageEventRaw::CAUSE_VOID && $event->getEntity() instanceof Player)//テスト用のため分割して実装
+		{
+			$event->getEntity()->teleport($event->getEntity()->getSpawn());
+			$event->setCancelled(true);
 		}
 
 		/*雑*/
