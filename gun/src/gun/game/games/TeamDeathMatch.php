@@ -201,14 +201,14 @@ class TeamDeathMatch extends Game
             {
                 $this->playSoundIndivudually_2(LevelSoundEventPacket::SOUND_NOTE);
             }
-            $this->bossbar->setTitle("§lゲーム開始まであと§a" . ($this->waitingCount) . "§f秒");
+            $this->bossbar->setTitle("§lゲーム開始まであと§a" . ($this->waitingCount) . "§f秒 §f ステージ>>§a" . $this->provider->getStageName($this->levelName));
             $this->bossbar->setPercentage($this->waitingCount / $this->provider->getWaitingTime($this->levelName));
         }
         else
         {
             $this->waitingCount = $this->provider->getWaitingTime($this->levelName);
             $this->bossbar->setPercentage(1);
-            $this->bossbar->setTitle("§l§a参加者を待っています…");
+            $this->bossbar->setTitle("§l§a参加者を待っています… §f ステージ>>§a" . $this->provider->getStageName($this->levelName));
         }
 
         $this->plugin->getScheduler()->scheduleDelayedTask(new Callback([$this, 'WaitingTask'], []), 20);

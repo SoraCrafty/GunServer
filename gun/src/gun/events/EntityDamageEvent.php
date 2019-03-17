@@ -27,7 +27,7 @@ class EntityDamageEvent extends Events {
 	public function call($event){
         if($event instanceof EntityDamageByEntityEvent && !$event->isCancelled())
         {
-            if(!GameManager::getObject()->isGaming() && $event->getEntity() instanceof Human)
+            if(!GameManager::getObject()->isGaming() && $event->getEntity() instanceof Player)
             {
                 $event->setCancelled(true);
             }
