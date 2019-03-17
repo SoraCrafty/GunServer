@@ -42,6 +42,8 @@ use gun\weapons\ShotGunBullet;
 
 use gun\entity\target\Target;
 
+use gun\scoreboard\ScoreboardManager;
+
 class Main extends PluginBase {
 	
 	public static $datafolder;
@@ -84,6 +86,7 @@ class Main extends PluginBase {
 		FormManager::init($this);
 		BossBarManager::init($this);
 		GameManager::init($this);
+		ScoreboardManager::init($this);
 		$this->Fireworks = new FireworksAPI($this);
 		self::$datafolder = $this->getDataFolder();
 		$this->server = $this->getServer();
@@ -91,7 +94,6 @@ class Main extends PluginBase {
 		$this->npcManager = new NPCManager($this);
 		$this->discordManager = new DiscordManager($this);
 		$this->playerManager = new PlayerManager($this);
-		$this->scoreboard = new scoreboard\scoreboard($this);
 		$this->ranking = new ranking\Ranking($this);
 		$this->rebootManager = new RebootManager($this);
 		$this->server->getPluginManager()->registerEvents($this->listener, $this);

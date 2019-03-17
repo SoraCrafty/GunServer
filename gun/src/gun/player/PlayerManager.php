@@ -6,6 +6,8 @@ use pocketmine\Player;
 
 use gun\weapons\WeaponManager;
 
+use gun\scoreboard\ScoreboardManager;
+
 use gun\provider\ProviderManager;
 use gun\provider\AccountProvider;
 use gun\provider\GuideBookProvider;
@@ -108,6 +110,15 @@ class PlayerManager
 	public function gotoLobby(Player $player)
 	{
 		$player->teleport(MainSettingProvider::get()->getLobbyWorld()->getSpawnLocation());
+	}
+
+	public function sendBaseScoreboard(Player $player)
+	{
+		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_EXP, '§eExp§f : ' . AccountProvider::get()->getExp($player));
+		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_POINT, '§6Point§f : ' . AccountProvider::get()->getPoint($player));
+		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_KILL, '§cKill§f : ' . AccountProvider::get()->getKill($player));
+		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_DEATH, '§4Death§f : ' . AccountProvider::get()->getDeath($player));
+		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_KILLRATIO, '§5K/D§f : ' . AccountProvider::get()->getKillRatio($player));
 	}
 
 }

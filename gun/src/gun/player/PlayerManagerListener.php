@@ -3,6 +3,8 @@
 namespace gun\player;
 
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerChangeSkinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 
@@ -19,6 +21,16 @@ class PlayerManagerListener implements Listener
 	{
 		$this->plugin = $plugin;
 		$this->manager = $manager;
+	}
+
+	public function onJoin(PlayerJoinEvent $event)
+	{
+
+	}
+
+	public function onChangeSkin(PlayerChangeSkinEvent $event)
+	{
+
 	}
 
 	public function onQuit(PlayerQuitEvent $event)

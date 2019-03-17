@@ -22,6 +22,7 @@ class PlayerJoinEvent extends Events {
 		$name = $player->getName();
 
     	$this->plugin->playerManager->setDefaultSpawn($player);
+    	$this->plugin->playerManager->sendBaseScoreboard($player);
         
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fタップして操作している方は分割コントロールを推奨します');
@@ -34,6 +35,8 @@ class PlayerJoinEvent extends Events {
 		$this->plugin->playerManager->setDefaultNameTags($player);
 
 		WeaponManager::setPermission($this->plugin, $player, false);
+
+
 
 		$this->plugin->discordManager->sendMessage('**⭕' . $player->getName() . 'がログインしました** ' . '(' . count($this->plugin->getServer()->getOnlinePlayers()) . '/' . $this->plugin->getServer()->getMaxPlayers() . ')');
 	}

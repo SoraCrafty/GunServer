@@ -34,7 +34,7 @@ class Ranking implements Listener{
 	}
 	
 	public function Ranking(){
-		$playerdata = AccountProvider::get()->getData();
+		$playerdata = AccountProvider::get()->getAllData();
 		foreach($playerdata as $name => $data){
 			if($data['death'] === 0){
 				$rank[$name] = 0;
