@@ -31,6 +31,8 @@ use gun\bossbar\BossBar;
 
 use gun\weapons\WeaponManager;
 
+use gun\scoreboard\ScoreboardManager;
+
 class TeamDeathMatch extends Game
 {
     const GAME_ID = "tdm";
@@ -150,6 +152,7 @@ class TeamDeathMatch extends Game
         $this->setInventory($player);
         $this->setHealth($player);
         $this->bossbar->register($player);
+        ScoreboardManager::updateLine($player, ScoreboardManager::LINE_TEAM, '§bTeam§f : ' . $this->provider->getTeamNameDecoration($this->levelName, $team) . $this->provider->getTeamName($this->levelName, $team));
         WeaponManager::setPermission($this->plugin, $player, true);
     }
 
@@ -181,6 +184,7 @@ class TeamDeathMatch extends Game
     {
         $this->unsetTeam($player);
         $this->leave_temporary($player);
+        ScoreboardManager::removeLine($player, ScoreboardManager::LINE_TEAM);
     }
 
     /*ゲーム開始まであと何秒か*/

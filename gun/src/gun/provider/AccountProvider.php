@@ -23,6 +23,7 @@ class AccountProvider extends Provider
                                     "kill" => 0,
                                     "death" => 0,
                                     "point" => 0,
+                                    "cape" => "",
                                     "setting" => [
                                                 "sensitivity" => self::SENSITIVITY_NORMAL,
                                                 "auto_heal" => false
@@ -211,6 +212,16 @@ class AccountProvider extends Provider
     {
 	    $this->data[$player->getName()]["weapon"]["sub"][$key]["type"] = $type;
         $this->data[$player->getName()]["weapon"]["sub"][$key]["id"] = $id;
+    }
+
+    public function getCapeId(IPlayer $player)
+    {
+        return $this->data[$player->getName()]["cape"];
+    }
+
+    public function setCapeId(IPlayer $player, $id)
+    {
+        $this->data[$player->getName()]["cape"] = $id;
     }
 
 }

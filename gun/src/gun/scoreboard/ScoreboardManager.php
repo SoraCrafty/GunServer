@@ -12,11 +12,12 @@ class ScoreboardManager {
 	const OBJECT_NAME = 'gunserver';
 	const DISPLAY_NAME = 'BattleFront§c2§f';
 
-	const LINE_EXP = 0;
-	const LINE_POINT = 1;
-	const LINE_KILL = 2;
-	const LINE_DEATH = 3;
-	const LINE_KILLRATIO = 4;
+	const LINE_TEAM = 0;
+	const LINE_EXP = 1;
+	const LINE_POINT = 2;
+	const LINE_KILL = 3;
+	const LINE_DEATH = 4;
+	const LINE_KILLRATIO = 5;
 
 	public static function init($plugin)
 	{
