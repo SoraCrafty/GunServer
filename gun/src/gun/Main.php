@@ -41,6 +41,7 @@ use gun\weapons\Bullet;
 use gun\weapons\ShotGunBullet;
 
 use gun\entity\target\Target;
+use gun\entity\barrier\Barrier;
 
 use gun\scoreboard\ScoreboardManager;
 
@@ -73,6 +74,7 @@ class Main extends PluginBase {
 		Entity::registerEntity(Bullet::class, true);
 		Entity::registerEntity(ShotGunBullet::class, true);
 		Entity::registerEntity(Target::class, true);
+		Entity::registerEntity(Barrier::class, true);
 
 		Item::initCreativeItems();
 	}

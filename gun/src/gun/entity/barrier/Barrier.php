@@ -1,6 +1,6 @@
 <?php
 
-namespace gun\entity\target;
+namespace gun\entity\barrier;
 
 use pocketmine\level\Level;
 use pocketmine\entity\Human;
@@ -14,8 +14,12 @@ use pocketmine\nbt\tag\StringTag;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
-class Target extends Human
+class Barrier extends Human
 {
+
+	public $width = 1.5;
+	public $height = 1.5;
+	public $eyeHeight = 1;
 
 	private static $geometryCache = null;
 	private static $skinCache = null;
@@ -26,7 +30,7 @@ class Target extends Human
 
 		if(is_null(self::$skinCache))
 		{
-			$path = __DIR__ . "/skin.png";
+			$path = __DIR__ . "/barrier.png";
 			$img = @imagecreatefrompng($path);
 			self::$skinCache = '';
 			$l = (int) @getimagesize($path)[1];
@@ -44,10 +48,10 @@ class Target extends Human
 		}
 
 		$nbt->setTag(new CompoundTag("Skin", [
-			new StringTag("Name", "Target"),
+			new StringTag("Name", "Barrier"),
 			new ByteArrayTag("Data", self::$skinCache),
 			new ByteArrayTag("CapeData", ""),
-			new StringTag("GeometryName", "geometry.target"),
+			new StringTag("GeometryName", "geometry.barrier"),
 			new ByteArrayTag("GeometryData", self::$geometryCache)
 		]));
 		parent::__construct($level, $nbt);

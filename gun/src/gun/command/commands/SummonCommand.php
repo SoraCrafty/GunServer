@@ -11,6 +11,7 @@ use gun\provider\DiscordProvider;
 use pocketmine\entity\Entity;
 
 use gun\entity\target\Target;
+use gun\entity\barrier\Barrier;
 
 class SummonCommand extends BattleFrontCommand
 {
@@ -38,16 +39,16 @@ class SummonCommand extends BattleFrontCommand
                 switch($sender->getDirection())
                 {
                     case 0:
-                        $yaw = 90;
-                        break;
-                    case 1:
-                        $yaw = 180;
-                        break;
-                    case 2:
                         $yaw = 270;
                         break;
-                    case 3:
+                    case 1:
                         $yaw = 360;
+                        break;
+                    case 2:
+                        $yaw = 90;
+                        break;
+                    case 3:
+                        $yaw = 180;
                         break;
                 }
                 $nbt = Entity::createBaseNBT(
@@ -57,6 +58,32 @@ class SummonCommand extends BattleFrontCommand
                     0
                 );
                 $entity = new Target($sender->getLevel(), $nbt);
+                $entity->spawnToAll();      
+                return true;
+
+            case "barrier":
+                switch($sender->getDirection())
+                {
+                    case 0:
+                        $yaw = 270;
+                        break;
+                    case 1:
+                        $yaw = 360;
+                        break;
+                    case 2:
+                        $yaw = 90;
+                        break;
+                    case 3:
+                        $yaw = 180;
+                        break;
+                }
+                $nbt = Entity::createBaseNBT(
+                    $sender,
+                    $sender->getMotion(),
+                    $yaw,
+                    0
+                );
+                $entity = new Barrier($sender->getLevel(), $nbt);
                 $entity->spawnToAll();      
                 return true;
 
