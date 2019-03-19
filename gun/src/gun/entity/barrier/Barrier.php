@@ -48,10 +48,10 @@ class Barrier extends Human
 		}
 
 		$nbt->setTag(new CompoundTag("Skin", [
-			new StringTag("Name", "Barrier"),
+			new StringTag("Name", "Barrier3"),
 			new ByteArrayTag("Data", self::$skinCache),
 			new ByteArrayTag("CapeData", ""),
-			new StringTag("GeometryName", "geometry.barrier"),
+			new StringTag("GeometryName", "geometry.barrier2"),
 			new ByteArrayTag("GeometryData", self::$geometryCache)
 		]));
 		parent::__construct($level, $nbt);
