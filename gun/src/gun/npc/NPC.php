@@ -85,7 +85,7 @@ class NPC extends Location{
 		$this->uuid = UUID::fromRandom();
 	}
 
-	public static function fromPlayerObject(Player $player, $plugin, $name = "", $size = 1, $doGaze = true)
+	public static function fromPlayerObject(Player $player, $plugin, $name = "", $size = 1, $doGaze = false)
 	{
 		return new static
 					(
@@ -460,6 +460,18 @@ class NPC extends Location{
 		$pk->headYaw = $this->yaw;
 		$pk->mode = MovePlayerPacket::MODE_TELEPORT;
 		$player->dataPacket($pk);
+	}
+
+	public function teleportToDefaultAll()
+	{
+		foreach($this->level->getPlayers() as $player){
+			$this->teleportToDefault($player);
+		}			
+	}
+
+	public function teleportToDefault(Player $player)
+	{
+		$this->gazeAtDefault($player);
 	}
 
 	//EntityRuntimeId関連

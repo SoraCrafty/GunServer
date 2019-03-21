@@ -36,8 +36,12 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 	private $skinQueue = [];
 	/*プレイヤーの方を向くかどうかを設定するための変数*/
 	private $gazeQueue = [];
-	/*NPCのインベントリ設定するための変数*/
+	/*NPCのインベントリを設定するための変数*/
 	private $inventoryQueue = [];
+	/*NPCの向きを設定するための変数*/
+	private $rotationQueue = [];
+	/*NPCの位置を設定するための変数*/
+	private $positionQueue = [];
 	/*メッセージを設定するための変数*/
 	private $messageQueue = [];
 	/*コマンドを設定するための変数*/
@@ -223,6 +227,29 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				$sender->sendMessage("インベントリを設定したいNPCをタッチしてください");
 				return true;
 
+			case "rotation":
+				if(!$sender instanceof Player){
+					$sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
+					return true;
+				}
+
+				$this->rotationQueue[$sender->getName()] = [
+														"yaw" => $sender->getYaw(),
+														"pitch" => $sender->getPitch()
+													   ];
+				$sender->sendMessage("向きを設定したいNPCをタッチしてください");
+				return true;
+
+			case "position":
+				if(!$sender instanceof Player){
+					$sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
+					return true;
+				}
+
+				$this->positionQueue[$sender->getName()] = $sender->asVector3();
+				$sender->sendMessage("位置を設定したいNPCをタッチしてください");
+				return true;
+
 			case "message":
 				if(!$sender instanceof Player){
 					$sender->sendMessage(TextFormat::RED . "ゲーム内で実行してください");
@@ -373,6 +400,8 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				   !isset($this->skinQueue[$name]) &&
 				   !isset($this->gazeQueue[$name]) &&
 				   !isset($this->inventoryQueue[$name]) &&
+				   !isset($this->rotationQueue[$name]) &&
+				   !isset($this->positionQueue[$name]) &&
 				   !isset($this->eventQueue[$name])
 				  )
 				{
@@ -427,6 +456,25 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 					$npc->setBoots($this->inventoryQueue[$name]["boots"]);
 					unset($this->inventoryQueue[$name]);
 					$player->sendMessage(TextFormat::GREEN . "インベントリを設定しました");
+				}
+
+				if(isset($this->rotationQueue[$name]))
+				{
+					$npc->yaw = $this->rotationQueue[$name]["yaw"];
+					$npc->pitch = $this->rotationQueue[$name]["pitch"];
+					$npc->gazeAtDefaultAll();
+					unset($this->rotationQueue[$name]);
+					$player->sendMessage(TextFormat::GREEN . "NPCの向きを設定しました");
+				}
+
+				if(isset($this->positionQueue[$name]))
+				{
+					$npc->x = $this->positionQueue[$name]->x;
+					$npc->y = $this->positionQueue[$name]->y;
+					$npc->z = $this->positionQueue[$name]->z;
+					$npc->teleportToDefaultAll();
+					unset($this->positionQueue[$name]);
+					$player->sendMessage(TextFormat::GREEN . "NPCの位置を設定しました");
 				}
 
 				if(isset($this->messageQueue[$name]))
