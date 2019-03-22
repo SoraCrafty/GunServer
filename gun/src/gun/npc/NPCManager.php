@@ -140,6 +140,7 @@ class NPCManager implements Listener//後々単体でプラグイン化したい
 				}
 
 				$name = str_replace("改行", "\n", implode(" ", $args));
+				$name = str_replace("Null", "", $name);
 				if(trim($name) === "")
 				{
 					$sender->sendMessage(TextFormat::RED . "使い方: /npc name <設定したい名前>");
