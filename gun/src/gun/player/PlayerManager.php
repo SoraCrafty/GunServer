@@ -3,6 +3,7 @@
 namespace gun\player;
 
 use pocketmine\Player;
+use pocketmine\entity\Skin;
 
 use gun\weapons\WeaponManager;
 
@@ -12,6 +13,8 @@ use gun\provider\ProviderManager;
 use gun\provider\AccountProvider;
 use gun\provider\GuideBookProvider;
 use gun\provider\MainSettingProvider;
+
+use gun\player\skin\SkinStrage;
 
 class PlayerManager
 {
@@ -32,10 +35,13 @@ class PlayerManager
 	private $plugin;
 	/*プレイヤーの一時保存データ*/
 	private $data = [];
+	/*スキンストレージのオブジェクト*/
+	private $skinstrage;
 
 	public function __construct($plugin)
 	{
 		$this->plugin = $plugin;
+		$this->skinstrage = new SkinStrage($plugin);
 		$this->plugin->getServer()->getPluginManager()->registerEvents(new PlayerManagerListener($plugin, $this), $plugin);
 	}
 
@@ -119,6 +125,19 @@ class PlayerManager
 		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_KILL, '§cKill§f : ' . AccountProvider::get()->getKill($player));
 		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_DEATH, '§4Death§f : ' . AccountProvider::get()->getDeath($player));
 		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_KILLRATIO, '§5K/D§f : ' . AccountProvider::get()->getKillRatio($player));
+	}
+
+	public function getProcessedSkin(Player $player, $oldSkin = null)
+	{
+		$oldSkin = is_null($oldSkin) ? $player->getSkin() : $oldSkin;
+
+		$skinId = $oldSkin->getSkinId();
+		$skinData = $oldSkin->getSkinData();
+		$capeData = $this->skinstrage->getCapeData(AccountProvider::get()->getCapeId($player));
+		$geometryName = $oldSkin->getGeometryName();
+		$geometryData = $oldSkin->getGeometryData();
+
+		return new Skin($skinId, $skinData, $capeData, $geometryName, $geometryData);
 	}
 
 }

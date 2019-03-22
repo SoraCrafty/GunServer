@@ -25,12 +25,15 @@ class PlayerManagerListener implements Listener
 
 	public function onJoin(PlayerJoinEvent $event)
 	{
-
+		$player = $event->getPlayer();
+		$skin = $this->manager->getProcessedSkin($player);
+		$player->setSkin($skin);
+		$player->sendSkin();
 	}
 
 	public function onChangeSkin(PlayerChangeSkinEvent $event)
 	{
-
+		$event->setNewSkin($this->manager->getProcessedSkin($player, $event->getNewSkin()));
 	}
 
 	public function onQuit(PlayerQuitEvent $event)
