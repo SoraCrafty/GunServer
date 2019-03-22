@@ -192,7 +192,7 @@ class TeamDeathMatch extends Game
 
     public function WaitingTask()
     {
-        if(count($this->applicants) >= 1)
+        if(count($this->applicants) >= 2)
         {
             $this->waitingCount--;
             if($this->waitingCount === 0)
@@ -493,6 +493,7 @@ class TeamDeathMatch extends Game
         {
             $this->sendMessage("§aGAME>>§f" . $player->getNameTag() . "§fが" . $this->killstreak[$name] . "キルストリークを達成しました");
             $this->plugin->discordManager->sendConvertedMessage('**❗❗' . $player->getNameTag() . 'が' . $this->killstreak[$name] . 'キルストリークを達成しました**', "game");
+            AccountProvider::get()->addExp($player, $this->killstreak[$name] * 5);
         }
     }
 
@@ -747,7 +748,7 @@ class TeamDeathMatch extends Game
         }
     }
 
-    public function onDamage($event)
+    public function onDamage($event)//雑
     {
         if($event instanceof EntityDamageByEntityEvent)
         {
@@ -756,8 +757,12 @@ class TeamDeathMatch extends Game
             if($player instanceof Player and $atacker instanceof Player){
                 $playerteam = $this->getTeam($player);
                 $atackerteam = $this->getTeam($atacker);
-                if($playerteam === false || $atackerteam === false || $playerteam === $atackerteam){
+                if($playerteam === false || $atackerteam === false || $playerteam === $atackerteam || !$this->isGaming()){
                     $event->setCancelled(true);
+                }
+                else
+                {
+                    AccountProvider::get()->addExp($atacker, $event->getBaseDamage());
                 }
             }
         }
