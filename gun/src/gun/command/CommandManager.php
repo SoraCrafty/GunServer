@@ -13,6 +13,7 @@ use gun\command\commands\DiscordCommand;
 use gun\command\commands\RankingCommand;
 use gun\command\commands\SummonCommand;
 use gun\command\commands\TestFireCommand;
+use gun\command\commands\StatusCommand;
 
 class CommandManager{
 
@@ -28,6 +29,7 @@ class CommandManager{
         $map->register("battlefront", new RankingCommand($plugin));
         $map->register("battlefront", new SummonCommand($plugin));
         $map->register("battlefront", new TestFireCommand($plugin));
+        $map->register("battlefront", new StatusCommand($plugin));
     }
 
 }

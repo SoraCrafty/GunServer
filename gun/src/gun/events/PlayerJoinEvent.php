@@ -26,10 +26,9 @@ class PlayerJoinEvent extends Events {
         
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fタップして操作している方は分割コントロールを推奨します');
-		$player->sendMessage('§bInfo>>§fルールの確認をお願い致します');
 
 		$event->setJoinMessage(null);
-		Server::getInstance()->broadcastPopup('§b§l'.$event->getPlayer()->getName().'さんがログインしました');
+		Server::getInstance()->broadcastPopup('§6>>参加>>§a' .$event->getPlayer()->getName());
 
 		$this->plugin->playerManager->setLobbyInventory($player);
 		$this->plugin->playerManager->setDefaultNameTags($player);

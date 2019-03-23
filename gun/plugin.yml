@@ -39,3 +39,6 @@ permissions:
      battlefront.command.testfire:
       default: true
       description: 試し打ち関連コマンドを使用することを許可します
+      battlefront.command.mystatus:
+        default: true
+        description: ステータスを確認することを許可します
