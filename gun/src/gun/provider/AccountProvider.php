@@ -48,8 +48,52 @@ class AccountProvider extends Provider
 
     /*ランク関連は別クラスのほうがいいかも…?*/
     const RANKS = [
-                    "c-" => [
+                    "g-" => [
                                 "exp" => 0,
+                                "name" => "§8G-§f"
+                            ],
+                    "g" => [
+                                "exp" => 500,
+                                "name" => "§8G§f"
+                            ],
+                    "g+" => [
+                                "exp" => 1000,
+                                "name" => "§8G+§f"
+                            ],
+                    "f-" => [
+                                "exp" => 2000,
+                                "name" => "§8F-§f"
+                            ],
+                    "f" => [
+                                "exp" => 3000,
+                                "name" => "§8F§f"
+                            ],
+                    "f+" => [
+                                "exp" => 4000,
+                                "name" => "§8F+§f"
+                            ],
+                    "f++" => [
+                                "exp" => 5500,
+                                "name" => "§8F++§f"
+                            ],
+                    "d-" => [
+                                "exp" => 8000,
+                                "name" => "§7D-§f"
+                            ],
+                    "d" => [
+                                "exp" => 11000,
+                                "name" => "§7D§f"
+                            ],
+                    "d+" => [
+                                "exp" => 14000,
+                                "name" => "§7D+§f"
+                            ],
+                    "d++" => [
+                                "exp" => 17000,
+                                "name" => "§7D+§f"
+                            ],
+                    "c-" => [
+                                "exp" => 20000,
                                 "name" => "§eC-§f"
                             ]
                 ];
@@ -69,12 +113,21 @@ class AccountProvider extends Provider
             }
         }
 
-        /*$exps = [];
+        $exps = [];
         foreach ($this->data as $name => $data) {
             if($data["exp"] > 0) $exps[$name] = $data["exp"];
         }
         arsort($exps);
-        var_dump(array_slice($exps, 0, 10));*/
+
+        $count = 0;
+        $all = 0;
+        foreach ($exps as $key => $value) {
+            $count++;
+            $all+=$value;
+            $this->plugin->getLogger()->info("§6{$count}位§f {$key} : §d{$value}§fEXP");
+        }
+        $average = round($all / $count);
+        $this->plugin->getLogger()->info("§c平均{$average}");
     }
 
     public function isRegistered(IPlayer $player)
@@ -105,13 +158,21 @@ class AccountProvider extends Provider
     public function setExp(IPlayer $player, int $exp)
     {
         $this->data[$player->getName()]["exp"] = $exp;
-        if($player->isOnline()) ScoreboardManager::updateLine($player, ScoreboardManager::LINE_EXP, '§eExp§f : ' . $this->data[$player->getName()]["exp"]);
+        if($player->isOnline())
+        {
+            ScoreboardManager::updateLine($player, ScoreboardManager::LINE_EXP, '§eExp§f : ' . $this->data[$player->getName()]["exp"]);
+            ScoreboardManager::updateLine($player, ScoreboardManager::LINE_RANK, '§dRank§f : ' . $this->getRankName($player));
+        }
     }
 
     public function addExp(IPlayer $player, int $exp)
     {
         $this->data[$player->getName()]["exp"] += $exp;
-        if($player->isOnline()) ScoreboardManager::updateLine($player, ScoreboardManager::LINE_EXP, '§eExp§f : ' . $this->data[$player->getName()]["exp"]);
+        if($player->isOnline())
+        {
+            ScoreboardManager::updateLine($player, ScoreboardManager::LINE_EXP, '§eExp§f : ' . $this->data[$player->getName()]["exp"]);
+            ScoreboardManager::updateLine($player, ScoreboardManager::LINE_RANK, '§dRank§f : ' . $this->getRankName($player));
+        }
     }
     public function getKill(IPlayer $player)
     {
