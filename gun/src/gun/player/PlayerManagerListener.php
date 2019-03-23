@@ -33,7 +33,7 @@ class PlayerManagerListener implements Listener
 
 	public function onChangeSkin(PlayerChangeSkinEvent $event)
 	{
-		$event->setNewSkin($this->manager->getProcessedSkin($player, $event->getNewSkin()));
+		$event->setNewSkin($this->manager->getProcessedSkin($event->getPlayer(), $event->getNewSkin()));
 	}
 
 	public function onQuit(PlayerQuitEvent $event)
