@@ -38,7 +38,7 @@ class PlayerDeathEvent extends Events {/*要改善*/
 				{
 					$weaponname = "KILL";
 				}
-				$message = '§c§l⚔§r§7[§f' . $killer->getName() . '§r§7]§f---> §7[§f' . $weaponname . '§7]§f--->§7 [§r§f' . $player->getName() . '§r§7]§r';
+				$message = '§c§l⚔§r§7[§f' . $killer->getDisplayName() . '§r§7]§f---> §7[§f' . $weaponname . '§7]§f--->§7 [§r§f' . $player->getDisplayName() . '§r§7]§r';
 				$event->setDeathMessage($message);
 				$this->plugin->discordManager->sendConvertedMessage($message, "game");
 				AccountProvider::get()->addDeath($player, 1);
