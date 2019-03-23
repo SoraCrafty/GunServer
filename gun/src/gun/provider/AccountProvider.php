@@ -46,6 +46,14 @@ class AccountProvider extends Provider
     const SENSITIVITY_NORMAL = 0;
     const SENSITIVITY_HIGH = 1;
 
+    /*ランク関連は別クラスのほうがいいかも…?*/
+    const RANKS = [
+                    "c-" => [
+                                "exp" => 0,
+                                "name" => "§eC-§f"
+                            ]
+                ];
+
     public function open()
     {
         parent::open();
@@ -60,6 +68,13 @@ class AccountProvider extends Provider
                 }
             }
         }
+
+        /*$exps = [];
+        foreach ($this->data as $name => $data) {
+            if($data["exp"] > 0) $exps[$name] = $data["exp"];
+        }
+        arsort($exps);
+        var_dump(array_slice($exps, 0, 10));*/
     }
 
     public function isRegistered(IPlayer $player)
@@ -222,6 +237,18 @@ class AccountProvider extends Provider
     public function setCapeId(IPlayer $player, $id)
     {
         $this->data[$player->getName()]["cape"] = $id;
+    }
+
+    public function getRankName(IPlayer $player)
+    {
+        $name = $player->getName();
+        $rank = "";
+        foreach (self::RANKS as $key => $value) {
+            if($value["exp"] > $this->data[$name]["exp"]) break;
+            $rank = $value["name"];
+        }
+
+        return $rank;
     }
 
 }

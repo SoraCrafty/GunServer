@@ -101,8 +101,7 @@ class PlayerManager
 
 	public function setDefaultNameTags(Player $player)
 	{
-    	$tag = $player->getName();
-    	if($player->isOp()) $tag = "§b★§f{$tag}";
+    	$tag = $player->isOp() ? AccountProvider::get()->getRankName($player) . "§b★§f" . $player->getName() : AccountProvider::get()->getRankName($player) . $player->getName();
     	$player->setNameTag($tag);
     	$player->setDisplayName($tag);
     	$player->setNameTagAlwaysVisible(true);
@@ -120,6 +119,7 @@ class PlayerManager
 
 	public function sendBaseScoreboard(Player $player)
 	{
+		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_RANK, '§dRank§f : ' . AccountProvider::get()->getRankName($player));
 		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_EXP, '§eExp§f : ' . AccountProvider::get()->getExp($player));
 		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_POINT, '§6Point§f : ' . AccountProvider::get()->getPoint($player));
 		ScoreboardManager::updateLine($player, ScoreboardManager::LINE_KILL, '§cKill§f : ' . AccountProvider::get()->getKill($player));

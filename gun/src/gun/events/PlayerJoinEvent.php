@@ -26,6 +26,7 @@ class PlayerJoinEvent extends Events {
         
 		$player->sendMessage('§bInfo>>§fBattleFront2に参加していただきありがとうございます');
 		$player->sendMessage('§bInfo>>§fタップして操作している方は分割コントロールを推奨します');
+		$player->sendMessage('§bInfo>>§fDiscordへの参加をお願い致します');
 
 		$event->setJoinMessage(null);
 		Server::getInstance()->broadcastPopup('§6>>参加>>§a' .$event->getPlayer()->getName());

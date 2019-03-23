@@ -10,6 +10,8 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 
 use pocketmine\network\mcpe\protocol\LoginPacket;
 
+use gun\provider\AccountProvider;
+
 class PlayerManagerListener implements Listener
 {
 	/*Mainクラスのオブジェクト*/

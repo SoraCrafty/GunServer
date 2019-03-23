@@ -13,11 +13,12 @@ class ScoreboardManager {
 	const DISPLAY_NAME = 'BattleFront§c2§f';
 
 	const LINE_TEAM = 0;
-	const LINE_EXP = 1;
-	const LINE_POINT = 2;
-	const LINE_KILL = 3;
-	const LINE_DEATH = 4;
-	const LINE_KILLRATIO = 5;
+	const LINE_RANK = 1;
+	const LINE_EXP = 2;
+	const LINE_POINT = 3;
+	const LINE_KILL = 4;
+	const LINE_DEATH = 5;
+	const LINE_KILLRATIO = 6;
 
 	public static function init($plugin)
 	{

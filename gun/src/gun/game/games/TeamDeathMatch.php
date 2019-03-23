@@ -580,8 +580,8 @@ class TeamDeathMatch extends Game
     {
     	if($player->isOnline())
     	{
-	    	$tag = $this->provider->getTeamNameDecoration($this->levelName, $team) . $player->getName() . "§f";
-            if($player->isOp()) $tag = "§r§b★§f{$tag}";
+            $tag = $player->isOp() ? AccountProvider::get()->getRankName($player) . "§b★§f" . $this->provider->getTeamNameDecoration($this->levelName, $team) . $player->getName() . '§f': 
+                                     AccountProvider::get()->getRankName($player) . $this->provider->getTeamNameDecoration($this->levelName, $team) . $player->getName() . '§f';
 	    	$player->setNameTag($tag);
 	    	$player->setDisplayName($tag);
             $player->setNameTagAlwaysVisible(false);
