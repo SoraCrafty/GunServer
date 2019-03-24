@@ -13,6 +13,8 @@ class WeaponManager
 
 	public static function init($plugin)
 	{
+		if(!file_exists($plugin->getDataFolder() . 'uniques')) mkdir($plugin->getDataFolder() . 'uniques');
+
 		self::registerWeapon(new AssaultRifle($plugin));
 		self::registerWeapon(new SniperRifle($plugin));
 		self::registerWeapon(new ShotGun($plugin));
@@ -20,6 +22,7 @@ class WeaponManager
 
 		self::registerWeapon(new HandGun($plugin));
 		self::registerWeapon(new ThrowingKnife($plugin));
+		self::registerWeapon(new Shield($plugin));
 		
 		$plugin->getServer()->getPluginManager()->registerEvents(new WeaponListener($plugin), $plugin);
 	}

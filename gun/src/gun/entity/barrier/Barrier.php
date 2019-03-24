@@ -66,6 +66,7 @@ class Barrier extends Human
 		if($source->getCause() === EntityDamageEvent::CAUSE_MAGIC) $this->kill();
 		else
 		{
+			$source->setCancelled(true);
 			$this->level->addParticle(new DestroyBlockParticle($this->asVector3(), Block::get(42)));
 			$this->level->addSound(new AnvilFallSound($this->asVector3()));
 		}
