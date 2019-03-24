@@ -101,7 +101,7 @@ class PlayerManager
 
 	public function setDefaultNameTags(Player $player)
 	{
-    	$tag = $player->isOp() ? AccountProvider::get()->getRankName($player) . "§b★§f" . $player->getName() : AccountProvider::get()->getRankName($player) . $player->getName();
+    	$tag = $player->isOp() ? AccountProvider::get()->getRankName($player) . " §b★§f" . $player->getName() : AccountProvider::get()->getRankName($player) . " " . $player->getName();
     	$player->setNameTag($tag);
     	$player->setDisplayName($tag);
     	$player->setNameTagAlwaysVisible(true);

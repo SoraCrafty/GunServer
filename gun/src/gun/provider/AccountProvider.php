@@ -95,6 +95,30 @@ class AccountProvider extends Provider
                     "c-" => [
                                 "exp" => 20000,
                                 "name" => "§eC-§f"
+                            ],
+                    "c" => [
+                                "exp" => 25000,
+                                "name" => "§eC§f"
+                            ],
+                    "c+" => [
+                                "exp" => 30000,
+                                "name" => "§eC+§f"
+                            ],
+                    "c++" => [
+                                "exp" => 35000,
+                                "name" => "§eC++§f"
+                            ],
+                    "c+3" => [
+                                "exp" => 40000,
+                                "name" => "§eC+3§f"
+                            ],
+                    "b-" => [
+                                "exp" => 50000,
+                                "name" => "§bB-§f"
+                            ],
+                    "b" => [
+                                "exp" => 60000,
+                                "name" => "§bB§f"
                             ]
                 ];
 
@@ -113,7 +137,7 @@ class AccountProvider extends Provider
             }
         }
 
-        $exps = [];
+        /*$exps = [];
         foreach ($this->data as $name => $data) {
             if($data["exp"] > 0) $exps[$name] = $data["exp"];
         }
@@ -127,7 +151,7 @@ class AccountProvider extends Provider
             $this->plugin->getLogger()->info("§6{$count}位§f {$key} : §d{$value}§fEXP");
         }
         $average = round($all / $count);
-        $this->plugin->getLogger()->info("§c平均{$average}");
+        $this->plugin->getLogger()->info("§c平均{$average}");*/
     }
 
     public function isRegistered(IPlayer $player)
