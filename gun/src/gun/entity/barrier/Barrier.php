@@ -13,6 +13,7 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\network\mcpe\protocol\EntityEventPacket;
 use pocketmine\block\Block;
 
 use pocketmine\level\particle\DestroyBlockParticle;
@@ -67,9 +68,19 @@ class Barrier extends Human
 		else
 		{
 			$source->setCancelled(true);
-			//$this->level->addParticle(new DestroyBlockParticle($this->asVector3(), Block::get(42)));
+			$this->level->addParticle(new DestroyBlockParticle($this->asVector3(), Block::get(42)));
 			$this->level->addSound(new AnvilFallSound($this->asVector3()));
 		}
+	}
+
+	public function broadcastEntityEvent(int $eventId, ?int $eventData = null, ?array $players = null) : void
+	{
+		if($eventId === EntityEventPacket::HURT_ANIMATION)
+		{
+			$this->level->addParticle(new DestroyBlockParticle($this->asVector3(), Block::get(42)));
+			$this->level->addSound(new AnvilFallSound($this->asVector3()));
+		} 
+		else parent::broadcastEntityEvent($eventId, $eventData, $players);
 	}
 
 	public function setHealth(float $amount) : void

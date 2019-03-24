@@ -77,9 +77,10 @@ class EntityDamageEvent extends Events {
 		$pk->motion = new Vector3(0, 0.15, 0);
         $flags = 0;
         $flags |= 1 << Entity::DATA_FLAG_CAN_SHOW_NAMETAG;
+        $text = ($damager instanceof Player) ? "§c♥ §f{$damage}" : "§1♥ §f{$damage}";
         $pk->metadata = [
           Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, $flags],
-          Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, "§c♥ §f{$damage}"],
+          Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $text],
           Entity::DATA_ALWAYS_SHOW_NAMETAG => [Entity::DATA_TYPE_BYTE, 1],
           Entity::DATA_SCALE => [Entity::DATA_TYPE_FLOAT, 1]
         ];
