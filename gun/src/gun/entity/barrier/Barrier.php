@@ -13,6 +13,10 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\block\Block;
+
+use pocketmine\level\particle\DestroyBlockParticle;
+use pocketmine\level\sound\AnvilFallSound;
 
 class Barrier extends Human
 {
@@ -59,10 +63,12 @@ class Barrier extends Human
 
 	public function attack(EntityDamageEvent $source) : void
 	{
-		$source->call();
-		$this->setLastDamageCause($source);
-
 		if($source->getCause() === EntityDamageEvent::CAUSE_MAGIC) $this->kill();
+		else
+		{
+			$this->level->addParticle(new DestroyBlockParticle($this->asVector3(), Block::get(42)));
+			$this->level->addSound(new AnvilFallSound($this->asVector3()));
+		}
 	}
 
 	public function setHealth(float $amount) : void
