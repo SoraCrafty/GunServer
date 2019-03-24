@@ -192,7 +192,7 @@ class TeamDeathMatch extends Game
 
     public function WaitingTask()
     {
-        if(count($this->applicants) >= 2)
+        if(count($this->applicants) >= 1)
         {
             $this->waitingCount--;
             if($this->waitingCount === 0)
@@ -497,10 +497,10 @@ class TeamDeathMatch extends Game
         }
     }
 
-    public function resetKillStreak($player, $killer)
+    public function resetKillStreak($player, $killer = null)
     {
         $name = $player->getName();
-        if(isset($this->killstreak[$name]) && $this->killstreak[$name] >= 5)
+        if(isset($this->killstreak[$name]) && $this->killstreak[$name] >= 5 && $killer instanceof Player)
         {
             $this->sendMessage("§aGAME>>§f" . $killer->getNameTag() . "§fが" . $player->getNameTag() . "§fの" . $this->killstreak[$name] . "キルストリークを阻止しました");
             $this->plugin->discordManager->sendConvertedMessage('**❗❗' . $killer->getNameTag() . "§fが" . $player->getNameTag() . "§fの" . $this->killstreak[$name] . 'キルストリークを阻止しました**', "game");
@@ -730,7 +730,7 @@ class TeamDeathMatch extends Game
         }
     }
 
-    public function onPlayerDeath($event)
+    public function onPlayerDeath($event)//雑
     {
         $player = $event->getPlayer();
         if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
@@ -745,6 +745,14 @@ class TeamDeathMatch extends Game
                 $this->resetKillStreak($player, $killer);
                 AccountProvider::get()->addPoint($killer, 100);
             }
+            else
+            {
+                $this->resetKillStreak($player);
+            }
+        }
+        else
+        {
+            $this->resetKillStreak($player);
         }
     }
 
