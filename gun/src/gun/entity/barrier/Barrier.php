@@ -67,7 +67,7 @@ class Barrier extends Human
 		else
 		{
 			$source->setCancelled(true);
-			$this->level->addParticle(new DestroyBlockParticle($this->asVector3(), Block::get(42)));
+			//$this->level->addParticle(new DestroyBlockParticle($this->asVector3(), Block::get(42)));
 			$this->level->addSound(new AnvilFallSound($this->asVector3()));
 		}
 	}

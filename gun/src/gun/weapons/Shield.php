@@ -24,6 +24,11 @@ class Shield extends UniqueWeapon
 										"Item_Damage" => 16,
 										"Item_Lore" => "地面に設置し、敵の攻撃を防ぐことができる"
 										],
+							"Item_Use" => [
+										"Cool_Time" => 0
+									],
+							"Shield" => [
+									],
 							"Move" =>[
 										"Move_Speed" => 0.8
 									]
