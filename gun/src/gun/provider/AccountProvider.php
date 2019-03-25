@@ -139,7 +139,7 @@ class AccountProvider extends Provider
                     "a++" => [
                                 "exp" => 200000,
                                 "name" => "§6A++§f"
-                            ],
+                            ]
                 ];
 
     public function open()

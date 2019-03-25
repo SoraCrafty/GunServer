@@ -73,7 +73,7 @@ class Shield extends UniqueWeapon
         $nbt = Entity::createBaseNBT(
             $player->asVector3(),
             new Vector3($baseVector->x, 0.2, $baseVector->z),
-            $player->yaw + 180,
+            $player->yaw,
             0
         );
         $entity = new ShieldEntity($player->getLevel(), $nbt);
