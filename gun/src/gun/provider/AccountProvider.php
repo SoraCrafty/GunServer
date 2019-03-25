@@ -108,18 +108,38 @@ class AccountProvider extends Provider
                                 "exp" => 35000,
                                 "name" => "§eC++§f"
                             ],
-                    "c+3" => [
-                                "exp" => 40000,
-                                "name" => "§eC+3§f"
-                            ],
                     "b-" => [
                                 "exp" => 50000,
                                 "name" => "§bB-§f"
                             ],
                     "b" => [
-                                "exp" => 60000,
+                                "exp" => 65000,
                                 "name" => "§bB§f"
-                            ]
+                            ],
+                    "b+" => [
+                                "exp" => 80000,
+                                "name" => "§bB+§f"
+                            ],
+                    "b++" => [
+                                "exp" => 95000,
+                                "name" => "§bB++§f"
+                            ],
+                    "a-" => [
+                                "exp" => 110000,
+                                "name" => "§6A-§f"
+                            ],
+                    "a" => [
+                                "exp" => 140000,
+                                "name" => "§6A§f"
+                            ],
+                    "a+" => [
+                                "exp" => 170000,
+                                "name" => "§6A+§f"
+                            ],
+                    "a++" => [
+                                "exp" => 200000,
+                                "name" => "§6A++§f"
+                            ],
                 ];
 
     public function open()

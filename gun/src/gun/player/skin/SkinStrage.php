@@ -7,7 +7,8 @@ class SkinStrage
 
 	const CAPE_LIST = [
 						"basic_red" => "basicRed",
-						"babayuta_cup" => "babayutaCup"
+						"babayuta_cup" => "babayutaCup",
+						"ghost" => "ghostCape"
 					];
 
 	private $plugin;

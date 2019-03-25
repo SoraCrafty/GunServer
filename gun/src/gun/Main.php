@@ -42,6 +42,7 @@ use gun\weapons\ShotGunBullet;
 
 use gun\entity\target\Target;
 use gun\entity\barrier\Barrier;
+use gun\weapons\entity\shield\ShieldEntity;
 
 use gun\scoreboard\ScoreboardManager;
 
@@ -71,10 +72,12 @@ class Main extends PluginBase {
 
 		ItemFactory::registerItem(new FishingRod(), true);
 
-		Entity::registerEntity(Bullet::class, true);
 		Entity::registerEntity(ShotGunBullet::class, true);
 		Entity::registerEntity(Target::class, true);
 		Entity::registerEntity(Barrier::class, true);
+
+		Entity::registerEntity(Bullet::class, true);
+		Entity::registerEntity(ShieldEntity::class, true);
 
 		Item::initCreativeItems();
 	}
