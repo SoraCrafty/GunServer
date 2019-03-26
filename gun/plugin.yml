@@ -42,3 +42,6 @@ permissions:
      battlefront.command.mystatus:
       default: true
       description: ステータスを確認することを許可します
+     battlefront.command.jobshop:
+      default: true
+      description: ジョブショップコマンドを使用することを許可します

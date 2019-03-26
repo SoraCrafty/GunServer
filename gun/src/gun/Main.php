@@ -37,6 +37,8 @@ use gun\server\RebootManager;
 
 use gun\game\GameManager;
 
+use gun\job\JobManager;
+
 use gun\weapons\Bullet;
 use gun\weapons\ShotGunBullet;
 
@@ -87,6 +89,7 @@ class Main extends PluginBase {
 		date_default_timezone_set('Asia/Tokyo');
 		ProviderManager::init($this);
 		WeaponManager::init($this);
+		JobManager::init($this);
 		CommandManager::init($this);
 		FormManager::init($this);
 		BossBarManager::init($this);
@@ -97,7 +100,7 @@ class Main extends PluginBase {
 		$this->server = $this->getServer();
 		$this->listener = new Listener($this);
 		$this->npcManager = new NPCManager($this);
-		$this->discordManager = new DiscordManager($this);
+		//$this->discordManager = new DiscordManager($this);
 		$this->playerManager = new PlayerManager($this);
 		$this->ranking = new ranking\Ranking($this);
 		$this->rebootManager = new RebootManager($this);

@@ -106,6 +106,7 @@ class Ranking implements Listener{
 	
 	public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
+		if(!isset($top3)) return false;
 		if(array_search($player->getName(), $this->top3) !== false){
 			$player->setNameTag('§c★§f'.($tag = $player->getNameTag()));
 			$player->setDisplayName('§c★§f'.($display = $player->getDisplayName()));

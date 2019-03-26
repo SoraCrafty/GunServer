@@ -14,6 +14,7 @@ use gun\command\commands\RankingCommand;
 use gun\command\commands\SummonCommand;
 use gun\command\commands\TestFireCommand;
 use gun\command\commands\StatusCommand;
+use gun\command\commands\JobShopCommand;
 
 class CommandManager{
 
@@ -30,6 +31,7 @@ class CommandManager{
         $map->register("battlefront", new SummonCommand($plugin));
         $map->register("battlefront", new TestFireCommand($plugin));
         $map->register("battlefront", new StatusCommand($plugin));
+        $map->register("battlefront", new JobShopCommand($plugin));
     }
 
 }
