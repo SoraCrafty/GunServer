@@ -100,7 +100,7 @@ class Main extends PluginBase {
 		$this->server = $this->getServer();
 		$this->listener = new Listener($this);
 		$this->npcManager = new NPCManager($this);
-		//$this->discordManager = new DiscordManager($this);
+		$this->discordManager = new DiscordManager($this);
 		$this->playerManager = new PlayerManager($this);
 		$this->ranking = new ranking\Ranking($this);
 		$this->rebootManager = new RebootManager($this);
