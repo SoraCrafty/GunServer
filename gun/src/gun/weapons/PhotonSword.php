@@ -85,7 +85,7 @@ class PhotonSword extends UniqueWeapon
 				}
 				
 				$pk = new SpawnParticleEffectPacket();
-				$pk->position = $player->asVector3()->add(0, $player->getEyeHeight(), 0)->add($player->getDirectionVector());
+				$pk->position = $entity->asVector3()->add(0, $entity->getEyeHeight(), 0);
 				$pk->particleName = "bf2:totem_particle";
 				foreach ($player->getLevel()->getPlayers() as $target) {
 					$target->dataPacket($pk);

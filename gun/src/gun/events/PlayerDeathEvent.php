@@ -5,7 +5,12 @@ use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\item\Item;
+use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket; 
 
+use pocketmine\entity\EffectInstance;
+use pocketmine\entity\Effect;
+
+use gun\Callback;
 use gun\gameManager;
 use gun\weapons\Weapon;
 use gun\weapons\WeaponManager;
@@ -20,6 +25,15 @@ class PlayerDeathEvent extends Events {/*要改善*/
 	public function call($event){
 		$event->setKeepInventory(true);
 		$player = $event->getPlayer();
+
+		$pk = new SpawnParticleEffectPacket();
+		$pk->position = $player->asVector3();
+		$pk->particleName = "bf2:particle_death";
+		foreach ($player->getLevel()->getPlayers() as $target) {
+			$target->dataPacket($pk);
+		}
+		$this->plugin->getScheduler()->scheduleDelayedTask(new CallBack([$this, "deathAnimationTask"], [$player]), 20);
+
 		if($player->getSpawn()->getLevel()!=$player->getPosition()->getLevel()) $this->plugin->getServer()->getPluginManager()->callEvent(new EntityTeleportEvent($player, $player->getPosition(), $player->getSpawn()->getLevel()->getSafeSpawn()));
 		if($player->getLastDamageCause() instanceof EntityDamageByEntityEvent){
 			$killer = $player->getLastDamageCause()->getDamager();
@@ -45,5 +59,13 @@ class PlayerDeathEvent extends Events {/*要改善*/
 				AccountProvider::get()->addKill($killer, 1);
 			}
 		}
+	}
+
+	public function deathAnimationTask($player)
+	{
+		if($player->isOnline() && !$player->isAlive())
+		{
+			$player->despawnFromAll();
+		} 
 	}
 }
