@@ -4,6 +4,7 @@ namespace gun\entity\barrier;
 
 use pocketmine\level\Level;
 use pocketmine\entity\Human;
+use pocketmine\entity\Entity;
 use pocketmine\Player;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\ByteArrayTag;
@@ -84,6 +85,11 @@ class Barrier extends Human
 	}
 
 	public function setHealth(float $amount) : void
+	{
+
+	}
+
+	public function knockBack(Entity $attacker, float $damage, float $x, float $z, float $base = 0.4) : void
 	{
 
 	}

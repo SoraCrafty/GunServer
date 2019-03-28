@@ -4,5 +4,11 @@
     "sounds": [
       "sounds/bottle/fill_dragonbreath1"
     ]
+  },
+  "camera.take_picture": {
+    "category": "player",
+    "sounds": [
+      "sounds/camera/camera_snap1"
+    ]
   }
 }
