@@ -17,8 +17,7 @@ class DiscordProvider extends Provider
                             "enable" => false,
                             "username" => "BattleFront2",
                             "webhook" => [
-                                            "server_chat" => "",
-                                            "game" => ""
+                                            "game" => "",
                                         ]
     					];
 

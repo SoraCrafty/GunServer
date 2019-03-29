@@ -109,12 +109,10 @@ class Main extends PluginBase {
 		if($this->server->hasWhitelist())
 		{
 			$this->server->getNetwork()->setName("現在メンテナンス中 §l§fBattleFront§c2§r §bβ§r");
-			$this->discordManager->sendMessage('**❗サーバーがメンテナンスモードで起動しました**');
 		}
 		else
 		{
 			$this->server->getNetwork()->setName("§l§fBattleFront§c2§r §bβ§r");
-			$this->discordManager->sendMessage('**❗サーバーが起動しました  **(' . date("m/d H:i") . ')');
 		}
 
 		$this->getServer()->loadLevel(MainSettingProvider::get()->getLobbyWorldName());
@@ -128,8 +126,6 @@ class Main extends PluginBase {
 
 	public function onDisable()
 	{
-		$this->discordManager->sendMessageDirect('**❗サーバーが停止しました  **(' . date("m/d H:i") . ')');
-
 		WeaponManager::close();
 		ProviderManager::close();
 	}

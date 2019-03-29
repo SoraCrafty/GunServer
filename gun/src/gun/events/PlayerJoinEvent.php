@@ -35,9 +35,5 @@ class PlayerJoinEvent extends Events {
 		$this->plugin->playerManager->setDefaultNameTags($player);
 
 		WeaponManager::setPermission($this->plugin, $player, false);
-
-
-
-		$this->plugin->discordManager->sendMessage('**⭕' . $player->getName() . 'がログインしました** ' . '(' . count($this->plugin->getServer()->getOnlinePlayers()) . '/' . $this->plugin->getServer()->getMaxPlayers() . ')');
 	}
 }

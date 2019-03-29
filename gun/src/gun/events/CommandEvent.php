@@ -37,12 +37,10 @@ class CommandEvent extends Events{
 
 					case "on":
 						$this->plugin->getServer()->getNetwork()->setName("現在メンテナンス中 §l§fBattleFront§c2§r §bβ§r");
-						$this->plugin->discordManager->sendMessage('**❗❗サーバーがメンテナンスモードになりました  **(' . date("m/d H:i") . ')');
 						break;
 
 					case "off":
 						$this->plugin->getServer()->getNetwork()->setName("§l§fBattleFront§c2§r §bβ§r");
-						$this->plugin->discordManager->sendMessage('**❗❗サーバーのメンテナンスモードが解除されました  **(' . date("m/d H:i") . ')');
 						break;
 
 				}
