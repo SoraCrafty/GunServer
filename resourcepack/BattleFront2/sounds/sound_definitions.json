@@ -43,5 +43,23 @@
       "volume": 0.5
      }
     ]
+  },
+ "bf2.mission_start": {
+    "category": "music",
+    "sounds": [
+     {
+      "name": "sounds/server/mission_start",
+      "volume": 1
+     }
+    ]
+  },
+ "bf2.mission_finish": {
+    "category": "music",
+    "sounds": [
+     {
+      "name": "sounds/server/mission_finish",
+      "volume": 1
+     }
+    ]
   }
 }
