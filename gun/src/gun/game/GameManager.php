@@ -5,6 +5,7 @@ namespace gun\game;
 use gun\provider\MainSettingProvider;
 
 use gun\game\games\TeamDeathMatch;
+use gun\game\games\FlagMatch;
 
 class GameManager
 {
@@ -18,6 +19,10 @@ class GameManager
 			
 			case TeamDeathMatch::GAME_ID:
 				self::$gameObject = new TeamDeathMatch($plugin);
+				break;
+				
+			case FlagMatch::GAME_ID:
+				self::$gameObject = new FlagMatch($plugin);
 				break;
 
 			default:

@@ -21,6 +21,7 @@ class ProviderManager
         self::register(new RankingProvider($plugin));
         self::register(new TestFiringFieldProvider($plugin));
         self::register(new JobProvider($plugin));
+        self::register(new FlagSettingProvider($plugin));
     }
 
     public static function register(Provider $provider)

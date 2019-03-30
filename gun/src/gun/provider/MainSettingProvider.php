@@ -5,6 +5,7 @@ namespace gun\provider;
 use pocketmine\utils\Config;
 
 use gun\game\games\TeamDeathMatch;
+use gun\game\games\FlagMatch;
 
 class MainSettingProvider extends Provider
 {
@@ -16,7 +17,7 @@ class MainSettingProvider extends Provider
     const VERSION = 1;
     /*デフォルトデータ*/
     const DATA_DEFAULT = [
-    						"GameMode" => TeamDeathMatch::GAME_ID,
+    						"GameMode" => FlagMatch::GAME_ID,
                             "Reboot_Count" => 5,
                             "LobbyWorld" => ""
     					];
