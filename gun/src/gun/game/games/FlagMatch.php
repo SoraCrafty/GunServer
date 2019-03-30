@@ -35,7 +35,7 @@ use gun\scoreboard\ScoreboardManager;//
 class FlagMatch extends Game {
 
 	const GAME_ID = "flag";
-	const GAME_NAME = "FlagSettingProvider";
+	const GAME_NAME = "FlagMatch";
 	const RESPAWN_COOLTIME = 5;
 	
 	/*Mainクラス*/
@@ -691,6 +691,7 @@ class FlagMatch extends Game {
                 		if($this->hasFlag($player)){
                 			$this->sendMessage('§aGAME>>§f'.$this->provider->getTeamNameDecoration($this->levelName, $killerteam) . $this->provider->getTeamName($this->levelName, $killerteam).'§fの'.$killer->getNameTag().'さんが'.$player->getNameTag() .'さんのFlagの持ち帰りを阻止しました!');
                 			AccountProvider::get()->addPoint($killer,100);
+                			if($this->hasFlag($player)) $this->removeFlag($player);
                 		}
            		 }else{
                 		$this->resetKillStreak($player);
