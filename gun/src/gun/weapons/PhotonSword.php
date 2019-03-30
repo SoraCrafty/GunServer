@@ -19,7 +19,7 @@ use pocketmine\level\particle\CriticalParticle;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacket; 
+use pocketmine\network\mcpe\protocol\PlaySoundPacket; 
 use pocketmine\network\mcpe\protocol\SpawnParticleEffectPacket; 
 
 use gun\Callback;
@@ -77,16 +77,20 @@ class PhotonSword extends UniqueWeapon
 				$entity->setHealth($entity->getHealth() - $data["Attack"]["Damage"]);
 				if($data["Attack"]["KnockBack"] > 0) $entity->knockBack($player, $data["Attack"]["Damage"], $entity->x - $player->x, $entity->z - $player->z, 0.4 * $data["Attack"]["KnockBack"]);
 
-				$pk = new LevelSoundEventPacket();
-				$pk->sound = LevelSoundEventPacket::SOUND_CAMERA_TAKE_PICTURE;
-				$pk->position = $player->asVector3();
+				$pk = new PlaySoundPacket();
+				$pk->soundName = "bf2.photonsword_swing";
+				$pk->x = $player->x;
+				$pk->y = $player->y;
+				$pk->z = $player->z;
+				$pk->volume = 1;
+				$pk->pitch = 1;
 				foreach ($player->getLevel()->getPlayers() as $target) {
 					$target->dataPacket($pk);
 				}
 				
 				$pk = new SpawnParticleEffectPacket();
 				$pk->position = $entity->asVector3()->add(0, $entity->getEyeHeight(), 0);
-				$pk->particleName = "bf2:totem_particle";
+				$pk->particleName = "bf2:particle_death";
 				foreach ($player->getLevel()->getPlayers() as $target) {
 					$target->dataPacket($pk);
 				}

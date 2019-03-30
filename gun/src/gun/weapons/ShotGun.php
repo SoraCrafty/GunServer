@@ -16,6 +16,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket; 
+use pocketmine\network\mcpe\protocol\PlaySoundPacket; 
 
 use gun\Callback;
 use gun\Blocks;
@@ -237,10 +238,14 @@ class ShotGun extends Weapon
 		}
 
 		/*音の処理*/
-		$pk = new LevelSoundEventPacket();
-		$pk->sound = LevelSoundEventPacket::SOUND_CONDUIT_DEACTIVATE;
-		$pk->position = $player->asVector3();
-		foreach ($level->getPlayers() as $target) {
+		$pk = new PlaySoundPacket();
+		$pk->soundName = "bf2.shotgun_shot";
+		$pk->x = $player->x;
+		$pk->y = $player->y;
+		$pk->z = $player->z;
+		$pk->volume = 5;
+		$pk->pitch = 1;
+		foreach ($player->getLevel()->getPlayers() as $target) {
 			$target->dataPacket($pk);
 		}
 

@@ -1,14 +1,47 @@
 {
-  "bottle.dragonbreath": {
-    "category": "bottle",
+ "bf2.photonsword_swing": {
+    "category": "music",
     "sounds": [
-      "sounds/bottle/fill_dragonbreath1"
+     {
+      "name": "sounds/server/photonsword_swing",
+      "volume": 1
+     }
     ]
   },
-  "camera.take_picture": {
-    "category": "player",
+ "bf2.assaultrifle_shot": {
+    "category": "music",
     "sounds": [
-      "sounds/camera/camera_snap1"
+     {
+      "name": "sounds/server/assaultrifle_shot",
+      "volume": 1
+     }
+    ]
+  },
+ "bf2.handgun_shot": {
+    "category": "music",
+    "sounds": [
+     {
+      "name": "sounds/server/handgun_shot",
+      "volume": 1
+     }
+    ]
+  },
+ "bf2.shotgun_shot": {
+    "category": "music",
+    "sounds": [
+     {
+      "name": "sounds/server/shotgun_shot",
+      "volume": 1
+     }
+    ]
+  },
+ "bf2.sniperrifle_shot": {
+    "category": "music",
+    "sounds": [
+     {
+      "name": "sounds/server/sniperrifle_shot",
+      "volume": 1
+     }
     ]
   }
 }
