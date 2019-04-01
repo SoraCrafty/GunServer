@@ -13,7 +13,7 @@
     "sounds": [
      {
       "name": "sounds/server/assaultrifle_shot",
-      "volume": 0.4
+      "volume": 0.3
      }
     ]
   },
@@ -22,7 +22,7 @@
     "sounds": [
      {
       "name": "sounds/server/handgun_shot",
-      "volume": 0.6
+      "volume": 0.5
      }
     ]
   },
@@ -31,7 +31,7 @@
     "sounds": [
      {
       "name": "sounds/server/shotgun_shot",
-      "volume": 0.6
+      "volume": 0.5
      }
     ]
   },
@@ -40,7 +40,7 @@
     "sounds": [
      {
       "name": "sounds/server/sniperrifle_shot",
-      "volume": 0.5
+      "volume": 0.4
      }
     ]
   },

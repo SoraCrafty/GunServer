@@ -260,7 +260,7 @@ class AssaultRifle extends Weapon
 			$pk->x = $player->x;
 			$pk->y = $player->y;
 			$pk->z = $player->z;
-			$pk->volume = 5;
+			$pk->volume = 2;
 			$pk->pitch = 1;
 			foreach ($player->getLevel()->getPlayers() as $target) {
 				$target->dataPacket($pk);

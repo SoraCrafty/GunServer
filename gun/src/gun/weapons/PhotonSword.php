@@ -75,6 +75,7 @@ class PhotonSword extends UniqueWeapon
 			{
 				$entity->broadcastEntityEvent(EntityEventPacket::HURT_ANIMATION, null);
 				$entity->setHealth($entity->getHealth() - $data["Attack"]["Damage"]);
+				$entity->setLastDamageCause($event);
 				if($data["Attack"]["KnockBack"] > 0) $entity->knockBack($player, $data["Attack"]["Damage"], $entity->x - $player->x, $entity->z - $player->z, 0.4 * $data["Attack"]["KnockBack"]);
 
 				$pk = new PlaySoundPacket();
