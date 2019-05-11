@@ -4,4 +4,8 @@ SoraCrafty/GunServerにおけるファイルの一部またはすべてを使用
 
 **著作権の表示**
 
-このSoraCrafty/GunServerにおいて公開されている全てのファイル、またはその一部(それを元に改変したものも含む)を公開、または他者へ譲渡するときこのSoracrafty/GunServerへの[リンク](https://github.com/SoraCrafty/GunServer)を表記してください。
+このSoraCrafty/GunServerにおいて公開されている全てのファイル、またはその一部(それを元に改変したものも含む)を公開、または他者へ譲渡するとき、このSoracrafty/GunServerへの[リンク](https://github.com/SoraCrafty/GunServer)を表記してください。
+
+**ファイルの公開**
+
+このSoraCrafty/GunServerにおいて公開されている全てのファイル、またはその一部を使用した制作物は、必ずGitHubにおいてファイルの公開をしなければなりません。
