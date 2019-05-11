@@ -9,3 +9,8 @@ SoraCrafty/GunServerにおけるファイルの一部またはすべてを使用
 **ファイルの公開**
 
 このSoraCrafty/GunServerにおいて公開されている全てのファイル、またはその一部を使用した制作物は、必ずGitHubにおいてファイルの公開をしなければなりません。
+
+**BattleFront3の作成**
+
+このSoraCrafty/GunServerにおいて公開されているファイルの全て、または一部を閲覧した方は可能ならばBattleFront3サーバーの作成をお願いします。
+その際は[こちら](https://twitter.com/2soraaaaa)まで連絡お願いします。
