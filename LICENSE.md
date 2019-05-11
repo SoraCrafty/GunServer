@@ -1,3 +1,7 @@
 # BattleFront2 License
 このSoraCrafty/GunServerにおいて公開されているすべてのファイルには、下記のライセンスが適用されます。
 SoraCrafty/GunServerにおけるファイルの一部またはすべてを使用する場合、使用者は下記のライセンスを守らなければなりません。
+
+**著作権の表示**
+
+このSoraCrafty/GunServerにおいて公開されている全てのファイル、またはその一部(それを元に改変したものも含む)を公開、または他者へ譲渡するときこのSoracrafty/GunServerへの[リンク](https://github.com/SoraCrafty/GunServer)を表記してください。
