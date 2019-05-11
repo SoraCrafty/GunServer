@@ -1,0 +1,3 @@
+# BattleFront2 License
+このSoraCrafty/GunServerにおいて公開されているすべてのファイルには、下記のライセンスが適用されます。
+SoraCrafty/GunServerにおけるファイルの一部またはすべてを使用する場合、使用者は下記のライセンスを守らなければなりません。
